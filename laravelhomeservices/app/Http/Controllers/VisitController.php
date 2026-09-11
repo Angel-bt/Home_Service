@@ -17,12 +17,11 @@ class VisitController extends Controller
             $user = auth()->user();
             $visitorName = $user ? $user->name : 'Invitado';
 
-            // Obtener el primer registro (o crearlo si no existe)
-            $visit = Visit::firstOrCreate(['id' => 1]);
-
-            $visit = Visit::create([
-                'visitor_name' => $visitorName, // Nombre del usuario autenticado o "Invitado"
-            ]);
+            // MEJORA BUG: conservar un único registro global para el contador.
+            $visit = Visit::firstOrCreate(
+                ['id' => 1],
+                ['visitor_name' => $visitorName]
+            );
 
 
             // Incrementar el contador de visitas

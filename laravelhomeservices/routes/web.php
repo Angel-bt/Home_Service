@@ -70,6 +70,12 @@ Route::get('/privacy', PrivacyComponent::class)->name('home.privacy');
 
 Route::get('/servicesbycategory/{category_slug}', AdminServicesByCategoryComponent::class)->name('services.by.category');
 
+// Public catalogue and search routes must remain accessible to visitors.
+Route::get('/{category_slug}/services', ServicesByCategoryComponent::class)->name('home.services_by_category');
+Route::get('/service/{service_slug}', ServiceDetailsComponent::class)->name('home.service_details');
+Route::get('/autocomplete', [SearchController::class, 'autocomplete'])->name('autocomplete');
+Route::post('/search', [SearchController::class, 'searchService'])->name('searchService');
+
 Route::get('password/reset', [PasswordResetController::class, 'showResetForm'])->name('password.request');
 Route::post('password/reset', [PasswordResetController::class, 'sendResetLink'])->name('password.email');
 
@@ -104,7 +110,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('/admin/service-providers', AdminServiceProvidersComponent::class)->name('admin.service_providers');
     Route::get('/admin/about', AdminAboutComponent::class)->name('admin.about');
     Route::get('/admin/faq', AdminFaqComponent::class)->name('admin.faq');
-    Route::get('/admin/terms', AdminFaqComponent::class)->name('admin.terms');
+    Route::get('/admin/terms', AdminTermsComponent::class)->name('admin.terms');
     Route::get('/admin/privacy', AdminPrivacyComponent::class)->name('admin.privacy');
 
 });
@@ -119,11 +125,4 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 // For Customer
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     Route::get('/customer/dashboard', CustomerDashboardComponent::class)->name('customer.dashboard');
-    Route::get('/{category_slug}/services', ServicesByCategoryComponent::class)->name('home.services_by_category');
-
-Route::get('/service/{service_slug}', ServiceDetailsComponent::class)->name('home.service_details');
-
-Route::get('/autocomplete', [SearchController::class, 'autocomplete'])->name('autocomplete');
-
-Route::post('/search', [SearchController::class, 'searchService'])->name('searchService');
 });

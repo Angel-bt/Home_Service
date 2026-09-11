@@ -116,10 +116,8 @@
                                         </table>
                                     </div>
                                     <div class="panel-footer">
-                                        <form>
-                                            <input type="submit" class="btn btn-primary" name="submit"
-                                                value=" Book Now">
-                                        </form>
+                                        {{-- MEJORA UI: dirigir la reserva al formulario de contacto disponible. --}}
+                                        <a href="{{ route('home.contact') }}" class="btn btn-primary">Book Now</a>
                                     </div>
                                 </div>
                             </aside>
