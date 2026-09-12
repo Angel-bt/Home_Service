@@ -1,173 +1,107 @@
-<div>
-    <section class="tp-banner-container">
-        <div class="tp-banner">
-            <ul>
-                @foreach($slides as $slide)
-                <li data-transition="slidevertical" data-slotamount="1" data-masterspeed="1000"
-                    data-saveperformance="off" data-title="Slide">
-                    <img src="{{asset('images/slider')}}/{{$slide->image}}" alt="{{$slide->title}}" 
-                        data-bgposition="center center" data-kenburns="on" data-duration="6000" 
-                        data-ease="Linear.easeNone" data-bgfit="130" data-bgfitend="100" 
-                        data-bgpositionend="right center">
-                </li>
-                @endforeach
-            </ul>
-            <div class="tp-bannertimer"></div>
-        </div>
-        <div class="filter-title">
-            <div class="title-header">
-                <h2 class="neon-title">BOOK A SERVICE</h2>
-                <p class="lead neon-text">Book a service at very affordable price</p>
+<div class="proyetech-home">
+    <section class="proyetech-hero" aria-labelledby="hero-title">
+        <div class="proyetech-hero-grid"></div>
+        <div class="proyetech-hero-inner">
+            <div class="proyetech-hero-copy">
+                <p class="proyetech-kicker"><span class="proyetech-status-dot"></span> PROYETECH / RED DE SERVICIOS</p>
+                <h1 id="hero-title">Servicios del hogar,<br><span>re-imaginados.</span></h1>
+                <p class="proyetech-hero-lede">Encuentra especialistas verificados en Loja y Malacatos. Compara soluciones, conecta con profesionales y resuelve tu hogar con confianza.</p>
+                <div class="proyetech-hero-actions">
+                    <a class="proyetech-button proyetech-button-primary" href="{{ route('home.service_categories') }}"><span>Explorar servicios</span><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                    <a class="proyetech-button proyetech-button-ghost" href="#proyetech-proof"><i class="fa fa-compass" aria-hidden="true"></i><span>Conocer la red</span></a>
+                </div>
+                <div class="proyetech-trust-line"><i class="fa fa-shield-halved" aria-hidden="true"></i> Profesionales verificados <span></span> Atención local <span></span> Respuesta rápida</div>
             </div>
-            <div class="filter-header">
-                <form id="sform" action="{{route('searchService')}}" method="post">
-                    @csrf
-                    <input type="text" id="q" name="q" required="required" 
-                        placeholder="What Services do you want?" class="input-large typeahead" autocomplete="off">
-                    <input type="submit" name="submit" value="Search" class="btn neon-btn">
-                </form>
+            <div class="proyetech-hero-visual" aria-label="Interactive service network visualization">
+                <div class="proyetech-orbit proyetech-orbit-one"></div>
+                <div class="proyetech-orbit proyetech-orbit-two"></div>
+                <canvas id="proyetech-network" width="620" height="620"></canvas>
+                <div class="proyetech-visual-label proyetech-visual-label-top"><span>SERVICIOS ACTIVOS</span><strong>99.98%</strong></div>
+                <div class="proyetech-visual-label proyetech-visual-label-bottom"><span>ESTADO DE LA RED</span><strong><i class="proyetech-status-dot"></i> DISPONIBLE</strong></div>
             </div>
         </div>
     </section>
-        <section class="content-central">
-            <div class="content_info content_resalt">
-                <div class="container" style="margin-top: 40px;">
-                    <div class="row">
-                    </div>
-                </div>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <ul id="sponsors" class="tooltip-hover">
-                                @foreach($scategories as $scategory)
-                                    <li data-toggle="tooltip" title="" data-original-title="{{$scategory->name}}"> 
-                                        <a href="{{route('home.services_by_category',['category_slug'=>$scategory->slug])}}">
-                                            <img src="{{asset('images/categories')}}/{{$scategory->image}}" alt="{{$scategory->name}}">
-                                        </a>
-                                    </li>
-                                @endforeach
-                                
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="semiboxshadow text-center">
-                <img src="{{asset('assets/img/img-theme/shp.png')}}" class="img-responsive" alt="">
-            </div>
-            <div class="content_info">
-	<div>
-		<div class="container">
-			<div class="row">
-				<div class="titles">
-					<h2>SurfsideMedia <span>Choice</span> of Services</h2>
-					<i class="fa fa-plane"></i>
-					<hr class="tall">
-				</div>
-			</div>
-			<div class="portfolioContainer" style="margin-top: -50px;">   
-				@foreach($fservices as $service)                     
-				<div class="col-xs-6 col-sm-4 col-md-3 hsgrids"
-					style="padding-right: 5px;padding-left: 5px;">
-					<a class="g-list" href="{{route('home.service_details',['service_slug'=>$service->slug])}}">
-						<div class="img-hover">
-							<img src="{{ asset('images/services/thumbnails') }}/{{$service->thumbnail}}" alt="{{$service->name}}"
-								class="img-responsive">
-						</div>
-						<div class="info-gallery">
-							<h3>{{$service->name}}</h3>
-							<hr class="separator">
-							<p>{{$service->tagline}}</p>
-							<div class="content-btn"><a href="{{route('home.service_details',['service_slug'=>$service->slug])}}"
-									class="btn btn-primary">Book Now</a></div>
-							<div class="price"><span>$</span><b>From</b>${{$service->price}}</div>
-						</div>
-					</a>
-				</div>
-				@endforeach                                               
-			</div>
-		</div>
-	</div>
-</div>
-<div class="content_info">
-	<div class="bg-dark color-white border-top">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-4 ">
-					<div class="services-lines-info">
-						<h2>WELCOME TO SurfsideMedia</h2>
-						<p class="lead">
-							Book best services at one place.
-							<span class="line"></span>
-						</p>
 
-						<p>Find a wide variety of home services.</p>
-					</div>
-				</div>
-				<div class="col-md-8">
-					<ul class="services-lines">   
-						@foreach($fscategories as $fscategory)                             
-						<li>
-							<a href="{{route('home.services_by_category',['category_slug'=>$fscategory->slug])}}">
-								<div class="item-service-line">
-									<i class="fa"><img class="icon-img"
-											src="{{ asset('images/categories') }}/{{$fscategory->image}}"></i>
-									<h5>{{$fscategory->name}}</h5>
-								</div>
-							</a>
-						</li>
-						@endforeach                                
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<div>
-	<div class="container">
-		<div class="row">
-			<div class="titles">
-				<h2><span>Appliance</span>Services</h2>
-				<i class="fa fa-plane"></i>
-				<hr class="tall">
-			</div>
-		</div>
-	</div>
-	<div id="boxes-carousel">  
-		@foreach($aservices as $aservice)
-		<div>
-			<a class="g-list" href="{{route('home.service_details',['service_slug'=>$aservice->slug])}}">
-				<div class="img-hover">
-					<img src="{{ asset('images/services/thumbnails') }}/{{$aservice->thumbnail}}" alt="{{$aservice->name}}" class="img-responsive">
-				</div>
+    <section class="proyetech-search-panel" aria-label="Buscar servicios">
+        <div class="proyetech-search-intro"><span class="proyetech-section-index">01</span><strong>Encuentra tu especialista</strong><small>Busca una solución para tu hogar</small></div>
+        <form id="sform" class="proyetech-search-form" action="{{ route('searchService') }}" method="post">
+            @csrf
+            <label class="sr-only" for="q">¿Qué servicio necesitas?</label>
+            <i class="fa fa-magnifying-glass" aria-hidden="true"></i>
+            <input type="text" id="q" name="q" required placeholder="¿Qué servicio necesitas?" class="typeahead" autocomplete="off">
+            <button type="submit">Buscar <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+        </form>
+    </section>
 
-				<div class="info-gallery">
-					<h3>{{$aservice->name}}</h3>
-					<hr class="separator">
-					<p>{{$aservice->tagline}}</p>
-					<div class="content-btn"><a href="{{route('home.service_details',['service_slug'=>$aservice->slug])}}"
-							class="btn btn-primary">Book Now</a></div>
-					<div class="price"><span>$</span><b>From</b>${{$aservice->price}}</div>
-				</div>
-			</a>
-		</div>
-                    @endforeach
-                </div>
-            </div>
-        </section>
+    <section id="proyetech-proof" class="proyetech-metrics" aria-label="Marketplace metrics">
+        <div><strong>&lt; 10<span>min</span></strong><small>Tiempo de respuesta</small></div>
+        <div><strong>24<span>/7</span></strong><small>Ayuda para tu hogar</small></div>
+        <div><strong>4.9<span>/5</span></strong><small>Valoración promedio</small></div>
+        <div><strong>100<span>%</span></strong><small>Profesionales verificados</small></div>
+    </section>
+
+    <section class="proyetech-home-section proyetech-category-strip" aria-labelledby="category-title">
+        <div class="proyetech-section-heading"><div><p class="proyetech-kicker">02 / DESCUBRE</p><h2 id="category-title">Una red.<br><span>Cada solución.</span></h2></div><a href="{{ route('home.service_categories') }}" class="proyetech-text-link">Ver todas las categorías <i class="fa fa-arrow-right" aria-hidden="true"></i></a></div>
+        <div class="proyetech-category-list">
+            @forelse($scategories->take(6) as $scategory)
+                <a class="proyetech-category-tile" href="{{ route('home.services_by_category', ['category_slug' => $scategory->slug]) }}">
+                    <span class="proyetech-tile-icon"><img src="{{ asset('images/categories') }}/{{ $scategory->image }}" alt=""></span><span>{{ $scategory->name }}</span><i class="fa fa-arrow-right" aria-hidden="true"></i>
+                </a>
+            @empty
+                <div class="proyetech-empty-state">Las categorías se están preparando para ti.</div>
+            @endforelse
+        </div>
+    </section>
+
+    <section class="proyetech-home-section proyetech-services-section" aria-labelledby="services-title">
+        <div class="proyetech-section-heading"><div><p class="proyetech-kicker">03 / PARA TI</p><h2 id="services-title">Soluciones que<br><span>sí funcionan.</span></h2></div><span class="proyetech-live-pill"><i class="proyetech-status-dot"></i> Disponibilidad activa</span></div>
+        <div class="proyetech-service-grid">
+            @forelse($fservices->take(4) as $service)
+                <a class="proyetech-service-card" href="{{ route('home.service_details', ['service_slug' => $service->slug]) }}">
+                    <div class="proyetech-service-image"><img src="{{ asset('images/services/thumbnails') }}/{{ $service->thumbnail }}" alt="{{ $service->name }}"><span>VERIFICADO</span></div>
+                    <div class="proyetech-service-info"><span>{{ $service->category->name ?? 'Servicio para el hogar' }}</span><h3>{{ $service->name }}</h3><p>{{ $service->tagline }}</p><strong>Desde ${{ $service->price }} <i class="fa fa-arrow-right" aria-hidden="true"></i></strong></div>
+                </a>
+            @empty
+                <div class="proyetech-empty-state">Aquí aparecerán los servicios destacados de nuestros profesionales.</div>
+            @endforelse
+        </div>
+    </section>
 </div>
 
 @push('scripts')
-    <script type="text/javascript">
-        var path = "{{route('autocomplete')}}";
-        $('input.typeahead').typeahead({
-            source: function(query,process){
-                return $.get(path,{query:query},function(data){
-                    return process(data);
-                });
+<script>
+    (function () {
+        var canvas = document.getElementById('proyetech-network');
+        if (!canvas) return;
+        var context = canvas.getContext('2d');
+        var points = [], pointer = { x: 0, y: 0 }, reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        for (var index = 0; index < 72; index += 1) {
+            var angle = Math.acos(1 - (2 * (index + 0.5) / 72)), spin = Math.PI * (1 + Math.sqrt(5)) * index;
+            points.push({ x: Math.sin(angle) * Math.cos(spin), y: Math.sin(angle) * Math.sin(spin), z: Math.cos(angle) });
+        }
+        function draw(time) {
+            var width = canvas.width, center = width / 2, radius = width * .34, rotation = reducedMotion ? .25 : time * .00018 + pointer.x * .22;
+            context.clearRect(0, 0, width, width);
+            var projected = points.map(function (point) {
+                var x = point.x * Math.cos(rotation) - point.z * Math.sin(rotation), z = point.x * Math.sin(rotation) + point.z * Math.cos(rotation), y = point.y * Math.cos(pointer.y * .12) - z * Math.sin(pointer.y * .12);
+                return { x: center + x * radius, y: center + y * radius, z: z };
+            }).sort(function (a, b) { return a.z - b.z; });
+            context.lineWidth = 1;
+            for (var link = 0; link < projected.length; link += 1) {
+                for (var next = link + 1; next < projected.length; next += 1) {
+                    var distance = Math.hypot(projected[link].x - projected[next].x, projected[link].y - projected[next].y);
+                    if (distance < 58) { context.strokeStyle = 'rgba(0, 240, 255, ' + (.07 + Math.max(projected[link].z, projected[next].z) * .12) + ')'; context.beginPath(); context.moveTo(projected[link].x, projected[link].y); context.lineTo(projected[next].x, projected[next].y); context.stroke(); }
+                }
+                var alpha = .25 + (projected[link].z + 1) * .35; context.fillStyle = 'rgba(0, 240, 255, ' + alpha + ')'; context.beginPath(); context.arc(projected[link].x, projected[link].y, 1.5 + (projected[link].z + 1), 0, Math.PI * 2); context.fill();
             }
-        });
-		
-		
-    </script>
+            if (!reducedMotion) window.requestAnimationFrame(draw);
+        }
+        canvas.addEventListener('pointermove', function (event) { var bounds = canvas.getBoundingClientRect(); pointer.x = (event.clientX - bounds.left) / bounds.width - .5; pointer.y = (event.clientY - bounds.top) / bounds.height - .5; });
+        draw(0);
+    }());
+</script>
+<script>
+    var path = "{{ route('autocomplete') }}";
+    if (window.jQuery && $.fn.typeahead) { $('input.typeahead').typeahead({ source: function (query, process) { return $.get(path, { query: query }, process); } }); }
+</script>
 @endpush

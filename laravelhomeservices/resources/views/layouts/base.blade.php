@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Online Service Provider for your House Needs</title>
+    <title>Servicios para tu hogar | Proyetech</title>
     <meta name="keywords" content="">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -75,10 +75,10 @@
                     <li class="glass-card" >
                         <a href="{{ route('home') }}" aria-label="Ir al inicio"><img src="{{ asset('images/logo.png') }}" alt="PROYETECH"></a>
                     </li>
-                    <li> <a href="{{ route('home.service_categories') }}">Service Categories</a>
+                    <li> <a href="{{ route('home.service_categories') }}">Categorías</a>
                     </li>
                      
-                    <li> <a href="{{ route('home.service_categories') }}"  class="neomorph-card" aria-haspopup="true">Appliances</a>
+                    <li> <a href="{{ route('home.service_categories') }}"  class="neomorph-card" aria-haspopup="true">Electrodomésticos</a>
                         <ul class="drop-down one-column hover-fade">
                         @foreach (App\Models\ServiceCategory::whereIn('name', ['Computer Repair','TV', 'AC','Gyser', 'Refrigerator', 'Washing Machine','Chimney and Hob', 'Microwave Oven', 'Water Purifier'])->distinct()->get() as $category)
                         <li><a href="{{ route('home.services_by_category', ['category_slug' => $category->slug]) }}">{{ $category->name }}</a></li>
@@ -86,7 +86,7 @@
                         </ul>
                     </li>
 
-                    <li> <a href="{{ route('home.service_categories') }}" class="neomorph-card" aria-haspopup="true">Home Needs</a>
+                    <li> <a href="{{ route('home.service_categories') }}" class="neomorph-card" aria-haspopup="true">Necesidades del hogar</a>
 
                     <ul class="drop-down one-column hover-fade">
                         @foreach (App\Models\ServiceCategory::whereIn('name', ['Laundry','Electrical', 'Pest Control','Carpentry', 'Plumbing', 'Painting','Movers & Packers', 'Shower Filters'])->distinct()->get() as $category)
@@ -95,7 +95,7 @@
                         </ul>
                         
                     </li>
-                    <li> <a href="{{ route('home.service_categories') }}" class="neomorph-card" aria-haspopup="true">Home Cleaning</a>
+                    <li> <a href="{{ route('home.service_categories') }}" class="neomorph-card" aria-haspopup="true">Limpieza</a>
                     <ul class="drop-down one-column hover-fade">
                         @foreach (App\Models\ServiceCategory::whereIn('name', ['Bedroom Deep Cleaning','Overhead Water Storage', 'Tank Cleaning','Underground Sump Cleaning', 'Dining Chair Shampooing', 'Office Chair Shampooing','Home Deep Cleaning', 'Carpet Shampooing', 'Fabric Sofa Shampooing','Bathroom Deep Cleaning','Floor Scrubbing & Polishing','Mattress Shampooing','Kitchen Deep Cleaning'])->distinct()->get() as $category)
                         <li><a href="{{ route('home.services_by_category', ['category_slug' => $category->slug]) }}">{{ $category->name }}</a></li>
@@ -103,7 +103,7 @@
                         </ul>
 
                     </li>
-                    <li> <a href="{{ route('home.service_categories') }}" class="neomorph-card" aria-haspopup="true">Special Services</a>
+                    <li> <a href="{{ route('home.service_categories') }}" class="neomorph-card" aria-haspopup="true">Servicios especiales</a>
                         <ul class="drop-down one-column hover-fade">
                             <li><a href="{{ route('home.service_categories') }}">Document Services</a></li>
                             <li><a href="{{ route('home.service_categories') }}">Cars &amp; Bikes</a></li>
@@ -146,9 +146,9 @@
                             @csrf
                         </form>
                         @else
-                            <li class="login-form"> <a href="{{ route('register') }}" class="neomorph-button" title="Register">Register</a></li>
+                            <li class="login-form"> <a href="{{ route('register') }}" class="neomorph-button" title="Registrarse">Registrarse</a></li>
                             
-                            <li class="login-form"> <a href="{{ route('login') }}" class="neomorph-button" title="Login">Login</a></li>
+                            <li class="login-form"> <a href="{{ route('login') }}" class="neomorph-button" title="Iniciar sesión">Iniciar sesión</a></li>
                         @endif
                     @endif
 
@@ -176,7 +176,7 @@
                 <div class="row visible-md visible-lg">
                     <div class="col-md-3 col-xs-6 col-sm-6">
                         
-                    <h3>APPLIANCE SERVICES </h3>
+                    <h3>SERVICIOS DE ELECTRODOMÉSTICOS </h3>
                     <ul>
             @foreach (App\Models\ServiceCategory::whereIn('name', ['Computer Repair','TV', 'AC','Gyser', 'Refrigerator', 'Washing Machine','Chimney and Hob', 'Microwave Oven', 'Water Purifier'])->distinct()->get() as $category)
                 <li><i class="fa fa-check"></i> <a href="{{ route('services.by.category', ['category_slug' => $category->slug]) }}">{{ $category->name }}</a></li>
@@ -184,7 +184,7 @@
         </ul>
                     </div>
                     <div class="col-md-3 col-xs-6 col-sm-6">
-                        <h3>AC SERVICES </h3>
+                        <h3>SERVICIOS DE CLIMATIZACIÓN </h3>
                         <ul>
             @foreach (App\Models\ServiceCategory::whereIn('name', ['Installation','Uninstallation', 'AC Repair','Gas Refill', 'Wet Servicing', 'Dry Servicing'])->distinct()->get() as $category)
                 <li><i class="fa fa-check"></i> <a href="{{ route('services.by.category', ['category_slug' => $category->slug]) }}">{{ $category->name }}</a></li>
@@ -192,7 +192,7 @@
         </ul>
                     </div>
                     <div class="col-md-3 col-xs-6 col-sm-6">
-                        <h3>HOME NEEDS </h3>
+                        <h3>NECESIDADES DEL HOGAR </h3>
                         <ul>
             @foreach (App\Models\ServiceCategory::whereIn('name', ['Laundry','Electrical', 'Pest Control','Carpentry', 'Plumbing', 'Painting','Movers & Packers', 'Shower Filters'])->distinct()->get() as $category)
                 <li><i class="fa fa-check"></i> <a href="{{ route('services.by.category', ['category_slug' => $category->slug]) }}">{{ $category->name }}</a></li>
@@ -200,7 +200,7 @@
         </ul>
                     </div>
                     <div class="col-md-3 col-xs-6 col-sm-6">
-                        <h3>CONTACT US</h3>
+                        <h3>CONTÁCTANOS</h3>
                         <ul class="contact_footer">
                         <li class="location">
     <i class="fa fa-map-marker"></i> 
@@ -215,7 +215,7 @@
                                 <i class="fa fa-headphones"></i> <a href="tel:+911234567890">+91-1234567890</a>
                             </li>
                         </ul>
-                        <h3 style="margin-top: 10px">FOLLOW US</h3>
+                        <h3 style="margin-top: 10px">SÍGUENOS</h3>
                         <ul class="social">
                             <li class="facebook"><span><i class="fa fa-facebook"></i></span><a href="#"></a></li>
                             <li class="twitter"><span><i class="fa fa-twitter"></i></span><a href="#"></a></li>
@@ -225,7 +225,7 @@
                 </div>
                 <div class="row visible-sm visible-xs">
                     <div class="col-md-6">
-                        <h3 class="mlist-h">CONTACT US</h3>
+                        <h3 class="mlist-h">CONTÁCTANOS</h3>
                         <ul class="contact_footer mlist">
                            
                             <li>
@@ -249,15 +249,15 @@
                     <div class="row">
                         <div class="col-md-6">
                             <ul class="nav-footer">
-                                <li><a href="{{ route('home.about') }}">About Us</a> </li>
-                                <li><a href="{{ route('home.contact') }}">Contact Us</a></li>
+                                <li><a href="{{ route('home.about') }}">Nosotros</a> </li>
+                                <li><a href="{{ route('home.contact') }}">Contacto</a></li>
                                 <li><a href="{{ route('home.faq') }}">FAQ</a></li>
-                                <li><a href="{{ route('home.terms') }}">Terms of Use</a></li>
+                                <li><a href="{{ route('home.terms') }}">Términos de uso</a></li>
                                 <li><a href="{{ route('home.privacy') }}">Privacy</a></li>
                             </ul>
                         </div>
                         <div class="col-md-6">
-                            <p class="text-xs-center crtext">&copy; 2025 Surf Service. All Rights Reserved.</p>
+                            <p class="text-xs-center crtext">&copy; 2025 Proyetech. Todos los derechos reservados.</p>
                         </div>
                     </div>
                 </div>
