@@ -33,9 +33,9 @@
                                     </div>
                                     <div class="form-group row">
                                         <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
-                                        <div class="col-md-6">
-                                            <input id="password" type="password" class="form-control" name="password" required autocomplete="current-password">
-                                            <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 px-2">👁️</button>
+                                        <div class="col-md-6" style="position: relative;">
+                                            <input id="password" type="password" class="form-control" name="password" required autocomplete="current-password" style="padding-right: 45px;">
+                                            <button type="button" id="togglePassword" class="btn btn-sm btn-link" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); border: none; background: transparent; text-decoration: none; z-index: 10;">👁️</button>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -53,6 +53,7 @@
                                     <div class="form-group row mb-0">
                                         <div class="col-md-10">
                                             <a class="" href="{{ route('password.request') }}">Forgot Your Password?</a>
+                                            <p style="margin-top: 15px; font-size: 14px;">Don't have an account? <a href="{{ route('register') }}" id="switchToRegister">Register here</a></p>
                                         </div>
                                     </div>
                                 </form>
@@ -106,10 +107,12 @@
         // Alternar visibilidad de la contraseña
         const togglePassword = document.querySelector('#togglePassword');
         const password = document.querySelector('#password');
-        togglePassword.addEventListener('click', () => {
-            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-            password.setAttribute('type', type);
-            togglePassword.textContent = type === 'password' ? '👁️' : '🙈';
-        });
+        if (togglePassword && password) {
+            togglePassword.addEventListener('click', () => {
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                togglePassword.textContent = type === 'password' ? '👁️' : '🙈';
+            });
+        }
     </script>
 </x-base-layout>

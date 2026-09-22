@@ -42,9 +42,9 @@
 
                                     <div class="form-group row">
                                         <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
-                                        <div class="col-md-6">
-                                            <input id="password" type="password" class="form-control" name="password" required>
-                                            <button type="button" id="togglePassword" class="btn btn-outline-secondary mt-2">👁️</button>
+                                        <div class="col-md-6" style="position: relative;">
+                                            <input id="password" type="password" class="form-control" name="password" required style="padding-right: 45px;">
+                                            <button type="button" id="togglePassword" class="btn btn-sm btn-link" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); border: none; background: transparent; text-decoration: none; z-index: 10;">👁️</button>
                                         </div>
                                     </div>
 

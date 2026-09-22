@@ -450,7 +450,7 @@
             filterEl.addEventListener('input', function () {
                 var term = this.value.trim().toLowerCase();
                 renderPros(currentServices.filter(function (service) {
-                    var haystack = (service.name + ' + (service.tagline || '')).toLowerCase();
+                    var haystack = ((service.name || '') + ' ' + (service.tagline || '')).toLowerCase();
                     return haystack.indexOf(term) !== -1;
                 }));
             });
@@ -483,8 +483,14 @@
             modal.setAttribute('data-active', mode);
             if (tabsWrap) tabsWrap.setAttribute('data-active', mode);
             document.querySelectorAll('.proyetech-auth-tab').forEach(function (tab) {
-                tab.classList.toggle('is-active', tab.getAttribute('data-auth-tab') === mode);
+                var isActive = tab.getAttribute('data-auth-tab') === mode;
+                tab.classList.toggle('is-active', isActive);
+                tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
             });
+            setTimeout(function () {
+                var firstInput = modal.querySelector('.proyetech-auth-pane[data-auth-pane="' + mode + '"] input:not([type="hidden"])');
+                if (firstInput) firstInput.focus();
+            }, 100);
         }
 
         function openAuth(mode) {
@@ -513,6 +519,11 @@
         if (closeBtn) closeBtn.addEventListener('click', closeAuth);
         modal.addEventListener('click', function (event) { if (event.target === modal) closeAuth(); });
         document.addEventListener('keydown', function (event) { if (event.key === 'Escape') closeAuth(); });
+
+        window.addEventListener('resize', function () {
+            var currentMode = modal.getAttribute('data-active') || 'login';
+            adjustHeight(currentMode);
+        });
 
         document.querySelectorAll('[data-social]').forEach(function (button) {
             button.addEventListener('click', function () {

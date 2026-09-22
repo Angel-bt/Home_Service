@@ -364,7 +364,10 @@ body.proyetech-locked { overflow: hidden; }
     background: #fff;
     border-radius: 20px;
     box-shadow: 0 34px 80px rgba(15, 23, 42, .32);
-    max-width: 460px;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    max-width: 480px;
     overflow: hidden;
     position: relative;
     transform: translateY(18px) scale(.97);
@@ -430,12 +433,12 @@ body.proyetech-locked { overflow: hidden; }
     z-index: 1;
 }
 .proyetech-auth-tab.is-active { color: #172033; }
-.proyetech-auth-panes { overflow: hidden; padding: 20px 24px 26px; }
-.proyetech-auth-track { display: flex; transition: transform .34s cubic-bezier(.4, 0, .2, 1); width: 200%; }
-.proyetech-auth-tabs-wrap { overflow: hidden; }
-.proyetech-auth-modal[data-active="register"] .proyetech-auth-track { transform: translateX(-50%); }
-.proyetech-auth-pane { width: 50%; }
-.proyetech-auth-field { display: grid; gap: 6px; margin-bottom: 14px; }
+.proyetech-auth-panes { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 18px 24px 22px; }
+.proyetech-auth-track { display: block; position: relative; width: 100%; }
+.proyetech-auth-pane { display: none; width: 100%; }
+.proyetech-auth-modal[data-active="login"] .proyetech-auth-pane[data-auth-pane="login"] { display: block; }
+.proyetech-auth-modal[data-active="register"] .proyetech-auth-pane[data-auth-pane="register"] { display: block; }
+.proyetech-auth-field { display: grid; gap: 4px; margin-bottom: 10px; }
 .proyetech-auth-field label { color: #475569; font: 600 12px Inter, system-ui, sans-serif; }
 .proyetech-auth-input {
     background: #f8fafc;
@@ -443,8 +446,8 @@ body.proyetech-locked { overflow: hidden; }
     border-radius: 10px;
     color: #172033;
     font: 14px Inter, system-ui, sans-serif;
-    min-height: 46px;
-    padding: 0 14px;
+    min-height: 42px;
+    padding: 0 12px;
     transition: border-color .18s ease, box-shadow .18s ease;
     width: 100%;
 }
@@ -463,7 +466,8 @@ body.proyetech-locked { overflow: hidden; }
     display: flex;
     font: 700 14px Inter, system-ui, sans-serif;
     justify-content: center;
-    min-height: 50px;
+    margin-top: 6px;
+    min-height: 44px;
     transition: transform .18s ease, box-shadow .18s ease;
     width: 100%;
 }
