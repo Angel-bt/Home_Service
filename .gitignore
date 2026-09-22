@@ -14,3 +14,26 @@ yarn-error.log
 /.vscode
 
 HomeServices.zip
+
+# Local SQLite Database
+/database/database.sqlite
+/database/database.sqlite-journal
+
+# Storage & Logs
+/storage/logs/*.log
+/storage/framework/cache/*
+!/storage/framework/cache/.gitignore
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitignore
+/storage/framework/views/*
+!/storage/framework/views/.gitignore
+/bootstrap/cache/livewire-components.php
+/bootstrap/cache/packages.php
+/bootstrap/cache/services.php
+/bootstrap/cache/config.php
+/bootstrap/cache/routes-v7.php
+
+# OS & Temp Files
+.DS_Store
+Thumbs.db
+
