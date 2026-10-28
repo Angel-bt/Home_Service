@@ -146,6 +146,7 @@
                                             @endif
                                             
                                             <div class="border-t border-gray-100 my-1"></div>
+                                            <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Mi cuenta y seguridad</a>
                                             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">Cerrar Sesión</a>
                                         </div>
                                     </div>
@@ -296,6 +297,7 @@
         });
     </script>
     
+    @stack('modals')
     @livewireScripts
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @stack('scripts') <!-- Asegura que las vistas puedan agregar scripts adicionales -->
@@ -335,7 +337,7 @@
 </script>
 @endif
 
-@if ($errors->any())
+@if (isset($errors) && $errors->any())
 <script>
     Swal.fire({
         icon: 'error',

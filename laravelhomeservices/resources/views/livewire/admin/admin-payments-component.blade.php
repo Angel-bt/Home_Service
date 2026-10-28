@@ -12,7 +12,7 @@
                             <div class="row">
                                 <div class="col-md-6">Comprobantes y pagos ({{ $pendingCount }} en revisión)</div>
                                 <div class="col-md-6">
-                                    <select class="form-control pull-right" style="max-width: 220px;" wire:model="status">
+                                    <select class="form-control pull-right" style="max-width: 220px;" wire:model.live="status">
                                         <option value="">Todos</option>
                                         @foreach (\App\Models\SubscriptionPayment::STATUS_LABELS as $value => $label)
                                             <option value="{{ $value }}">{{ $label }}</option>
@@ -82,7 +82,7 @@
                                                     <tr wire:key="reject-{{ $payment->id }}">
                                                         <td colspan="9">
                                                             <form wire:submit.prevent="reject" class="form-inline">
-                                                                <input type="text" class="form-control" style="min-width: 360px;" wire:model.defer="rejectReason" placeholder="Motivo (lo verá el proveedor), ej.: no encontramos la transferencia">
+                                                                <input type="text" class="form-control" style="min-width: 360px;" wire:model="rejectReason" placeholder="Motivo (lo verá el proveedor), ej.: no encontramos la transferencia">
                                                                 <button type="submit" class="btn btn-danger">Rechazar pago</button>
                                                                 <button type="button" class="btn btn-link" wire:click="$set('rejectingId', null)">Cancelar</button>
                                                                 @error('rejectReason') <div class="text-danger">{{ $message }}</div> @enderror

@@ -48,7 +48,7 @@
                                 <div class="panel-body">
                                     <div class="form-group">
                                         <label for="periods">Periodo</label>
-                                        <select id="periods" class="form-control" wire:model="periods">
+                                        <select id="periods" class="form-control" wire:model.live="periods">
                                             @foreach ($periodOptions as $option)
                                                 <option value="{{ $option }}">{{ $option * $periodDays }} días — ${{ number_format($price * $option, 2) }}</option>
                                             @endforeach
@@ -90,7 +90,7 @@
                                         <form wire:submit.prevent="submitReceipt">
                                             <div class="form-group">
                                                 <label for="method">Método</label>
-                                                <select id="method" class="form-control" wire:model.defer="method">
+                                                <select id="method" class="form-control" wire:model="method">
                                                     <option value="transfer">Transferencia bancaria</option>
                                                     <option value="deuna">DeUna</option>
                                                 </select>
@@ -98,7 +98,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="reference">Número de comprobante / referencia</label>
-                                                <input type="text" id="reference" class="form-control" wire:model.defer="reference">
+                                                <input type="text" id="reference" class="form-control" wire:model="reference">
                                                 @error('reference') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
                                             <div class="form-group">

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Service;
 
+use App\Http\Livewire\Concerns\ThrottlesActions;
 use App\Models\Service;
 use App\Models\ServiceRequest;
 use App\Services\ServiceVisitCounter;
@@ -15,6 +16,8 @@ use Throwable;
 
 class ServiceDetailsComponent extends Component
 {
+    use ThrottlesActions;
+
     public string $service_slug;
 
     public int $views = 0;
@@ -86,6 +89,10 @@ class ServiceDetailsComponent extends Component
         }
 
         $data = $this->validate();
+
+        if (! $this->withinRateLimit('service-request', (string) $user->id, 5, 600, 'message')) {
+            return null;
+        }
 
         ServiceRequest::create($data + [
             'service_id' => $service->id,

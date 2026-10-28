@@ -1,10 +1,6 @@
 require('./bootstrap');
 
-import Alpine from 'alpinejs';
-
-window.Alpine = Alpine;
-
-Alpine.start();
+// Alpine se carga con Livewire 3 (@livewireScripts); importarlo aquí lo duplicaría.
 
 import Swal from 'sweetalert2';
 window.Swal = Swal;

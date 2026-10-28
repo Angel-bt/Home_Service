@@ -138,17 +138,17 @@
                                             <form wire:submit.prevent="submitRequest">
                                                 <div class="form-group">
                                                     <label for="req-name">Nombre</label>
-                                                    <input type="text" id="req-name" class="form-control" wire:model.defer="name">
+                                                    <input type="text" id="req-name" class="form-control" wire:model="name">
                                                     @error('name') <div class="text-danger">{{ $message }}</div> @enderror
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="req-phone">Celular / WhatsApp</label>
-                                                    <input type="tel" id="req-phone" class="form-control" wire:model.defer="phone" placeholder="0991234567">
+                                                    <input type="tel" id="req-phone" class="form-control" wire:model="phone" placeholder="0991234567">
                                                     @error('phone') <div class="text-danger">{{ $message }}</div> @enderror
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="req-zone">Zona</label>
-                                                    <select id="req-zone" class="form-control" wire:model.defer="zone">
+                                                    <select id="req-zone" class="form-control" wire:model="zone">
                                                         <option value="">Selecciona tu zona</option>
                                                         @foreach ($zones as $slug => $label)
                                                             <option value="{{ $slug }}">{{ $label }}</option>
@@ -158,17 +158,17 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="req-address">Dirección o referencia</label>
-                                                    <input type="text" id="req-address" class="form-control" wire:model.defer="address" placeholder="Barrio, quinta, referencia">
+                                                    <input type="text" id="req-address" class="form-control" wire:model="address" placeholder="Barrio, quinta, referencia">
                                                     @error('address') <div class="text-danger">{{ $message }}</div> @enderror
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="req-date">Fecha preferida (opcional)</label>
-                                                    <input type="date" id="req-date" class="form-control" wire:model.defer="preferred_date" min="{{ now()->toDateString() }}">
+                                                    <input type="date" id="req-date" class="form-control" wire:model="preferred_date" min="{{ now()->toDateString() }}">
                                                     @error('preferred_date') <div class="text-danger">{{ $message }}</div> @enderror
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="req-message">¿Qué necesitas?</label>
-                                                    <textarea id="req-message" rows="3" class="form-control" wire:model.defer="message"></textarea>
+                                                    <textarea id="req-message" rows="3" class="form-control" wire:model="message"></textarea>
                                                     @error('message') <div class="text-danger">{{ $message }}</div> @enderror
                                                 </div>
                                                 <button type="submit" class="btn btn-primary btn-block" wire:loading.attr="disabled">Enviar solicitud</button>

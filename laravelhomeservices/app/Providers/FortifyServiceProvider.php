@@ -25,6 +25,11 @@ class FortifyServiceProvider extends ServiceProvider
             \Laravel\Fortify\Contracts\LoginResponse::class,
             \App\Http\Responses\LoginResponse::class
         );
+
+        $this->app->bind(
+            \Laravel\Fortify\Contracts\FailedPasswordResetLinkRequestResponse::class,
+            \App\Http\Responses\NeutralPasswordResetLinkResponse::class
+        );
     }
 
     /**

@@ -26,7 +26,7 @@ class AdminAddServiceCategoryComponent extends Component
         $this->validateOnly($fields, [
             'name' => 'required',
             'slug' => 'required',
-            'image' => 'required|mimes:png,jpg,jpeg'
+            'image' => 'required|image|mimes:png,jpg,jpeg,webp|max:4096'
         ]);
     }
 
@@ -35,7 +35,7 @@ class AdminAddServiceCategoryComponent extends Component
         $this->validate([
             'name' => 'required',
             'slug' => 'required',
-            'image' => 'required|mimes:png,jpg,jpeg'
+            'image' => 'required|image|mimes:png,jpg,jpeg,webp|max:4096'
         ]);
 
         $scategory = new ServiceCategory();

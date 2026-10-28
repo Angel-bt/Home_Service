@@ -49,6 +49,13 @@ return [
     'encrypt' => false,
 
     /*
+    | JSON instead of PHP serialization: the session never stores objects, and
+    | it prevents deserialization gadget chains (Laravel 13 default).
+    */
+
+    'serialization' => env('SESSION_SERIALIZATION', 'json'),
+
+    /*
     |--------------------------------------------------------------------------
     | Session File Location
     |--------------------------------------------------------------------------

@@ -22,7 +22,7 @@ class ChangeLocationComponent extends Component
         session()->put('country', $this->country);
         session()->put('zipcode', $this->zipcode);
         session()->flash('message', 'Tu ubicación se guardó.');
-        $this->emitTo('location-component', 'refreshComponent');
+        $this->dispatch('refreshComponent')->to('location-component');
     }
 
     public function render()

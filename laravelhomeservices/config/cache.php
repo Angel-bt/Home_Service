@@ -107,4 +107,23 @@ return [
 
     'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Serializable Classes
+    |--------------------------------------------------------------------------
+    |
+    | Only these classes may be unserialized from the cache, which blocks PHP
+    | gadget chains if APP_KEY or Redis is ever exposed. The home page caches
+    | Eloquent collections of these models (see HomeComponent).
+    |
+    */
+
+    'serializable_classes' => [
+        Illuminate\Database\Eloquent\Collection::class,
+        App\Models\Service::class,
+        App\Models\ServiceCategory::class,
+        App\Models\Slider::class,
+        App\Models\User::class,
+    ],
+
 ];

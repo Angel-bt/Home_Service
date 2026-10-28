@@ -41,7 +41,6 @@ use App\Http\Livewire\AboutComponent;
 use App\Http\Livewire\FaqComponent;
 use App\Http\Livewire\TermsComponent;
 use App\Http\Livewire\PrivacyComponent;
-use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\VisitController;
 
 
@@ -86,12 +85,10 @@ Route::get('/billing/payphone/return', [BillingController::class, 'payphoneRetur
 Route::get('/autocomplete', [SearchController::class, 'autocomplete'])->name('autocomplete');
 Route::post('/search', [SearchController::class, 'searchService'])->name('searchService');
 
-Route::get('password/reset', [PasswordResetController::class, 'showResetForm'])->name('password.request');
-Route::post('password/reset', [PasswordResetController::class, 'sendResetLink'])->name('password.email');
 
 
 // Ruta para incrementar el contador de visitas (POST: efecto secundario, no debe ser GET)
-Route::post('/increment-visit', [VisitController::class, 'incrementVisit'])->name('increment.visit');
+Route::post('/increment-visit', [VisitController::class, 'incrementVisit'])->middleware('throttle:60,1')->name('increment.visit');
 
 // For Admin
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified', 'authadmin'])->group(function () {

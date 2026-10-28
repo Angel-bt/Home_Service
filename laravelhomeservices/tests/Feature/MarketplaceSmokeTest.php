@@ -9,6 +9,7 @@ use App\Models\ServiceCategory;
 use App\Models\ServiceProvider;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 /**
@@ -49,7 +50,7 @@ class MarketplaceSmokeTest extends TestCase
     /**
      * @return array<string, array{string}>
      */
-    public function publicUrls(): array
+    public static function publicUrls(): array
     {
         return [
             'home' => ['/'],
@@ -67,9 +68,7 @@ class MarketplaceSmokeTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider publicUrls
-     */
+    #[DataProvider('publicUrls')]
     public function test_public_pages_render(string $url): void
     {
         $this->get($url)->assertOk();

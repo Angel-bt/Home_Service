@@ -5,34 +5,41 @@ declare(strict_types=1);
 namespace App\Http\Livewire;
 
 use App\Models\Contact;
+use App\Http\Livewire\Concerns\ThrottlesActions;
 use App\Jobs\SendNewLeadNotification;
 use Livewire\Component;
 
 class ContactComponent extends Component
 {
+    use ThrottlesActions;
+
     public $name;
     public $email;
     public $phone;
     public $message;
 
+    protected function rules(): array
+    {
+        return [
+            'name' => 'required|string|max:120',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+            'message' => 'required|string|max:2000',
+        ];
+    }
+
     public function updated($fields)
     {
-        $this->validateOnly($fields, [
-            'name' => 'required',
-            'email' => 'required|email',
-            'phone' => 'required',
-            'message' => 'required'
-        ]);
+        $this->validateOnly($fields);
     }
 
     public function sendMessage(): void
     {
-        $this->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'phone' => 'required',
-            'message' => 'required'
-        ]);
+        $this->validate();
+
+        if (! $this->withinRateLimit('contact', (string) request()->ip(), 5, 600, 'message')) {
+            return;
+        }
 
         $contact = new Contact();
         $contact->name = $this->name;

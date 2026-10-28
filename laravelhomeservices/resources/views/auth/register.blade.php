@@ -23,7 +23,7 @@
                         <div class="col-xs-12 col-sm-6 col-md-6 profile1" style="min-height: 300px;">
                             <div class="thinborder-ontop">
                                 <h3>Tus datos</h3>
-                                <x-jet-validation-errors class="mb-4" />
+                                <x-validation-errors class="mb-4" />
                                 <form id="userregistrationform" method="POST" action="{{ route('register') }}">
                                     @csrf
                                     <div class="form-group row">

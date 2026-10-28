@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Sprovider;
 
+use App\Http\Livewire\Concerns\ThrottlesActions;
 use App\Models\SubscriptionPayment;
 use App\Services\ProPlanBilling;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +18,7 @@ use Livewire\WithFileUploads;
  */
 class SproviderPlanComponent extends Component
 {
+    use ThrottlesActions;
     use WithFileUploads;
 
     public const PERIOD_OPTIONS = [1, 3, 6, 12];
@@ -48,6 +50,10 @@ class SproviderPlanComponent extends Component
         $this->validate();
 
         $user = Auth::user();
+
+        if (! $this->withinRateLimit('receipt', (string) $user->id, 5, 3600, 'reference')) {
+            return;
+        }
 
         if ($user->subscriptionPayments()->where('status', SubscriptionPayment::PENDING)->exists()) {
             $this->addError('reference', 'Ya tienes un pago en revisión. Espera a que lo confirmemos.');

@@ -19,7 +19,7 @@ class AdminAddSlideComponent extends Component
     {
         $this->validateOnly($fields, [
             'title' => 'required',
-            'image' => 'required|mimes:png,jpg,jpeg'
+            'image' => 'required|image|mimes:png,jpg,jpeg,webp|max:4096'
         ]);
     }
 
@@ -27,7 +27,7 @@ class AdminAddSlideComponent extends Component
     {
         $this->validate([
             'title' => 'required',
-            'image' => 'required|mimes:png,jpg,jpeg'
+            'image' => 'required|image|mimes:png,jpg,jpeg,webp|max:4096'
         ]);
 
         $slide = new Slider();

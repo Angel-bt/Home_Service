@@ -195,8 +195,6 @@
 
     @endpush
     
-</div>
-
 <style>
     table {
         width: 100%;
@@ -220,3 +218,4 @@
         background-color: #f1f1f1;
     }
 </style>
+</div>

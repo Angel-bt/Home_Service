@@ -4,7 +4,7 @@
         <div class="container" style="padding-top: 30px;">
             <div class="row">
                 <div class="col-sm-8">
-                    <input type="search" class="form-control input-lg" wire:model.debounce.400ms="q" placeholder="¿Qué necesitas? Ej.: plomero, jardinería, piscina" aria-label="Buscar servicios" autofocus>
+                    <input type="search" class="form-control input-lg" wire:model.live.debounce.400ms="q" placeholder="¿Qué necesitas? Ej.: plomero, jardinería, piscina" aria-label="Buscar servicios" autofocus>
                 </div>
                 <div class="col-sm-4">
                     <div class="input-lg" style="padding: 0;">@include('livewire.partials.zone-select')</div>

@@ -61,4 +61,7 @@ Set the price and payment details through `BILLING_*` and `PAYPHONE_*` (see `.en
 
 ## Required environment
 
+The server needs **PHP 8.3 or newer** (Laravel 13) with the `redis` extension. Deploying the Laravel 13 upgrade switches sessions to JSON serialization, so everyone is logged out once.
+
+
 Copy the non-secret keys from `.env.production.example` into the production environment. At minimum, set `CACHE_DRIVER=redis`, `SESSION_DRIVER=redis`, `QUEUE_CONNECTION=redis`, the Redis connection values, SMTP settings, and the lead notification address. After changing environment values, run `php artisan config:cache`.

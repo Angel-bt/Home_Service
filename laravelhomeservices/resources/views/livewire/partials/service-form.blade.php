@@ -7,21 +7,21 @@
     <div class="form-group">
         <label for="name" class="control-label col-sm-3">Nombre:</label>
         <div class="col-sm-9">
-            <input type="text" id="name" class="form-control" wire:model.lazy="name" wire:change="generateSlug" placeholder="Ej.: Mantenimiento de piscinas"/>
+            <input type="text" id="name" class="form-control" wire:model.blur="name" wire:change="generateSlug" placeholder="Ej.: Mantenimiento de piscinas"/>
             @error('name') <div class="text-danger">{{ $message }}</div> @enderror
         </div>
     </div>
     <div class="form-group">
         <label for="slug" class="control-label col-sm-3">Enlace (slug):</label>
         <div class="col-sm-9">
-            <input type="text" id="slug" class="form-control" wire:model.lazy="slug"/>
+            <input type="text" id="slug" class="form-control" wire:model.blur="slug"/>
             @error('slug') <div class="text-danger">{{ $message }}</div> @enderror
         </div>
     </div>
     <div class="form-group">
         <label for="tagline" class="control-label col-sm-3">Frase corta:</label>
         <div class="col-sm-9">
-            <input type="text" id="tagline" class="form-control" wire:model.lazy="tagline" placeholder="Ej.: Limpieza y químicos incluidos"/>
+            <input type="text" id="tagline" class="form-control" wire:model.blur="tagline" placeholder="Ej.: Limpieza y químicos incluidos"/>
             @error('tagline') <div class="text-danger">{{ $message }}</div> @enderror
         </div>
     </div>
@@ -40,14 +40,14 @@
     <div class="form-group">
         <label for="price" class="control-label col-sm-3">Precio desde (USD):</label>
         <div class="col-sm-9">
-            <input type="number" step="0.01" min="0" id="price" class="form-control" wire:model.lazy="price"/>
+            <input type="number" step="0.01" min="0" id="price" class="form-control" wire:model.blur="price"/>
             @error('price') <div class="text-danger">{{ $message }}</div> @enderror
         </div>
     </div>
     <div class="form-group">
         <label for="discount" class="control-label col-sm-3">Descuento:</label>
         <div class="col-sm-5">
-            <input type="number" step="0.01" min="0" id="discount" class="form-control" wire:model.lazy="discount"/>
+            <input type="number" step="0.01" min="0" id="discount" class="form-control" wire:model.blur="discount"/>
             @error('discount') <div class="text-danger">{{ $message }}</div> @enderror
         </div>
         <div class="col-sm-4">
@@ -73,21 +73,21 @@
     <div class="form-group">
         <label for="description" class="control-label col-sm-3">Descripción:</label>
         <div class="col-sm-9">
-            <textarea id="description" rows="4" class="form-control" wire:model.lazy="description"></textarea>
+            <textarea id="description" rows="4" class="form-control" wire:model.blur="description"></textarea>
             @error('description') <div class="text-danger">{{ $message }}</div> @enderror
         </div>
     </div>
     <div class="form-group">
         <label for="inclusion" class="control-label col-sm-3">Qué incluye:</label>
         <div class="col-sm-9">
-            <textarea id="inclusion" rows="3" class="form-control" wire:model.lazy="inclusion" placeholder="Una línea por cada punto"></textarea>
+            <textarea id="inclusion" rows="3" class="form-control" wire:model.blur="inclusion" placeholder="Una línea por cada punto"></textarea>
             @error('inclusion') <div class="text-danger">{{ $message }}</div> @enderror
         </div>
     </div>
     <div class="form-group">
         <label for="exclusion" class="control-label col-sm-3">Qué no incluye:</label>
         <div class="col-sm-9">
-            <textarea id="exclusion" rows="3" class="form-control" wire:model.lazy="exclusion" placeholder="Una línea por cada punto"></textarea>
+            <textarea id="exclusion" rows="3" class="form-control" wire:model.blur="exclusion" placeholder="Una línea por cada punto"></textarea>
             @error('exclusion') <div class="text-danger">{{ $message }}</div> @enderror
         </div>
     </div>

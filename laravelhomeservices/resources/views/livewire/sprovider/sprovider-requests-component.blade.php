@@ -11,7 +11,7 @@
                                     <div class="row">
                                         <div class="col-md-6">{{ $isAdmin ? 'Todas las solicitudes' : 'Clientes que pidieron tus servicios' }}</div>
                                         <div class="col-md-6">
-                                            <select class="form-control pull-right" style="max-width: 220px;" wire:model="status">
+                                            <select class="form-control pull-right" style="max-width: 220px;" wire:model.live="status">
                                                 <option value="">Todos los estados</option>
                                                 @foreach (\App\Models\ServiceRequest::LABELS as $value => $label)
                                                     <option value="{{ $value }}">{{ $label }}</option>

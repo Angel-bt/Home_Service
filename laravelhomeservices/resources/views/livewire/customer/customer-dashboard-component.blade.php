@@ -60,12 +60,12 @@
                                                         <td colspan="6">
                                                             <form wire:submit.prevent="saveReview" class="form-inline">
                                                                 <label for="rating-{{ $request->id }}">Calificación:</label>
-                                                                <select id="rating-{{ $request->id }}" class="form-control" wire:model.defer="rating">
+                                                                <select id="rating-{{ $request->id }}" class="form-control" wire:model="rating">
                                                                     @for ($i = 5; $i >= 1; $i--)
                                                                         <option value="{{ $i }}">{{ str_repeat('★', $i) }} ({{ $i }})</option>
                                                                     @endfor
                                                                 </select>
-                                                                <input type="text" class="form-control" style="min-width: 300px;" wire:model.defer="comment" placeholder="Cuéntanos cómo fue el trabajo (opcional)">
+                                                                <input type="text" class="form-control" style="min-width: 300px;" wire:model="comment" placeholder="Cuéntanos cómo fue el trabajo (opcional)">
                                                                 <button type="submit" class="btn btn-success">Enviar reseña</button>
                                                                 <button type="button" class="btn btn-link" wire:click="$set('reviewingId', null)">Cancelar</button>
                                                                 @error('rating') <div class="text-danger">{{ $message }}</div> @enderror

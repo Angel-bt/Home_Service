@@ -14,6 +14,9 @@ module.exports = {
         preflight: false,
     },
 
+    // The site has no dark theme; keep Jetstream's dark: variants from following the OS setting.
+    darkMode: 'class',
+
     theme: {
         extend: {
             fontFamily: {

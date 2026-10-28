@@ -3,7 +3,8 @@
 ## Layout
 
 - The application lives in `laravelhomeservices/`; the repo root is just that folder plus `estructura.txt`; tutorial notes/links live in `laravelhomeservices/pasos .txt`. Run every command from `laravelhomeservices/`.
-- Laravel 9 + Livewire 2 full-page components + Jetstream 2/Fortify auth + Sanctum + Tailwind. PHP `^8.0.2`. Legacy HTML theme is committed under `public/assets/`.
+- Laravel 13 + Livewire 3 full-page components + Jetstream 5/Fortify auth + Sanctum 4 + Tailwind (via Mix). PHP `^8.3`. Legacy Bootstrap 3 HTML theme is committed under `public/assets/`.
+- The app keeps the pre-Laravel-11 structure (`app/Http/Kernel.php`, `app/Console/Kernel.php`, `RouteServiceProvider`, `Exceptions/Handler`); Laravel 13 still supports it. Register middleware in `Kernel::$middlewareAliases`.
 
 ## Local dev
 
@@ -16,7 +17,7 @@
 
 ## Tests
 
-- `php artisan test` (or `vendor/bin/phpunit`). `phpunit.xml` overrides to sqlite `:memory:`, array cache/session, sync queue — no MySQL/Redis needed.
+- `php artisan test` (or `vendor/bin/phpunit`, PHPUnit 12: use `#[DataProvider]` attributes with static providers, not docblock annotations). `phpunit.xml` overrides to sqlite `:memory:`, array cache/session, sync queue — no MySQL/Redis needed.
 - Besides stock Jetstream tests, `tests/Feature/MarketplaceSmokeTest.php` renders every public/admin/provider/customer page and covers registration roles. `tests/Feature/MarketplaceFlowTest.php` covers provider publishing/freemium, profile zones, the request → review flow, search and zone filters. `ServiceDetailsComponent` swallows (and reports) visit-counter failures, so `/service/{slug}` renders without Redis.
 
 ## Domain model and roles
@@ -32,6 +33,13 @@
 - Pro plan billing (no Stripe: it doesn't serve Ecuador): manual transfer/DeUna receipts on the private `receipts` disk, approved in `/admin/payments`, plus optional Payphone card payments (`PayphoneGateway`, `BillingController`). Always change plan state through `App\Services\ProPlanBilling::approve()/reject()` (idempotent, extends from current expiry). Payphone payments start as `initiated` and are approved only after a server-side Confirm matching `clientTransactionId` and amount; `/billing/payphone/return` is intentionally unauthenticated. Tests fake Payphone with `Http::fake()`.
 
 ## Gotchas
+
+- Livewire 3: components stay in `App\Http\Livewire` (`config/livewire.php` `class_namespace`), default layout `layouts.base`. `wire:model` is deferred; use `wire:model.live` for inputs that must re-render (zone/status/period selects, search with `.live.debounce`), `.blur` instead of v2 `.lazy`. Events: `$this->dispatch(...)->to(...)`. Every component view needs exactly one root element (put `<script>`/`<style>` inside it or in `@push('scripts')`).
+- `AuthAdmin`/`AuthSprovider` are Livewire persistent middleware (`AppServiceProvider`), so role checks also run on `/livewire/update` requests.
+- Jetstream 5 views/components are published (`resources/views/components`, `x-button`, no `x-jet-` prefix). `layouts/app.blade.php` wraps `<x-base-layout>` so account pages (`/user/profile`) use the site header; there is no `dashboard` route. Jetstream strings are translated in `lang/es.json`. Tailwind `darkMode: 'class'` keeps Jetstream's `dark:` styles off.
+- Password reset uses Fortify only (`/forgot-password`, `password.request`); `NeutralPasswordResetLinkResponse` answers unknown e-mails like sent links. Don't re-add custom routes with Fortify's names: duplicate names break `route:cache`.
+- Sessions use JSON serialization and the cache only unserializes `cache.serializable_classes` (the models cached by `HomeComponent`). Caching a new object type requires adding its classes there.
+- Livewire actions that send data (contact, service request, Pro receipt) are rate limited with `Concerns\ThrottlesActions`; route `throttle` does not cover `/livewire/update`.
 
 - `AdminServicesByCategoryComponent` is now only served by the `authadmin` route `/admin/{category_slug}/services`; its `deleteService()` also re-checks `Auth::user()->utype === 'ADM'`. The former public `servicesbycategory/{category_slug}` route was removed — public category links use `home.services_by_category` (`/{category_slug}/services`).
 - Home page cache keys (`home:*`, Redis, TTL `MARKETPLACE_CACHE_TTL` default 3600s) are only invalidated when `Service`, `ServiceCategory`, or `Slider` save/delete. After external edits, `php artisan cache:clear`.

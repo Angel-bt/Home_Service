@@ -37,7 +37,7 @@
                                         <div class="form-group">
                                             <label for="whatsapp" class="control-label col-sm-3">WhatsApp:</label>
                                             <div class="col-sm-9">
-                                                <input type="tel" id="whatsapp" class="form-control" wire:model.lazy="whatsapp" placeholder="0991234567"/>
+                                                <input type="tel" id="whatsapp" class="form-control" wire:model.blur="whatsapp" placeholder="0991234567"/>
                                                 <small class="text-muted">Los clientes te escribirán a este número.</small>
                                                 @error('whatsapp') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
@@ -47,7 +47,7 @@
                                             <div class="col-sm-9">
                                                 @foreach (config('marketplace.zones') as $slug => $label)
                                                     <label class="checkbox-inline" style="margin-right: 15px;">
-                                                        <input type="checkbox" value="{{ $slug }}" wire:model.defer="zones"> {{ $label }}
+                                                        <input type="checkbox" value="{{ $slug }}" wire:model="zones"> {{ $label }}
                                                     </label>
                                                 @endforeach
                                                 @error('zones') <div class="text-danger">{{ $message }}</div> @enderror
@@ -56,14 +56,14 @@
                                         <div class="form-group">
                                             <label for="about" class="control-label col-sm-3">Sobre ti:</label>
                                             <div class="col-sm-9">
-                                                <textarea id="about" class="form-control" wire:model.lazy="about" placeholder="Experiencia, especialidades, horarios..."></textarea>
+                                                <textarea id="about" class="form-control" wire:model.blur="about" placeholder="Experiencia, especialidades, horarios..."></textarea>
                                                 @error('about') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="city" class="control-label col-sm-3">Ciudad / parroquia:</label>
                                             <div class="col-sm-9">
-                                                <input type="text" id="city" class="form-control" wire:model.lazy="city" placeholder="Malacatos"/>
+                                                <input type="text" id="city" class="form-control" wire:model.blur="city" placeholder="Malacatos"/>
                                                 @error('city') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
                                         </div>
@@ -82,7 +82,7 @@
                                         <div class="form-group">
                                             <label for="service_location" class="control-label col-sm-3">Referencia de ubicación:</label>
                                             <div class="col-sm-9">
-                                                <input type="text" id="service_location" class="form-control" wire:model.lazy="service_location" placeholder="Barrio, sector o referencia"/>
+                                                <input type="text" id="service_location" class="form-control" wire:model.blur="service_location" placeholder="Barrio, sector o referencia"/>
                                                 @error('service_location') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
                                         </div>

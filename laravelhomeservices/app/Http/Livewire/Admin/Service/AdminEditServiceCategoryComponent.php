@@ -44,7 +44,7 @@ class AdminEditServiceCategoryComponent extends Component
 
         if ($this->newimage) {
             $this->validateOnly($fields, [
-                'newimage' => 'required|mimes:png,jpg,jpeg'
+                'newimage' => 'required|image|mimes:png,jpg,jpeg,webp|max:4096'
             ]);
         }
     }
@@ -58,7 +58,7 @@ class AdminEditServiceCategoryComponent extends Component
 
         if ($this->newimage) {
             $this->validate([
-                'newimage' => 'required|mimes:png,jpg,jpeg'
+                'newimage' => 'required|image|mimes:png,jpg,jpeg,webp|max:4096'
             ]);
         }
 
