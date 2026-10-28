@@ -19,18 +19,19 @@ class AdminDashboardComponent extends Component
             $totalServices = Service::count();
             $totalServiceCategory = ServiceCategory::count();
             $totalContacts = Contact::count(); // En lugar de `pendingRequests`
-             // Obtener el contador de visitas
-        $visit = Visit::firstOrCreate(['id' => 1]);
-        $visits = $visit->visits;
+            // Obtener el contador de visitas
+            $visitCount = Visit::counter()->visits;
 
-        // Obtener todas las visitas ordenadas por fecha de creación
-        $visits = Visit::orderBy('created_at', 'desc')->get();
+            // Obtener todas las visitas ordenadas por fecha de creación
+            $visits = Visit::orderBy('created_at', 'desc')->get();
 
             // Obtener las categorías de servicios con el número de servicios asociados
-        $serviceCategories = ServiceCategory::withCount('services')->orderBy('services_count', 'desc')->take(5)->get();
+            $serviceCategories = ServiceCategory::withCount('services')->orderBy('services_count', 'desc')->take(5)->get();
         } catch (\Exception $e) {
+            report($e);
             session()->flash('error', 'Error loading dashboard data.');
-            $totalUsers = $totalServices = $totalServiceCategory = $totalContacts = 0;
+            $totalUsers = $totalServices = $totalServiceCategory = $totalContacts = $visitCount = 0;
+            $visits = collect();
             $serviceCategories = collect(); // Inicializar una colección vacía en caso de error
         }
 
@@ -39,7 +40,8 @@ class AdminDashboardComponent extends Component
             'totalServices' => $totalServices,
             'totalServiceCategory' => $totalServiceCategory,
             'totalContacts' => $totalContacts, // Reemplazando `pendingRequests`
-            'visits' => $visits, // Pasar el contador de visitas a la vista
+            'visitCount' => $visitCount, // Contador global de visitas
+            'visits' => $visits, // Registros de visitas para la tabla
             'serviceCategories' => $serviceCategories, // Pasar las categorías de servicios a la vista
         ])->layout('layouts.base');
     }

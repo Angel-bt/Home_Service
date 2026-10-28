@@ -1,10 +1,10 @@
 {{-- resources/views/auth/password-reset.blade.php --}}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reset Password</title>
+    <title>Restablecer contraseña</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" >
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet" media="screen">
 </head>
@@ -14,8 +14,8 @@
     
     <div class="bg-white p-6 rounded shadow-md w-full max-w-md">
         <div class="neomorph-card">
-        <a href="/"><button class="neomorph-card">Home</button></a>
-        <h2 class="text-2xl font-semibold text-gray-800 text-center mb-4">Reset Password</h2>
+        <a href="/"><button class="neomorph-card">Inicio</button></a>
+        <h2 class="text-2xl font-semibold text-gray-800 text-center mb-4">Restablecer contraseña</h2>
 
         <p class="mb-4 text-sm text-gray-600 text-center">
             Enter your email address, and we will send you a link to reset your password.
@@ -40,10 +40,10 @@
         <form method="POST" action="{{ route('password.email') }}" class="space-y-4">
             @csrf
             <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
                 <input id="email" name="email" type="email" 
                        class="block mt-1 w-full p-2 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" 
-                       value="{{ old('email') }}" placeholder="example@example.com" required autofocus>
+                       value="{{ old('email') }}" placeholder="correo@ejemplo.com" required autofocus>
             </div>
             <div class="flex justify-end">
                 <button

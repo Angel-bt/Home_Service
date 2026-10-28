@@ -6,6 +6,8 @@ namespace App\Http\Livewire\Admin\Service;
 
 use App\Models\Service;
 use App\Models\ServiceCategory;
+use App\Services\ServiceAssetCleaner;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -21,24 +23,24 @@ class AdminServicesByCategoryComponent extends Component
 
     public function deleteService($service_id)
     {
+        abort_unless(Auth::check() && Auth::user()->utype === 'ADM', 403);
+
         $service = Service::find($service_id);
 
-        if ($service->thumbnail) {
-            unlink('images/services/thumbnails' . '/' . $service->thumbnail);
+        if ($service === null) {
+            return;
         }
 
-        if ($service->image) {
-            unlink('images/services' . '/' . $service->image);
-        }
+        app(ServiceAssetCleaner::class)->deleteFiles($service);
 
         $service->delete();
-        session()->flash('message', 'Service has been deleted successfully!');
+        session()->flash('message', 'El servicio se eliminó.');
     }
 
 
     public function render()
     {
-        $category = ServiceCategory::where('slug', $this->category_slug)->first();
+        $category = ServiceCategory::where('slug', $this->category_slug)->firstOrFail();
         $services = Service::query()->with(['category:id,name,slug', 'user:id,name'])->where('service_category_id', $category->id)->paginate(10);
         return view('livewire.admin.service.admin-services-by-category-component', ['category_name' => $category->name, 'services' => $services])->layout('layouts.base');
     }

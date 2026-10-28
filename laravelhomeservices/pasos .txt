@@ -1,0 +1,140 @@
+
+todos los videos :
+https://www.youtube.com/playlist?list=PLz_YkiqIHesuxBsGgvWy9YEa2qOBUW07R
+
+
+
+video 2
+https://www.youtube.com/watch?v=pP2uDhSJFS4&t=31s
+
+
+
+composer create-project laravel/laravel HomeServices
+
+
+
+ir a carpeta HomeServices
+
+
+composer require livewire/livewire
+
+
+
+
+
+
+
+
+
+0:02 / 9:37
+
+
+#4
+
+Laravel 8 Project Home Services - Changing the Login and Registration page Layout
+https://www.youtube.com/watch?v=kmqmvhPnoBA
+
+
+
+#5
+Laravel 8 Project Home Services - Add User Option and Phone On Register Page
+https://www.youtube.com/watch?v=dykMSbgBkTk
+
+
+#6
+
+
+
+
+0:02 / 19:16
+
+
+Laravel 8 Project Home Services - Create Service Categories
+https://www.youtube.com/watch?v=7O9HzHi0a5A
+
+
+
+#7
+
+
+
+
+0:15 / 11:19
+
+
+Laravel 8 Project Home Services - Admin Create Service Categories Page
+https://www.youtube.com/watch?v=N6rQ953JCUE
+
+
+
+#8
+Laravel 8 Project Home Services - Admin Add New Service Category
+https://www.youtube.com/watch?v=-LRImQHxuJg
+
+
+
+#9
+
+
+
+
+0:10 / 21:15
+
+
+Laravel 8 Project Home Services - Admin Edit Service Category
+https://www.youtube.com/watch?v=I01o2fxV8bw
+
+
+#10
+
+Laravel 8 Project Home Services - Admin Delete Service Category
+https://www.youtube.com/watch?v=OPJMJdf13XU
+
+
+
+
+#11
+
+
+
+
+
+0:08 / 18:58
+
+
+Laravel 8 Project Home Services - Create Services
+https://www.youtube.com/watch?v=Hj91GzWRLhM
+
+php artisan make:model Service -m
+
+
+
+#12
+Laravel 8 Project Home Services - Services by Category
+https://www.youtube.com/watch?v=fVLvQUCsi0o
+
+
+hasta aqui
+#13
+Laravel 8 Project Home Services - Admin Create Services Page
+https://www.youtube.com/watch?v=_kL6GQzjCxI
+
+
+
+#14
+Laravel 8 Project Home Services - Admin Fetch Services By Category
+https://www.youtube.com/watch?v=vvJblH_WADc
+
+
+
+
+
+
+
+0:33 / 28:53
+
+falta
+#15
+Laravel 8 Project Home Services - Admin Add New Service
+https://www.youtube.com/watch?v=xL6PPEJK-Dk
+

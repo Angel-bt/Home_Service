@@ -40,7 +40,7 @@ class AdminAddSlideComponent extends Component
         $slide->status = $this->status;
         $slide->save();
 
-        session()->flash('message', 'Slide has been created successfully!');
+        session()->flash('message', 'La diapositiva se creó correctamente.');
     }
 
     public function render()

@@ -19,7 +19,7 @@
                             <h1>{{ $category_name }} Services</h1>
                             <div class="crumbs">
                                 <ul>
-                                    <li><a href="/">Home</a></li>
+                                    <li><a href="/">Inicio</a></li>
                                     <li>/</li>
                                     <li>{{ $category_name }} Services</li>
                                 </ul>
@@ -40,7 +40,7 @@
                                                         {{ $category_name }} Services
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <a href="{{route('admin.add_service')}}" class="btn btn-info pull-right">Add New</a>
+                                                        <a href="{{route('admin.add_service')}}" class="btn btn-info pull-right">Agregar</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -52,13 +52,13 @@
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
-                                                            <th>Image</th>
-                                                            <th>Name</th>
-                                                            <th>Price</th>
-                                                            <th>Status</th>
-                                                            <th>Category</th>
-                                                            <th>Created At</th>
-                                                            <th>Action</th>
+                                                            <th>Imagen</th>
+                                                            <th>Nombre</th>
+                                                            <th>Precio</th>
+                                                            <th>Estado</th>
+                                                            <th>Categoría</th>
+                                                            <th>Creado el</th>
+                                                            <th>Acciones</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -73,7 +73,7 @@
                                                                 <td>{{ $service->created_at }}</td>
                                                                 <td>
                                                                 <a href="{{ route('admin.edit_service', ['service_slug' => $service->slug]) }}"><i class="fa fa-edit fa-2x text-info"></i></a>
-                                                                    <a href="#" onclick="confirm('Are you sure, you want to delete this service?') || event.stopImmediatePropagation()" style="margin-left:10px;" wire:click.prevent="deleteService({{$service->id}})"><i class="fa fa-times fa-2x text-danger"></i></a>
+                                                                    <a href="#" onclick="confirm('¿Seguro que quieres eliminar este servicio?') || event.stopImmediatePropagation()" style="margin-left:10px;" wire:click.prevent="deleteService({{$service->id}})"><i class="fa fa-times fa-2x text-danger"></i></a>
                                                                 </td>
                                                             </tr>
                                                         @endforeach
@@ -98,7 +98,7 @@
                             <h1>{{ $category_name }} Services</h1>
                             <div class="crumbs">
                                 <ul>
-                                    <li><a href="/">Home</a></li>
+                                    <li><a href="/">Inicio</a></li>
                                     <li>/</li>
                                     <li>{{ $category_name }} Services</li>
                                 </ul>
@@ -114,10 +114,10 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Image</th>
-                                            <th>Name</th>
-                                            <th>Price</th>
-                                            <th>Status</th>
+                                            <th>Imagen</th>
+                                            <th>Nombre</th>
+                                            <th>Precio</th>
+                                            <th>Estado</th>
                                         </tr>
                                     </thead>
                                     <tbody>

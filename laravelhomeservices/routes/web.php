@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\BillingController;
 use App\Http\Controllers\SearchController;
 use App\Http\Livewire\Admin\AdminDashboardComponent;
+use App\Http\Livewire\Admin\AdminPaymentsComponent;
 use App\Http\Livewire\Admin\Service\AdminAddServiceCategoryComponent;
 use App\Http\Livewire\Admin\Service\AdminAddServiceComponent;
 use App\Http\Livewire\Admin\Service\AdminAddSlideComponent;
@@ -22,10 +24,16 @@ use App\Http\Livewire\ContactComponent;
 use App\Http\Livewire\Customer\CustomerDashboardComponent;
 use App\Http\Livewire\HomeComponent;
 use App\Http\Livewire\Service\ChangeLocationComponent;
+use App\Http\Livewire\Service\SearchComponent;
 use App\Http\Livewire\Service\ServiceCategoriesComponent;
 use App\Http\Livewire\Service\ServiceDetailsComponent;
 use App\Http\Livewire\Service\ServicesByCategoryComponent;
 use App\Http\Livewire\Sprovider\EditSproviderProfileComponent;
+use App\Http\Livewire\Sprovider\SproviderAddServiceComponent;
+use App\Http\Livewire\Sprovider\SproviderPlanComponent;
+use App\Http\Livewire\Sprovider\SproviderEditServiceComponent;
+use App\Http\Livewire\Sprovider\SproviderRequestsComponent;
+use App\Http\Livewire\Sprovider\SproviderServicesComponent;
 use App\Http\Livewire\Sprovider\SproviderDashboardComponent;
 use App\Http\Livewire\Sprovider\SproviderProfileComponent;
 use Illuminate\Support\Facades\Route;
@@ -68,11 +76,13 @@ Route::get('/faq', FaqComponent::class)->name('home.faq');
 Route::get('/terms', TermsComponent::class)->name('home.terms');
 Route::get('/privacy', PrivacyComponent::class)->name('home.privacy');
 
-Route::get('/servicesbycategory/{category_slug}', AdminServicesByCategoryComponent::class)->name('services.by.category');
-
 // Public catalogue and search routes must remain accessible to visitors.
 Route::get('/{category_slug}/services', ServicesByCategoryComponent::class)->name('home.services_by_category');
 Route::get('/service/{service_slug}', ServiceDetailsComponent::class)->name('home.service_details');
+Route::get('/buscar', SearchComponent::class)->name('search');
+
+// Retorno de Payphone: sin auth (la sesión puede haber expirado); el pago se valida contra Payphone.
+Route::get('/billing/payphone/return', [BillingController::class, 'payphoneReturn'])->middleware('throttle:30,1')->name('billing.payphone.return');
 Route::get('/autocomplete', [SearchController::class, 'autocomplete'])->name('autocomplete');
 Route::post('/search', [SearchController::class, 'searchService'])->name('searchService');
 
@@ -80,11 +90,8 @@ Route::get('password/reset', [PasswordResetController::class, 'showResetForm'])-
 Route::post('password/reset', [PasswordResetController::class, 'sendResetLink'])->name('password.email');
 
 
-// Ruta para incrementar el contador de visitas
-Route::get('/increment-visit', [VisitController::class, 'incrementVisit']);
-
-// Ruta para reiniciar el contador de visitas
-Route::post('/reset-visits', [VisitController::class, 'resetVisits'])->name('reset.visits');
+// Ruta para incrementar el contador de visitas (POST: efecto secundario, no debe ser GET)
+Route::post('/increment-visit', [VisitController::class, 'incrementVisit'])->name('increment.visit');
 
 // For Admin
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified', 'authadmin'])->group(function () {
@@ -94,7 +101,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('/admin/service-categories', AdminServiceCategoryComponent::class)->name('admin.service_categories');
     Route::get('/admin/service-category/add', AdminAddServiceCategoryComponent::class)->name('admin.add_service_category');
     Route::get('/admin/service-category/edit/{category_id}', AdminEditServiceCategoryComponent::class)->name('admin.edit_service_category');
-    Route::get('/admin/service-categories', AdminServiceCategoryComponent::class)->name('admin.service_categories');
 
     Route::get('/admin/all-services', AdminServicesComponent::class)->name('admin.all_services');
     Route::get('/admin/{category_slug}/services', AdminServicesByCategoryComponent::class)->name('admin.services_by_category');
@@ -106,12 +112,18 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('/admin/slide/edit/{slide_id}', AdminEditSlideComponent::class)->name('admin.edit_slide');
 
     Route::get('/admin/contacts', AdminContactComponent::class)->name('admin.contacts');
+    Route::get('/admin/service-requests', SproviderRequestsComponent::class)->name('admin.service_requests');
+    Route::get('/admin/payments', AdminPaymentsComponent::class)->name('admin.payments');
+    Route::get('/admin/payments/{payment}/receipt', [BillingController::class, 'receipt'])->name('admin.payment_receipt');
 
     Route::get('/admin/service-providers', AdminServiceProvidersComponent::class)->name('admin.service_providers');
     Route::get('/admin/about', AdminAboutComponent::class)->name('admin.about');
     Route::get('/admin/faq', AdminFaqComponent::class)->name('admin.faq');
     Route::get('/admin/terms', AdminTermsComponent::class)->name('admin.terms');
     Route::get('/admin/privacy', AdminPrivacyComponent::class)->name('admin.privacy');
+
+    // Ruta de reset del contador de visitas (solo administradores).
+    Route::post('/reset-visits', [VisitController::class, 'resetVisits'])->name('reset.visits');
 
 });
 
@@ -120,6 +132,12 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('/sprovider/dashboard', SproviderDashboardComponent::class)->name('sprovider.dashboard');
     Route::get('/sprovider/profile', SproviderProfileComponent::class)->name('sprovider.profile');
     Route::get('/sprovider/profile/edit', EditSproviderProfileComponent::class)->name('sprovider.edit_profile');
+    Route::get('/sprovider/my-services', SproviderServicesComponent::class)->name('sprovider.services');
+    Route::get('/sprovider/service/add', SproviderAddServiceComponent::class)->name('sprovider.add_service');
+    Route::get('/sprovider/service/edit/{service_slug}', SproviderEditServiceComponent::class)->name('sprovider.edit_service');
+    Route::get('/sprovider/requests', SproviderRequestsComponent::class)->name('sprovider.requests');
+    Route::get('/sprovider/plan', SproviderPlanComponent::class)->name('sprovider.plan');
+    Route::post('/sprovider/plan/payphone', [BillingController::class, 'startPayphone'])->middleware('throttle:10,1')->name('billing.payphone.start');
 });
 
 // For Customer

@@ -2,21 +2,39 @@
 
 namespace App\Http\Livewire\Service;
 
+use App\Http\Livewire\Concerns\FiltersByZone;
+use App\Models\Service;
 use App\Models\ServiceCategory;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class ServicesByCategoryComponent extends Component
 {
+    use FiltersByZone;
+    use WithPagination;
+
     public $category_slug;
+
+    protected $queryString = ['zona' => ['except' => '']];
 
     public function mount($category_slug)
     {
         $this->category_slug = $category_slug;
+        $this->initialiseZone();
     }
 
     public function render()
     {
-        $scategory = ServiceCategory::where('slug', $this->category_slug)->first();
-        return view('livewire.service.services-by-category-component', ['scategory' => $scategory])->layout('layouts.base');
+        $scategory = ServiceCategory::where('slug', $this->category_slug)->firstOrFail();
+        $services = Service::query()
+            ->active()
+            ->where('service_category_id', $scategory->id)
+            ->withAvg('reviews', 'rating')
+            ->inZone($this->zona)
+            ->orderByDesc('featured')
+            ->orderBy('name')
+            ->paginate(12);
+
+        return view('livewire.service.services-by-category-component', ['scategory' => $scategory, 'services' => $services])->layout('layouts.base');
     }
 }

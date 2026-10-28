@@ -4,23 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Service;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class SearchController extends Controller
 {
     public function autoComplete(Request $req)
     {
-        $data = Service::select('name')->where("name", "LIKE", "%{$req->input('query')}%")->get();
+        $data = Service::query()
+            ->active()
+            ->select('name')
+            ->search((string) $req->input('query'))
+            ->orderBy('name')
+            ->limit(10)
+            ->get();
+
         return response()->json($data);
     }
 
+    // Formularios antiguos que hacen POST: se redirigen a la búsqueda real (GET).
     public function searchService(Request $req)
     {
-        $service_slug = Str::slug($req->q, '-');
-        if ($service_slug) {
-            return redirect('/service/' . $service_slug);
-        } else {
-            return back();
-        }
+        return redirect()->route('search', array_filter(['q' => trim((string) $req->input('q'))]));
     }
 }

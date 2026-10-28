@@ -31,6 +31,7 @@ class ServiceCategory extends Model
             Cache::forget('home:service-categories');
             Cache::forget('home:featured-categories');
             Cache::forget('home:appliance-services');
+            Cache::forget('home:category-modals');
         };
 
         static::saved($forgetHomeCategoryCaches);

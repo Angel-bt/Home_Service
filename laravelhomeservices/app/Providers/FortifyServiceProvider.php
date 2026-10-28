@@ -21,7 +21,10 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton(
+            \Laravel\Fortify\Contracts\LoginResponse::class,
+            \App\Http\Responses\LoginResponse::class
+        );
     }
 
     /**
@@ -43,7 +46,7 @@ class FortifyServiceProvider extends ServiceProvider
 
             if ($user && \Hash::check($request->password, $user->password)) {
                 // Establece un mensaje de sesión de éxito
-                session()->flash('success', 'Login successful!');
+                session()->flash('success', '¡Bienvenido de nuevo!');
                 return $user;
             }
 

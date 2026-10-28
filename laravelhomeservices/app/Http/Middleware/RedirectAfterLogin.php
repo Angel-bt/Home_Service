@@ -21,7 +21,7 @@ class RedirectAfterLogin
         // Verifica si el usuario está autenticado
         if (auth()->check()) {
             // Establece un mensaje de sesión de éxito
-            session()->flash('success', 'Login successful!');
+            session()->flash('success', '¡Bienvenido de nuevo!');
         }
 
         return $response;

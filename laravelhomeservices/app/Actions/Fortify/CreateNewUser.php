@@ -30,10 +30,11 @@ class CreateNewUser implements CreatesNewUsers
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
             'phone' => ['required'],
+            'registeras' => ['nullable', 'in:CST,SVP'],
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
 
-        $registeras = $input['registeras'] === 'SVP' ? 'SVP' : 'CST';
+        $registeras = ($input['registeras'] ?? 'CST') === 'SVP' ? 'SVP' : 'CST';
 
         $user = User::create([
             'name' => $input['name'],
@@ -53,7 +54,7 @@ class CreateNewUser implements CreatesNewUsers
         SendWelcomeEmail::dispatch($user);
 
         // Establecer un mensaje de sesión de éxito
-        Session::flash('success', 'Registration successful!');
+        Session::flash('success', '¡Registro exitoso! Bienvenido a Proyetech.');
         return $user;
     }
 }

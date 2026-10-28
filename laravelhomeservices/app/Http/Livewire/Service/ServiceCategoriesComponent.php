@@ -9,7 +9,7 @@ class ServiceCategoriesComponent extends Component
 {
     public function render()
     {
-        $scategories = ServiceCategory::all();
+        $scategories = ServiceCategory::withCount('services')->get();
         return view('livewire.service.service-categories-component', ['scategories' => $scategories])->layout('layouts.base');
     }
 }

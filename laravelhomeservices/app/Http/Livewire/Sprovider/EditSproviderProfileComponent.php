@@ -4,8 +4,11 @@ namespace App\Http\Livewire\Sprovider;
 
 use App\Models\ServiceCategory;
 use App\Models\ServiceProvider;
-use Carbon\Carbon;
+use App\Services\ServiceAssetCleaner;
+use App\Support\WhatsApp;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -16,63 +19,80 @@ class EditSproviderProfileComponent extends Component
     public $image;
     public $about;
     public $city;
+    public $whatsapp;
     public $service_category_id;
     public $service_location;
+    public $zones = [];
 
     public $newimage;
 
     public function mount()
     {
-        $sprovider = ServiceProvider::where('user_id', Auth::user()->id)->first();
+        // Los proveedores registrados antes de crear su perfil lo obtienen aquí.
+        $sprovider = ServiceProvider::firstOrCreate(['user_id' => Auth::id()]);
 
-        // Check if $sprovider is null
-        if ($sprovider) {
-            $this->service_provider_id = $sprovider->id;
-            $this->image = $sprovider->image;
-            $this->about = $sprovider->about;
-            $this->city = $sprovider->city;
-            $this->service_category_id = $sprovider->service_category_id;
-            $this->service_location = $sprovider->service_location;
-        } else {
-            // Handle the case where no ServiceProvider record exists for the user
-            // You can initialize default values or redirect the user
-            $this->service_provider_id = null;
-            $this->image = null;
-            $this->about = null;
-            $this->city = null;
-            $this->service_category_id = null;
-            $this->service_location = null;
-        }
+        $this->service_provider_id = $sprovider->id;
+        $this->image = $sprovider->image;
+        $this->about = $sprovider->about;
+        $this->city = $sprovider->city;
+        $this->whatsapp = $sprovider->whatsapp ?: Auth::user()->phone;
+        $this->service_category_id = $sprovider->service_category_id;
+        $this->service_location = $sprovider->service_location;
+        $this->zones = $sprovider->zones()->pluck('zone')->all();
     }
+
+    protected function rules()
+    {
+        return [
+            'newimage' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:4096'],
+            'about' => ['nullable', 'string', 'max:255'],
+            'city' => ['nullable', 'string', 'max:100'],
+            'whatsapp' => ['required', 'string', 'max:20', function ($attribute, $value, $fail) {
+                if (WhatsApp::normalize($value) === null) {
+                    $fail('El número de WhatsApp no es válido (ej.: 0991234567).');
+                }
+            }],
+            'service_category_id' => ['nullable', 'exists:service_categories,id'],
+            'service_location' => ['nullable', 'string', 'max:255'],
+            'zones' => ['required', 'array', 'min:1'],
+            'zones.*' => [Rule::in(array_keys(config('marketplace.zones')))],
+        ];
+    }
+
+    protected $messages = [
+        'zones.required' => 'Elige al menos una zona donde trabajas.',
+        'zones.min' => 'Elige al menos una zona donde trabajas.',
+    ];
 
     public function updateProfile()
     {
-        $sprovider = ServiceProvider::where('user_id', Auth::user()->id)->first();
+        $this->validate();
 
-        // Check if $sprovider is null
-        if (!$sprovider) {
-            session()->flash('error', 'No service provider record found for this user.');
-            return;
-        }
+        $sprovider = ServiceProvider::where('user_id', Auth::id())->firstOrFail();
 
         if ($this->newimage) {
-            $imageName = Carbon::now()->timestamp . '.' . $this->newimage->extension();
+            app(ServiceAssetCleaner::class)->deleteFile('images/sproviders', $sprovider->image);
+            $imageName = now()->timestamp . '_' . Str::random(8) . '.' . $this->newimage->extension();
             $this->newimage->storeAs('sproviders', $imageName);
             $sprovider->image = $imageName;
+            $this->image = $imageName;
+            $this->newimage = null;
         }
 
         $sprovider->about = $this->about;
         $sprovider->city = $this->city;
-        $sprovider->service_category_id = $this->service_category_id;
+        $sprovider->whatsapp = $this->whatsapp;
+        $sprovider->service_category_id = $this->service_category_id ?: null;
         $sprovider->service_location = $this->service_location;
         $sprovider->save();
+        $sprovider->syncZones($this->zones);
 
-        session()->flash('message', 'Profile has been updated successfully!');
+        session()->flash('message', 'Tu perfil se actualizó correctamente.');
     }
 
     public function render()
     {
-        $scategories = ServiceCategory::all();
+        $scategories = ServiceCategory::orderBy('name')->get();
         return view('livewire.sprovider.edit-sprovider-profile-component', ['scategories' => $scategories])->layout('layouts.base');
     }
 }

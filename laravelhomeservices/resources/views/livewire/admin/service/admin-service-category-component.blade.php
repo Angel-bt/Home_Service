@@ -11,12 +11,12 @@
         <div class="bg_parallax image_01_parallax"></div>
         <div class="opacy_bg_02">
             <div class="container">
-                <h1>Service Categories</h1>
+                <h1>Categorías de servicios</h1>
                 <div class="crumbs">
                     <ul>
-                    <li><a href="/"><button class="glass-button">Home</button></a></li>
+                    <li><a href="/"><button class="glass-button">Inicio</button></a></li>
                         <li>/</li>
-                        <li>Service Categories</li>
+                        <li>Categorías de servicios</li>
                     </ul>
                 </div>
             </div>
@@ -32,10 +32,10 @@
                                 <div class="panel-heading">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            All Service Categories
+                                            Todas las categorías
                                         </div>
                                         <div class="col-md-6">
-                                            <a href="{{ route('admin.add_service_category') }}" class="btn btn-info pull-right">Add New</a>
+                                            <a href="{{ route('admin.add_service_category') }}" class="btn btn-info pull-right">Agregar</a>
                                         </div>
                                     </div>
                                 </div>
@@ -47,11 +47,11 @@
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Image</th>
-                                                <th>Name</th>
+                                                <th>Imagen</th>
+                                                <th>Nombre</th>
                                                 <th>Slug</th>
-                                                <th>Featured</th>
-                                                <th>Action</th>
+                                                <th>Destacado</th>
+                                                <th>Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -71,7 +71,7 @@
                                                     <td>
                                                         <a href="{{ route('admin.services_by_category', ['category_slug' => $scategory->slug]) }}" style="margin-right: 10px"><i class="fa fa-list fa-2x text-info"></i></a>
                                                         <a href="{{ route('admin.edit_service_category', ['category_id' => $scategory->id]) }}"><i class="fa fa-edit fa-2x text-info"></i></a>
-                                                        <a href="#" onclick="confirm('Are you sure, You want to delete this service category?') || event.stopImmediatePropagation();" wire:click.prevent="deleteServiceCategory({{ $scategory->id }})" style="margin-left: 10px"><i class="fa fa-times fa-2x text-danger"></i></a>
+                                                        <a href="#" onclick="confirm('¿Seguro que quieres eliminar esta categoría?') || event.stopImmediatePropagation();" wire:click.prevent="deleteServiceCategory({{ $scategory->id }})" style="margin-left: 10px"><i class="fa fa-times fa-2x text-danger"></i></a>
                                                     </td>
                                                 </tr>
                                             @endforeach

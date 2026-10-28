@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Admin\Service;
 
 use App\Models\Slider;
+use App\Services\ServiceAssetCleaner;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -13,9 +14,14 @@ class AdminSliderComponent extends Component
     public function deleteSlide($slide_id)
     {
         $slide = Slider::find($slide_id);
-        unlink('images/slider/' . $slide->image);
+
+        if ($slide === null) {
+            return;
+        }
+
+        app(ServiceAssetCleaner::class)->deleteFile('images/slider', $slide->image);
         $slide->delete();
-        session()->flash('message', 'Slide has been deleted successfully!');
+        session()->flash('message', 'La diapositiva se eliminó.');
     }
     public function render()
     {

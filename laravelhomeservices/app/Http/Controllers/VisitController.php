@@ -10,6 +10,11 @@ class VisitController extends Controller
     // Método para incrementar el contador de visitas
     public function incrementVisit(Request $request)
     {
+        // Ruta pensada para POST: si llega como GET, responder 405 en lugar de mutar estado.
+        if (! $request->isMethod('post')) {
+            return response()->json(['error' => 'Method not allowed'], 405);
+        }
+
         // Verificar si ya se ha registrado una visita en esta sesión
         if (!$request->session()->has('visit_counted')) {
 
@@ -18,10 +23,7 @@ class VisitController extends Controller
             $visitorName = $user ? $user->name : 'Invitado';
 
             // MEJORA BUG: conservar un único registro global para el contador.
-            $visit = Visit::firstOrCreate(
-                ['id' => 1],
-                ['visitor_name' => $visitorName]
-            );
+            $visit = Visit::counter();
 
 
             // Incrementar el contador de visitas
@@ -35,7 +37,7 @@ class VisitController extends Controller
         }
 
         // Si ya se ha registrado una visita en esta sesión, devolver el contador actual
-        $visit = Visit::firstOrCreate(['id' => 1]);
+        $visit = Visit::counter();
         return $visit->visits;
     }
 
@@ -55,7 +57,7 @@ class VisitController extends Controller
     public function resetVisits(Request $request)
     {
         // Obtener el primer registro (o crearlo si no existe)
-        $visit = Visit::firstOrCreate(['id' => 1]);
+        $visit = Visit::counter();
 
         // Reiniciar el contador de visitas a 0
         $visit->update(['visits' => 0]);

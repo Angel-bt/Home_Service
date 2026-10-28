@@ -2,32 +2,40 @@
     <div class="admin-dashboard">
         <!-- Barra de navegación del dashboard -->
         <div class="dashboard-nav card p-3 mb-4">
-            <h2>Admin Dashboard</h2>
+            <h2>Panel de administración</h2>
         </div>
+
+        @php $pendingPayments = \App\Models\SubscriptionPayment::where('status', 'pending')->count(); @endphp
+        @if ($pendingPayments > 0)
+            <div class="alert alert-warning">
+                Hay {{ $pendingPayments }} {{ $pendingPayments === 1 ? 'comprobante' : 'comprobantes' }} de pago del plan Pro por revisar.
+                <a href="{{ route('admin.payments') }}">Revisar pagos</a>
+            </div>
+        @endif
 
         <!-- Sección de estadísticas rápidas -->
         <div class="row">
             <div class="col-md-3">
                 <div class="card stat-card p-3 text-center">
-                    <h3>Total Users</h3>
+                    <h3>Usuarios</h3>
                     <p>{{ $totalUsers ?? 0 }}</p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card stat-card p-3 text-center">
-                    <h3>Total Services</h3>
+                    <h3>Servicios</h3>
                     <p>{{ $totalServices ?? 0 }}</p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card stat-card p-3 text-center">
-                    <h3>Total Categories</h3>
+                    <h3>Categorías</h3>
                     <p>{{ $totalServiceCategory ?? 0 }}</p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card stat-card p-3 text-center">
-                    <h3>Total Contacts</h3>
+                    <h3>Mensajes de contacto</h3>
                     <p>{{ $totalContacts ?? 0 }}</p>
                 </div>
             </div>
@@ -37,9 +45,9 @@
         <div class="row custom-margin">
             <div class="col-md-3">
                 <div class="card stat-card p-3 text-center">
-                    <h3>Total Visits</h3>
-                    <p id="visit-count">{{ $visits->count() ?? 0 }}</p>
-                    <button id="reset-visit-button" class="btn btn-danger mt-2">Reset Visits</button>
+                    <h3>Visitas totales</h3>
+                    <p id="visit-count">{{ $visitCount ?? 0 }}</p>
+                    <button id="reset-visit-button" class="btn btn-danger mt-2">Reiniciar visitas</button>
                 </div>
             </div>
         </div>
@@ -71,13 +79,13 @@
         <div class="row mt-4">
             <div class="col-md-6">
                 <div class="card p-3">
-                    <h3>User Growth</h3>
+                    <h3>Crecimiento de usuarios</h3>
                     <canvas id="userGrowthChart"></canvas>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="card p-3">
-                    <h3>Service Categories Popularity</h3>
+                    <h3>Categorías más populares</h3>
                     <canvas id="servicePopularityChart"></canvas>
                 </div>
             </div>
@@ -85,25 +93,25 @@
 
         <!-- Sección de últimas actividades -->
         <div class="card p-3 mt-4">
-            <h3>Recent Activities</h3>
+            <h3>Actividad reciente</h3>
             <ul>
                 @forelse ($recentActivities ?? [] as $activity)
                     <li>{{ $activity->description }} - <small>{{ $activity->created_at->diffForHumans() }}</small></li>
                 @empty
-                    <li>No recent activities.</li>
+                    <li>Sin actividad reciente.</li>
                 @endforelse
             </ul>
         </div>
 
         <!-- Sección de enlaces rápidos -->
         <div class="card p-3 mt-4">
-            <h3>Quick Links</h3>
+            <h3>Accesos rápidos</h3>
             <ul>
-                <li><a href="{{ route('admin.service_categories') }}">Manage Service Categories</a></li>
-                <li><a href="{{ route('admin.all_services') }}">Manage Services</a></li>
-                <li><a href="{{ route('admin.slider') }}">Manage Slider</a></li>
-                <li><a href="{{ route('admin.contacts') }}">View Contacts</a></li>
-                <li><a href="{{ route('admin.service_providers') }}">Manage Service Providers</a></li>
+                <li><a href="{{ route('admin.service_categories') }}">Gestionar categorías</a></li>
+                <li><a href="{{ route('admin.all_services') }}">Gestionar servicios</a></li>
+                <li><a href="{{ route('admin.slider') }}">Gestionar slider</a></li>
+                <li><a href="{{ route('admin.contacts') }}">Ver mensajes</a></li>
+                <li><a href="{{ route('admin.service_providers') }}">Gestionar proveedores</a></li>
             </ul>
         </div>
     </div>

@@ -8,8 +8,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-    // Increment the visit count when the page loads
-    axios.get('/increment-visit')
+    // Increment the visit count when the page loads (POST: ruta con efecto secundario).
+    axios.post('/increment-visit', {}, { headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } })
         .then(response => {
             // Update the visit count on the page
             document.getElementById('visit-count').textContent = response.data;

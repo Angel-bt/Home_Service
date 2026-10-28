@@ -1,134 +1,30 @@
 <div>
-<div class="section-title-01 honmob">
-            <div class="bg_parallax image_02_parallax"></div>
-            <div class="opacy_bg_02">
+    @include('livewire.partials.page-header', ['title' => 'Preguntas frecuentes'])
+    <section class="content-central">
+        <div class="content_info">
+            <div class="paddings-mini">
                 <div class="container">
-                    <h1>FAQ Questions</h1>
-                    <div class="crumbs">
-                        <ul>
-                            <li><a href="/">Home</a></li>
-                            <li>/</li>
-                            <li>FAQ Questions</li>
-                        </ul>
+                    <div class="row">
+                        <div class="col-md-10 col-md-offset-1" style="font-size: 16px; line-height: 1.7;">
+                            @php
+                                $faqs = [
+                                    '¿Cuánto cuesta usar Proyetech?' => 'Para los clientes es gratis. Buscas, contactas y solicitas servicios sin pagar nada a la plataforma.',
+                                    '¿Cómo pago el servicio?' => 'Pagas directamente al proveedor (efectivo, transferencia o DeUna), según lo que acuerden. El precio publicado es referencial; el final depende del trabajo.',
+                                    '¿Cómo contacto a un proveedor?' => 'En cada servicio tienes un botón de WhatsApp para escribirle de inmediato y un formulario para enviar una solicitud con tu zona, dirección y fecha preferida.',
+                                    '¿En qué zonas funciona?' => 'Malacatos y el valle: ' . implode(', ', config('marketplace.zones')) . '. Puedes filtrar los servicios por zona.',
+                                    '¿Quién puede dejar reseñas?' => 'Solo los clientes cuya solicitud fue marcada como completada por el proveedor. Así las reseñas reflejan trabajos reales.',
+                                    '¿Cómo publico mis servicios?' => 'Crea una cuenta como "Proveedor de servicios", completa tu perfil (WhatsApp y zonas) y entra a "Mis servicios". El plan gratuito permite ' . config('marketplace.free_service_limit') . ' servicios.',
+                                    '¿Qué hago si tengo un problema con un proveedor?' => 'Escríbenos desde la página de contacto con los detalles de tu solicitud y lo revisamos.',
+                                ];
+                            @endphp
+                            @foreach ($faqs as $question => $answer)
+                                <h4 style="margin-top: 25px;"><i class="fa fa-question-circle text-primary"></i> {{ $question }}</h4>
+                                <p>{{ $answer }}</p>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <section class="content-central">
-            <div class="semiboxshadow text-center">
-                <img src="img/img-theme/shp.png" class="img-responsive" alt="">
-            </div>
-            <div class="content_info">
-                <div class="container">
-                    <div class="row" style="margin-top: -30px;">
-                        <div class="titles">
-                            <h2>FAQ <span>Questions</span></h2>
-                            <i class="fa fa-plane"></i>
-                            <hr class="tall">
-                        </div>
-                    </div>
-                </div>
-                <div class="container" style="margin-top: -70px;">
-                    <div class="row padding-bottom">
-                        <div class="col-md-12">
-                            <div class="accrodation">
-                                <span class="acc-trigger"><a href="#">Mision</a></span>
-                                <div class="acc-container">
-                                    <div class="content ptext">
-                                        <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac
-                                            turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget,
-                                            tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean
-                                            ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est
-                                            et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed,
-                                            commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt
-                                            condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui.
-                                            Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus,
-                                            neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna
-                                            eros eu erat. Aliquam erat volutpat.</p>
-                                    </div>
-                                </div>
-                                <span class="acc-trigger active"><a href="#">Vision</a></span>
-                                <div class="acc-container">
-                                    <div class="content ptext">
-                                        <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac
-                                            turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget,
-                                            tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean
-                                            ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est
-                                            et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed,
-                                            commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt
-                                            condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui.
-                                            Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus,
-                                            neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna
-                                            eros eu erat. Aliquam erat volutpat.</p>
-                                    </div>
-                                </div>
-                                <span class="acc-trigger"><a href="#">What we offer?</a></span>
-                                <div class="acc-container">
-                                    <div class="content ptext">
-                                        <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac
-                                            turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget,
-                                            tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean
-                                            ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est
-                                            et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed,
-                                            commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt
-                                            condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui.
-                                            Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus,
-                                            neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna
-                                            eros eu erat. Aliquam erat volutpat.</p>
-                                    </div>
-                                </div>
-                                <span class="acc-trigger"><a href="#">Our services</a></span>
-                                <div class="acc-container">
-                                    <div class="content ptext">
-                                        Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac
-                                        turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor
-                                        sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies
-                                        mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien
-                                        ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae,
-                                        ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros
-                                        ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis
-                                        pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor
-                                        neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat.
-                                    </div>
-                                </div>
-                                <span class="acc-trigger"><a href="#">Features</a></span>
-                                <div class="acc-container">
-                                    <div class="content ptext">
-                                        <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac
-                                            turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget,
-                                            tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean
-                                            ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est
-                                            et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed,
-                                            commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt
-                                            condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui.
-                                            Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus,
-                                            neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna
-                                            eros eu erat. Aliquam erat volutpat.</p>
-                                    </div>
-                                </div>
-                                <span class="acc-trigger"><a href="#">Product Sales</a></span>
-                                <div class="acc-container">
-                                    <div class="content ptext">
-                                        <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac
-                                            turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget,
-                                            tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean
-                                            ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est
-                                            et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed,
-                                            commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt
-                                            condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui.
-                                            Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus,
-                                            neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna
-                                            eros eu erat. Aliquam erat volutpat.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="content_info">
-                <div class="skin_base paddings-mini color-white text-center">
-                    <h2>Need Help? Call our Expert 24 X 7 - +91-1234567890</h2>
-                </div>
-            </div>            
+    </section>
 </div>

@@ -11,12 +11,12 @@
         <div class="bg_parallax image_02_parallax"></div>
         <div class="opacy_bg_02">
             <div class="container">
-                <h1>All Services</h1>
+                <h1>Todos los servicios</h1>
                 <div class="crumbs">
                     <ul>
-                        <li><a href="/">Home</a></li>
+                        <li><a href="/">Inicio</a></li>
                         <li>/</li>
-                        <li>All Services</li>
+                        <li>Todos los servicios</li>
                     </ul>
                 </div>
             </div>
@@ -32,10 +32,10 @@
                                 <div class="panel-heading">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            All Services
+                                            Todos los servicios
                                         </div>
                                         <div class="col-md-6">
-                                            <a href="{{route('admin.add_service')}}" class="btn btn-info pull-right">Add New</a>
+                                            <a href="{{route('admin.add_service')}}" class="btn btn-info pull-right">Agregar</a>
                                         </div>
                                     </div>
                                 </div>
@@ -47,14 +47,14 @@
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Image</th>
-                                                <th>Name</th>
-                                                <th>Price</th>
-                                                <th>Status</th>
-                                                <th>Featured</th>
-                                                <th>Category</th>
-                                                <th>Created At</th>
-                                                <th>Action</th>
+                                                <th>Imagen</th>
+                                                <th>Nombre</th>
+                                                <th>Precio</th>
+                                                <th>Estado</th>
+                                                <th>Destacado</th>
+                                                <th>Categoría</th>
+                                                <th>Creado el</th>
+                                                <th>Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -82,7 +82,7 @@
                                                     <td>{{ $service->created_at }}</td>
                                                     <td>
                                                         <a href="{{ route('admin.edit_service', ['service_slug' => $service->slug]) }}"><i class="fa fa-edit fa-2x text-info"></i></a>
-                                                        <a href="#" onclick="confirm('Are you sure, you want to delete this service?') || event.stopImmediatePropagation()" style="margin-left:10px;" wire:click.prevent="deleteService({{$service->id}})"><i class="fa fa-times fa-2x text-danger"></i></a>
+                                                        <a href="#" onclick="confirm('¿Seguro que quieres eliminar este servicio?') || event.stopImmediatePropagation()" style="margin-left:10px;" wire:click.prevent="deleteService({{$service->id}})"><i class="fa fa-times fa-2x text-danger"></i></a>
                                                     </td>
                                                 </tr>
                                             @endforeach

@@ -22,7 +22,7 @@ class AdminEditServiceCategoryComponent extends Component
 
     public function mount($category_id)
     {
-        $scategory = ServiceCategory::find($category_id);
+        $scategory = ServiceCategory::findOrFail($category_id);
         $this->category_id = $scategory->id;
         $this->name = $scategory->name;
         $this->slug = $scategory->slug;
@@ -62,7 +62,7 @@ class AdminEditServiceCategoryComponent extends Component
             ]);
         }
 
-        $scategory = ServiceCategory::find($this->category_id);
+        $scategory = ServiceCategory::findOrFail($this->category_id);
         $scategory->name = $this->name;
         $scategory->slug = $this->slug;
 
@@ -75,7 +75,7 @@ class AdminEditServiceCategoryComponent extends Component
         $scategory->featured = $this->featured;
 
         $scategory->save();
-        session()->flash('message', 'Category has been updated successfully!');
+        session()->flash('message', 'La categoría se actualizó correctamente.');
     }
 
     public function render()

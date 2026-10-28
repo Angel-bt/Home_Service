@@ -42,7 +42,7 @@ class ContactComponent extends Component
         $contact->save();
         SendNewLeadNotification::dispatch($contact);
 
-        session()->flash('message', 'Your message has been send successfully!');
+        session()->flash('message', 'Tu mensaje fue enviado. Te responderemos pronto.');
     }
 
     public function render()

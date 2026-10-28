@@ -21,6 +21,11 @@ class Kernel extends ConsoleKernel
             ->everyFiveMinutes()
             ->withoutOverlapping()
             ->onOneServer();
+
+        $schedule->command('billing:expire-plans')
+            ->hourly()
+            ->withoutOverlapping()
+            ->onOneServer();
     }
 
     /**

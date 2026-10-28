@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8">
     <title>Servicios para tu hogar | Proyetech</title>
@@ -16,6 +16,8 @@
     <link href="{{ asset('assets/css/toastr.min.css') }}" rel="stylesheet" media="screen">
     {{-- MEJORA UI: estilos premium aislados para no alterar los assets heredados. --}}
     <link href="{{ asset('css/proyetech.css') }}" rel="stylesheet">
+    {{-- Utilidades Tailwind usadas por el encabezado y la portada (npm run dev / prod). --}}
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
@@ -44,8 +46,8 @@
             <!-- Columna de información -->
             <div class="col-md-6 d-flex flex-column flex-md-row justify-content-between">
                 <ul class="d-none d-md-block text-left proyetech-contact-list">
-                    <li><a href="tel:+911234567890"><i class="fa fa-phone"></i> +593-995528556</a></li>
-                    <li><a href="mailto:contact@surfsidemedia.in"><i class="fa fa-envelope"></i> gameri7@hotmail.com</a></li>
+                    <li><a href="tel:{{ config('marketplace.contact_phone') }}"><i class="fa fa-phone"></i> {{ config('marketplace.contact_phone') }}</a></li>
+                    <li><a href="mailto:{{ config('marketplace.contact_email') }}"><i class="fa fa-envelope"></i> {{ config('marketplace.contact_email') }}</a></li>
                 </ul>
 
                 
@@ -66,97 +68,99 @@
     </div>
 </div>
 
-        <header id="header" class="header-v3 proyetech-nav">
-            <nav class="flat-mega-menu" aria-label="Navegación principal">
-                <label for="mobile-button" aria-label="Abrir menú de navegación"> <i class="fa fa-bars" aria-hidden="true"></i></label>
-                <input id="mobile-button" type="checkbox">
+        <header class="sticky top-0 z-50 w-full backdrop-blur-md bg-white/80 border-b border-gray-100 shadow-sm transition-all duration-300">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-20">
+                    <!-- Logo -->
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="{{ route('home') }}" class="flex items-center gap-2 transition-transform hover:scale-105">
+                            <img src="{{ asset('images/logo.png') }}" alt="PROYETECH" class="h-10 w-auto">
+                        </a>
+                    </div>
 
-                <ul class="neomorph-card proyetech-nav-list" >
-                    <li class="glass-card" >
-                        <a href="{{ route('home') }}" aria-label="Ir al inicio"><img src="{{ asset('images/logo.png') }}" alt="PROYETECH"></a>
-                    </li>
-                    <li> <a href="{{ route('home.service_categories') }}">Categorías</a>
-                    </li>
-                     
-                    <li> <a href="{{ route('home.service_categories') }}"  class="neomorph-card" aria-haspopup="true">Electrodomésticos</a>
-                        <ul class="drop-down one-column hover-fade">
-                        @foreach (App\Models\ServiceCategory::whereIn('name', ['Computer Repair','TV', 'AC','Gyser', 'Refrigerator', 'Washing Machine','Chimney and Hob', 'Microwave Oven', 'Water Purifier'])->distinct()->get() as $category)
-                        <li><a href="{{ route('home.services_by_category', ['category_slug' => $category->slug]) }}">{{ $category->name }}</a></li>
-                        @endforeach
-                        </ul>
-                    </li>
-
-                    <li> <a href="{{ route('home.service_categories') }}" class="neomorph-card" aria-haspopup="true">Necesidades del hogar</a>
-
-                    <ul class="drop-down one-column hover-fade">
-                        @foreach (App\Models\ServiceCategory::whereIn('name', ['Laundry','Electrical', 'Pest Control','Carpentry', 'Plumbing', 'Painting','Movers & Packers', 'Shower Filters'])->distinct()->get() as $category)
-                        <li><a href="{{ route('home.services_by_category', ['category_slug' => $category->slug]) }}">{{ $category->name }}</a></li>
-                        @endforeach
-                        </ul>
+                    <!-- Desktop Menu -->
+                    <nav class="hidden md:flex space-x-8 items-center" aria-label="Navegación principal">
                         
-                    </li>
-                    <li> <a href="{{ route('home.service_categories') }}" class="neomorph-card" aria-haspopup="true">Limpieza</a>
-                    <ul class="drop-down one-column hover-fade">
-                        @foreach (App\Models\ServiceCategory::whereIn('name', ['Bedroom Deep Cleaning','Overhead Water Storage', 'Tank Cleaning','Underground Sump Cleaning', 'Dining Chair Shampooing', 'Office Chair Shampooing','Home Deep Cleaning', 'Carpet Shampooing', 'Fabric Sofa Shampooing','Bathroom Deep Cleaning','Floor Scrubbing & Polishing','Mattress Shampooing','Kitchen Deep Cleaning'])->distinct()->get() as $category)
-                        <li><a href="{{ route('home.services_by_category', ['category_slug' => $category->slug]) }}">{{ $category->name }}</a></li>
-                        @endforeach
-                        </ul>
+                        <!-- Categorías Dropdown -->
+                        <div class="relative group">
+                            <a href="{{ route('home.service_categories') }}" class="text-gray-700 hover:text-blue-600 font-medium inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-blue-600 transition-colors duration-200">
+                                Explorar Servicios
+                                <i class="fa fa-chevron-down ml-1 text-xs"></i>
+                            </a>
+                            <!-- Dropdown Menu -->
+                            <div class="absolute left-0 mt-2 w-64 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-left -translate-y-2 group-hover:translate-y-0 z-50">
+                                <div class="rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden bg-white">
+                                    <div class="p-4">
+                                        <ul class="space-y-1">
+                                            @foreach (App\Models\ServiceCategory::query()->orderByDesc('featured')->orderBy('name')->take(10)->get(['name', 'slug']) as $category)
+                                            <li><a href="{{ route('home.services_by_category', ['category_slug' => $category->slug]) }}" class="block px-2 py-1 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-md transition-colors">{{ $category->name }}</a></li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                    <div class="bg-gray-50 px-4 py-3 text-center">
+                                        <a href="{{ route('home.service_categories') }}" class="text-sm font-semibold text-blue-600 hover:text-blue-800">Ver todas las categorías &rarr;</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                    </li>
-                    <li> <a href="{{ route('home.service_categories') }}" class="neomorph-card" aria-haspopup="true">Servicios especiales</a>
-                        <ul class="drop-down one-column hover-fade">
-                            <li><a href="{{ route('home.service_categories') }}">Document Services</a></li>
-                            <li><a href="{{ route('home.service_categories') }}">Cars &amp; Bikes</a></li>
-                            <li><a href="{{ route('home.service_categories') }}">Movers &amp; Packers </a></li>
-                            <li><a href="{{ route('home.service_categories') }}">Home Automation</a></li>
-                        </ul>
-                    </li>
-                    @if (Route::has('login'))
-                        @auth
-                            @if (Auth::user()->utype==='ADM')
-                                <li class="login-form"><a href="#" class="neomorph-card" title="My Account (Admin)">Welcome, {{ auth()->user()->name }}!(Admin)</a>
-                                    <ul class="drop-down one-column hover-fade">
-                                        <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                                        <li><a href="{{ route('admin.service_categories') }}">Service Categories</a></li>
-                                        <li><a href="{{ route('admin.all_services') }}">All Services</a></li>
-                                        <li><a href="{{ route('admin.slider') }}">Manage Slider</a></li>
-                                        <li><a href="{{ route('admin.contacts') }}">All Contacts</a></li>
-                                        <li><a href="{{ route('admin.service_providers') }}">All Service Providers</a></li>
-                                        <li><a  href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a></li>
-                                    </ul>
-                                </li>
-                            
-                            @elseif(Auth::user()->utype==='SVP')
-                            <li class="login-form"><a href="#" title="My Account (S Providers)">Welcome, {{ auth()->user()->name }}!(S Provd)</a>
-                                <ul class="drop-down one-column hover-fade">
-                                    <li><a href="{{ route('sprovider.dashboard') }}">Dashboard</a></li>
-                                    <li><a href="{{ route('sprovider.profile') }}">My Profile</a></li>
-                                    <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a></li>
-                                </ul>
-                            </li>
+                        <!-- Enlaces adicionales -->
+                        <a href="{{ route('search') }}" class="text-gray-700 hover:text-blue-600 font-medium px-1 pt-1 border-b-2 border-transparent transition-colors duration-200"><i class="fa fa-search"></i> Buscar</a>
+                        <a href="{{ route('home.about') }}" class="text-gray-700 hover:text-blue-600 font-medium px-1 pt-1 border-b-2 border-transparent transition-colors duration-200">Nosotros</a>
+                        <a href="{{ route('home.contact') }}" class="text-gray-700 hover:text-blue-600 font-medium px-1 pt-1 border-b-2 border-transparent transition-colors duration-200">Contacto</a>
+                    </nav>
+
+                    <!-- Auth Section -->
+                    <div class="flex items-center space-x-4">
+                        @if (Route::has('login'))
+                            @auth
+                                <div class="relative group">
+                                    <button type="button" class="flex items-center gap-2 text-gray-700 hover:text-blue-600 font-medium focus:outline-none">
+                                        <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold shadow-sm">
+                                            {{ substr(auth()->user()->name, 0, 1) }}
+                                        </div>
+                                        <span class="hidden md:block">Hola, {{ explode(' ', auth()->user()->name)[0] }}</span>
+                                        <i class="fa fa-chevron-down text-xs"></i>
+                                    </button>
+                                    
+                                    <div class="absolute right-0 mt-2 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-right -translate-y-2 group-hover:translate-y-0 z-50">
+                                        <div class="rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden bg-white py-1">
+                                            @if (Auth::user()->utype==='ADM')
+                                                <div class="px-4 py-2 border-b border-gray-100"><span class="block text-xs font-bold text-gray-400">ADMINISTRADOR</span></div>
+                                                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">Dashboard</a>
+                                                <a href="{{ route('admin.service_categories') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Categorías</a>
+                                                <a href="{{ route('admin.all_services') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Servicios</a>
+                                                <a href="{{ route('admin.service_requests') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Solicitudes</a>
+                                                <a href="{{ route('admin.service_providers') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Proveedores</a>
+                                                <a href="{{ route('admin.payments') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Pagos Pro</a>
+                                            @elseif(Auth::user()->utype==='SVP')
+                                                <div class="px-4 py-2 border-b border-gray-100"><span class="block text-xs font-bold text-gray-400">PROVEEDOR</span></div>
+                                                <a href="{{ route('sprovider.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">Mi Panel</a>
+                                                <a href="{{ route('sprovider.services') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Mis servicios</a>
+                                                <a href="{{ route('sprovider.requests') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Solicitudes</a>
+                                                <a href="{{ route('sprovider.plan') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Mi plan</a>
+                                                <a href="{{ route('sprovider.profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Mi perfil</a>
+                                            @else
+                                                <div class="px-4 py-2 border-b border-gray-100"><span class="block text-xs font-bold text-gray-400">CLIENTE</span></div>
+                                                <a href="{{ route('customer.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">Mis solicitudes</a>
+                                            @endif
+                                            
+                                            <div class="border-t border-gray-100 my-1"></div>
+                                            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">Cerrar Sesión</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none">@csrf</form>
                             @else
-                            <li class="login-form"><a href="#" title="My Account (Customer)">Welcome, {{ auth()->user()->name }}!(Customer)</a>
-                                <ul class="drop-down one-column hover-fade">
-                                    <li><a href="{{ route('customer.dashboard') }}">Dashboard</a></li>
-                                    <li><a  href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a></li>
-                                </ul>
-                            </li>
+                                <button type="button" class="proyetech-auth-trigger group relative inline-flex items-center justify-center px-6 py-2.5 text-sm font-semibold text-white transition-all duration-200 bg-green-700 border border-transparent rounded-full hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-600 shadow-md shadow-green-500/30 hover:shadow-lg hover:shadow-green-500/40" data-auth-open="login" title="Acceder o crear cuenta">
+                                    <i class="fa fa-user-circle mr-2 group-hover:scale-110 transition-transform"></i>
+                                    <span>Acceder / Registro</span>
+                                </button>
                             @endif
-                        <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none">
-                            @csrf
-                        </form>
-                        @else
-                            <li class="login-form"> <a href="{{ route('register') }}" class="neomorph-button" title="Registrarse">Registrarse</a></li>
-                            
-                            <li class="login-form"> <a href="{{ route('login') }}" class="neomorph-button" title="Iniciar sesión">Iniciar sesión</a></li>
                         @endif
-                    @endif
-
-                    <li class="search-bar">
-                        
-                    </li>
-                </ul>
-            </nav>
+                    </div>
+                </div>
+            </div>
         </header>
           <!-- Mostrar el nombre del usuario autenticado 
            
@@ -174,30 +178,21 @@
         <footer id="footer" class="footer-v1">
             <div class="container">
                 <div class="row visible-md visible-lg">
-                    <div class="col-md-3 col-xs-6 col-sm-6">
-                        
-                    <h3>SERVICIOS DE ELECTRODOMÉSTICOS </h3>
-                    <ul>
-            @foreach (App\Models\ServiceCategory::whereIn('name', ['Computer Repair','TV', 'AC','Gyser', 'Refrigerator', 'Washing Machine','Chimney and Hob', 'Microwave Oven', 'Water Purifier'])->distinct()->get() as $category)
-                <li><i class="fa fa-check"></i> <a href="{{ route('services.by.category', ['category_slug' => $category->slug]) }}">{{ $category->name }}</a></li>
-            @endforeach
-        </ul>
+                    <div class="col-md-6 col-xs-12 col-sm-6">
+                        <h3>CATEGORÍAS</h3>
+                        <ul>
+                            @foreach (App\Models\ServiceCategory::query()->orderBy('name')->take(12)->get(['name', 'slug']) as $category)
+                                <li><i class="fa fa-check"></i> <a href="{{ route('home.services_by_category', ['category_slug' => $category->slug]) }}">{{ $category->name }}</a></li>
+                            @endforeach
+                        </ul>
                     </div>
                     <div class="col-md-3 col-xs-6 col-sm-6">
-                        <h3>SERVICIOS DE CLIMATIZACIÓN </h3>
+                        <h3>ZONAS</h3>
                         <ul>
-            @foreach (App\Models\ServiceCategory::whereIn('name', ['Installation','Uninstallation', 'AC Repair','Gas Refill', 'Wet Servicing', 'Dry Servicing'])->distinct()->get() as $category)
-                <li><i class="fa fa-check"></i> <a href="{{ route('services.by.category', ['category_slug' => $category->slug]) }}">{{ $category->name }}</a></li>
-            @endforeach
-        </ul>
-                    </div>
-                    <div class="col-md-3 col-xs-6 col-sm-6">
-                        <h3>NECESIDADES DEL HOGAR </h3>
-                        <ul>
-            @foreach (App\Models\ServiceCategory::whereIn('name', ['Laundry','Electrical', 'Pest Control','Carpentry', 'Plumbing', 'Painting','Movers & Packers', 'Shower Filters'])->distinct()->get() as $category)
-                <li><i class="fa fa-check"></i> <a href="{{ route('services.by.category', ['category_slug' => $category->slug]) }}">{{ $category->name }}</a></li>
-            @endforeach
-        </ul>
+                            @foreach (config('marketplace.zones') as $slug => $label)
+                                <li><i class="fa fa-map-marker"></i> <a href="{{ route('search', ['zona' => $slug]) }}">{{ $label }}</a></li>
+                            @endforeach
+                        </ul>
                     </div>
                     <div class="col-md-3 col-xs-6 col-sm-6">
                         <h3>CONTÁCTANOS</h3>
@@ -208,11 +203,10 @@
 </li>
 
                             <li>
-                                <i class="fa fa-envelope"></i> <a
-                                    href="mailto:contact@surfsidemedia.in">contact@surfsidemedia.in</a>
+                                <i class="fa fa-envelope"></i> <a href="mailto:{{ config('marketplace.contact_email') }}">{{ config('marketplace.contact_email') }}</a>
                             </li>
                             <li>
-                                <i class="fa fa-headphones"></i> <a href="tel:+911234567890">+91-1234567890</a>
+                                <i class="fab fa-whatsapp"></i> <a href="{{ \App\Support\WhatsApp::link(config('marketplace.contact_phone')) }}" target="_blank" rel="noopener">{{ config('marketplace.contact_phone') }}</a>
                             </li>
                         </ul>
                         <h3 style="margin-top: 10px">SÍGUENOS</h3>
@@ -229,11 +223,10 @@
                         <ul class="contact_footer mlist">
                            
                             <li>
-                                <i class="fa fa-envelope"></i> <a
-                                    href="mailto:contact@surfsidemedia.in">contact@surfsidemedia.in</a>
+                                <i class="fa fa-envelope"></i> <a href="mailto:{{ config('marketplace.contact_email') }}">{{ config('marketplace.contact_email') }}</a>
                             </li>
                             <li>
-                                <i class="fa fa-phone"></i> <a href="tel:+911234567890">+91-1234567890</a>
+                                <i class="fab fa-whatsapp"></i> <a href="{{ \App\Support\WhatsApp::link(config('marketplace.contact_phone')) }}" target="_blank" rel="noopener">{{ config('marketplace.contact_phone') }}</a>
                             </li>
                         </ul>
                         <ul class="social mlist-h">
@@ -253,11 +246,11 @@
                                 <li><a href="{{ route('home.contact') }}">Contacto</a></li>
                                 <li><a href="{{ route('home.faq') }}">FAQ</a></li>
                                 <li><a href="{{ route('home.terms') }}">Términos de uso</a></li>
-                                <li><a href="{{ route('home.privacy') }}">Privacy</a></li>
+                                <li><a href="{{ route('home.privacy') }}">Privacidad</a></li>
                             </ul>
                         </div>
                         <div class="col-md-6">
-                            <p class="text-xs-center crtext">&copy; 2025 Proyetech. Todos los derechos reservados.</p>
+                            <p class="text-xs-center crtext">&copy; {{ date('Y') }} Proyetech. Todos los derechos reservados.</p>
                         </div>
                     </div>
                 </div>
@@ -306,16 +299,38 @@
     @livewireScripts
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @stack('scripts') <!-- Asegura que las vistas puedan agregar scripts adicionales -->
- <!-- Scripts de SweetAlert2 -->
- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{-- MEJORA: fallback del botón único de acceso cuando el modal no está en la página. --}}
+    <script>
+        (function () {
+            var trigger = document.querySelector('.proyetech-auth-trigger[data-auth-open]');
+            if (!trigger) return;
+            trigger.addEventListener('click', function () {
+                if (!document.getElementById('proyetech-auth-modal')) {
+                    window.location.href = "{{ route('login') }}";
+                }
+            });
+        }());
+    </script>
+    {{-- MEJORA: estado activo en la navegación principal. --}}
+    <script>
+        (function () {
+            var links = document.querySelectorAll('.proyetech-nav-list > li > a');
+            for (var i = 0; i < links.length; i++) {
+                links[i].addEventListener('click', function () {
+                    for (var j = 0; j < links.length; j++) links[j].classList.remove('active');
+                    this.classList.add('active');
+                });
+            }
+        }());
+    </script>
 
 <!-- Mensajes de éxito y error -->
 @if (session('success'))
 <script>
     Swal.fire({
         icon: 'success',
-        title: 'Success',
-        text: '{{ session('success') }}',
+        title: 'Listo',
+        text: @json(session('success')),
     });
 </script>
 @endif
@@ -325,7 +340,7 @@
     Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: '{{ $errors->first() }}',
+        text: @json($errors->first()),
     });
 </script>
 @endif

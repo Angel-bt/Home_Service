@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reset Password</title>
+    <title>Restablecer contraseña</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet" media="screen">
     <script>
@@ -23,7 +23,7 @@
 <body class="bg-gray-100 flex items-center justify-center h-screen">
 <div class="glass-card">
     <div class="bg-white p-6 rounded shadow-md w-full max-w-md">
-        <h2 class="text-2xl font-semibold text-gray-800 text-center mb-4">Reset Password</h2>
+        <h2 class="text-2xl font-semibold text-gray-800 text-center mb-4">Restablecer contraseña</h2>
 
         @if ($errors->any())
             <div class="mb-4 p-4 bg-red-100 border border-red-300 text-red-800 rounded">
@@ -40,14 +40,14 @@
             <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
             <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
                 <input id="email" name="email" type="email"
                        class="neomorph-card"
-                       value="{{ old('email', $request->email) }}" placeholder="example@example.com" required autofocus>
+                       value="{{ old('email', $request->email) }}" placeholder="correo@ejemplo.com" required autofocus>
             </div>
 
             <div class="relative">
-                <label for="password" class="block text-sm font-medium text-gray-700">New Password</label>
+                <label for="password" class="block text-sm font-medium text-gray-700">Nueva contraseña</label>
                 <input id="password" name="password" type="password"
                        class="neomorph-card w-full pr-10"
                        required autocomplete="new-password">
@@ -56,7 +56,7 @@
             </div>
 
             <div class="relative">
-                <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirm New Password</label>
+                <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirmar nueva contraseña</label>
                 <input id="password_confirmation" name="password_confirmation" type="password"
                        class="neomorph-card w-full pr-10"
                        required autocomplete="new-password">
@@ -67,7 +67,7 @@
             <div class="flex justify-end">
                 <button type="submit"
                         class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    Reset Password
+                    Restablecer contraseña
                 </button>
             </div>
         </form>

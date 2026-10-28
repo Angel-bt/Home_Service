@@ -3,12 +3,12 @@
         <div class="bg_parallax image_02_parallax"></div>
         <div class="opacy_bg_02">
             <div class="container">
-                <h1>Add Service Category</h1>
+                <h1>Agregar categoría</h1>
                 <div class="crumbs">
                     <ul>
-                        <li><a href="/">Home</a></li>
+                        <li><a href="/">Inicio</a></li>
                         <li>/</li>
-                        <li>Add Service Category</li>
+                        <li>Agregar categoría</li>
                     </ul>
                 </div>
             </div>
@@ -27,7 +27,7 @@
                                             Add New Service Category
                                         </div>
                                         <div class="col-md-6">
-                                            <a href="{{ route('admin.service_categories') }}" class="btn btn-info pull-right">All Service Categories</a>
+                                            <a href="{{ route('admin.service_categories') }}" class="btn btn-info pull-right">Todas las categorías</a>
                                         </div>
                                     </div>
                                 </div>
@@ -38,7 +38,7 @@
                                     <form class="form-horizontal" wire:submit.prevent="createNewCategory">
                                         @csrf
                                         <div class="form-group">
-                                            <label for="name" class="control-label col-sm-3">Category Name: </label>
+                                            <label for="name" class="control-label col-sm-3">Nombre de la categoría: </label>
                                             <div class="col-sm-9">
                                                 <input type="text" class="form-control" name="name" wire:model="name" wire:keyup="generateSlug"/>
                                                 @error('name')
@@ -47,7 +47,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="slug" class="control-label col-sm-3">Category Slug: </label>
+                                            <label for="slug" class="control-label col-sm-3">Slug de la categoría: </label>
                                             <div class="col-sm-9">
                                                 <input type="text" class="form-control" name="slug" wire:model="slug"/>
                                                 @error('slug')
@@ -56,7 +56,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="image" class="control-label col-sm-3">Category Image: </label>
+                                            <label for="image" class="control-label col-sm-3">Imagen de la categoría: </label>
                                             <div class="col-sm-9">
                                                 <input type="file" class="form-control-file" name="image" wire:model="image"/>
                                                 @error('image')
@@ -70,7 +70,7 @@
                                         <div class="form-group">
                                             <label for="" class="control-label col-sm-3"></label>
                                             <div class="col-sm-9">
-                                                <button type="submit" class="btn btn-success pull-right">Add Category</button>
+                                                <button type="submit" class="btn btn-success pull-right">Agregar categoría</button>
                                             </div>
                                         </div>
                                     </form>

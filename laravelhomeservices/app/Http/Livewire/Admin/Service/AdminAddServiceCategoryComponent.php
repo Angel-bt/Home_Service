@@ -45,7 +45,7 @@ class AdminAddServiceCategoryComponent extends Component
         $this->image->storeAs('categories', $imageName);
         $scategory->image = $imageName;
         $scategory->save();
-        session()->flash('message', 'Category has been created successfully!');
+        session()->flash('message', 'La categoría se creó correctamente.');
     }
 
     public function render()

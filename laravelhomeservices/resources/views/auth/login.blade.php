@@ -3,12 +3,12 @@
         <div class="bg_parallax image_01_parallax"></div>
         <div class="opacy_bg_02">
             <div class="container">
-                <h1>Login</h1>
+                <h1>Iniciar sesión</h1>
                 <div class="crumbs">
                     <ul>
-                        <li><a href="/"><button class="glass-button">Home</button></a></li>
+                        <li><a href="/"><button class="glass-button">Inicio</button></a></li>
                         <li>/</li>
-                        <li>Login</li>
+                        <li>Iniciar sesión</li>
                     </ul>
                 </div>
             </div>
@@ -22,17 +22,17 @@
                         <div class="col-xs-12 col-sm-3 col-md-3 profile1"></div>
                         <div class="col-xs-12 col-sm-6 col-md-6 profile1" style="min-height: 300px;">
                             <div class="thinborder-ontop">
-                                <h3>Login Info</h3>
+                                <h3>Datos de acceso</h3>
                                 <form id="userloginform" method="POST" action="{{ route('login') }}">
                                     @csrf
                                     <div class="form-group row">
-                                        <label for="email" class="col-sm-4 col-form-label text-md-right">E-Mail Address</label>
+                                        <label for="email" class="col-sm-4 col-form-label text-md-right">Correo electrónico</label>
                                         <div class="col-md-6">
                                             <input id="email" type="email" class="form-control" name="email" :value="old('email')" required autofocus>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
+                                        <label for="password" class="col-md-4 col-form-label text-md-right">Contraseña</label>
                                         <div class="col-md-6">
                                             <input id="password" type="password" class="form-control" name="password" required autocomplete="current-password">
                                             <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 px-2">👁️</button>
@@ -47,12 +47,12 @@
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <button type="submit" class="glass-button pull-right" id="loginButton">Login</button>
+                                            <button type="submit" class="glass-button pull-right" id="loginButton">Iniciar sesión</button>
                                         </div>
                                     </div>
                                     <div class="form-group row mb-0">
                                         <div class="col-md-10">
-                                            <a class="" href="{{ route('password.request') }}">Forgot Your Password?</a>
+                                            <a class="" href="{{ route('password.request') }}">¿Olvidaste tu contraseña?</a>
                                         </div>
                                     </div>
                                 </form>

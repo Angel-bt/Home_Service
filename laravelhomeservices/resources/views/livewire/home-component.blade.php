@@ -1,103 +1,317 @@
-<div class="proyetech-home">
-    <section class="proyetech-hero" aria-labelledby="hero-title">
-        <div class="proyetech-hero-grid"></div>
-        <div class="proyetech-hero-inner">
-            <div class="proyetech-hero-copy">
-                <p class="proyetech-kicker"><span class="proyetech-status-dot"></span> PROYETECH / RED DE SERVICIOS</p>
-                <h1 id="hero-title">Servicios del hogar,<br><span>re-imaginados.</span></h1>
-                <p class="proyetech-hero-lede">Encuentra especialistas verificados en Loja y Malacatos. Compara soluciones, conecta con profesionales y resuelve tu hogar con confianza.</p>
-                <div class="proyetech-hero-actions">
-                    <a class="proyetech-button proyetech-button-primary" href="{{ route('home.service_categories') }}"><span>Explorar servicios</span><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
-                    <a class="proyetech-button proyetech-button-ghost" href="#proyetech-proof"><i class="fa fa-compass" aria-hidden="true"></i><span>Conocer la red</span></a>
-                </div>
-                <div class="proyetech-trust-line"><i class="fa fa-shield-halved" aria-hidden="true"></i> Profesionales verificados <span></span> Atención local <span></span> Respuesta rápida</div>
+<div class="proyetech-home bg-white font-sans">
+    <!-- Compact Hero Section (TaskRabbit Style) -->
+    <section class="relative w-full h-[400px] md:h-[500px] overflow-hidden group bg-gray-900">
+        <!-- Static High-Quality Background (Or Carousel) -->
+        <div id="hero-carousel" class="w-full h-full relative">
+            <div class="carousel-slide absolute inset-0 w-full h-full opacity-100 z-10 transition-opacity duration-1000">
+                <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover opacity-80" alt="Limpieza profesional">
+                <div class="absolute inset-0 bg-black/40"></div>
             </div>
-            <div class="proyetech-hero-visual" aria-label="Interactive service network visualization">
-                <div class="proyetech-orbit proyetech-orbit-one"></div>
-                <div class="proyetech-orbit proyetech-orbit-two"></div>
-                <canvas id="proyetech-network" width="620" height="620"></canvas>
-                <div class="proyetech-visual-label proyetech-visual-label-top"><span>SERVICIOS ACTIVOS</span><strong>99.98%</strong></div>
-                <div class="proyetech-visual-label proyetech-visual-label-bottom"><span>ESTADO DE LA RED</span><strong><i class="proyetech-status-dot"></i> DISPONIBLE</strong></div>
+            <!-- Slides 2 and 3 omitted for cleaner static look, but script keeps them rotating -->
+            <div class="carousel-slide absolute inset-0 w-full h-full opacity-0 z-0 transition-opacity duration-1000">
+                <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=2069&auto=format&fit=crop" class="w-full h-full object-cover opacity-80" alt="Electricista">
+                <div class="absolute inset-0 bg-black/40"></div>
+            </div>
+            <div class="carousel-slide absolute inset-0 w-full h-full opacity-0 z-0 transition-opacity duration-1000">
+                <img src="https://images.unsplash.com/photo-1542013936693-884638332954?q=80&w=1974&auto=format&fit=crop" class="w-full h-full object-cover opacity-80" alt="Plomería">
+                <div class="absolute inset-0 bg-black/40"></div>
+            </div>
+        </div>
+
+        <!-- Hero Content & Search Bar -->
+        <div class="absolute inset-0 z-20 flex flex-col items-center justify-center px-4 w-full">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-8 drop-shadow-md text-center max-w-2xl">
+                Servicios de confianza <br/>para tu hogar y tu quinta
+            </h1>
+            
+            <!-- Large Floating Search Bar -->
+            <div class="w-full max-w-3xl bg-white rounded-md shadow-2xl p-2 flex items-center">
+                <form id="sform" class="w-full flex items-center" action="{{ route('search') }}" method="get">
+                    <div class="flex-grow flex items-center pl-4">
+                        <i class="fa fa-search text-green-700 text-lg"></i>
+                        <input type="text" id="q" name="q" required placeholder="¿Qué necesitas? Ej.: plomero, jardinería, piscina" class="w-full border-none focus:ring-0 text-gray-700 text-lg py-3 px-4 outline-none typeahead" autocomplete="off">
+                    </div>
+                    <button type="submit" class="bg-green-700 hover:bg-green-800 text-white font-bold py-3 px-8 rounded cursor-pointer transition-colors whitespace-nowrap">
+                        Buscar
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Rotating Profession Text -->
+            <div class="mt-6 flex gap-3 text-white font-medium text-sm md:text-base drop-shadow-md">
+                <span class="flex items-center gap-1"><i class="fa fa-check text-green-400"></i> Proveedores de Malacatos y el valle</span>
+                <span class="flex items-center gap-1"><i class="fa fa-check text-green-400"></i> Contacto directo por WhatsApp</span>
             </div>
         </div>
     </section>
 
-    <section class="proyetech-search-panel" aria-label="Buscar servicios">
-        <div class="proyetech-search-intro"><span class="proyetech-section-index">01</span><strong>Encuentra tu especialista</strong><small>Busca una solución para tu hogar</small></div>
-        <form id="sform" class="proyetech-search-form" action="{{ route('searchService') }}" method="post">
-            @csrf
-            <label class="sr-only" for="q">¿Qué servicio necesitas?</label>
-            <i class="fa fa-magnifying-glass" aria-hidden="true"></i>
-            <input type="text" id="q" name="q" required placeholder="¿Qué servicio necesitas?" class="typeahead" autocomplete="off">
-            <button type="submit">Buscar <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-        </form>
-    </section>
-
-    <section id="proyetech-proof" class="proyetech-metrics" aria-label="Marketplace metrics">
-        <div><strong>&lt; 10<span>min</span></strong><small>Tiempo de respuesta</small></div>
-        <div><strong>24<span>/7</span></strong><small>Ayuda para tu hogar</small></div>
-        <div><strong>4.9<span>/5</span></strong><small>Valoración promedio</small></div>
-        <div><strong>100<span>%</span></strong><small>Profesionales verificados</small></div>
-    </section>
-
-    <section class="proyetech-home-section proyetech-category-strip" aria-labelledby="category-title">
-        <div class="proyetech-section-heading"><div><p class="proyetech-kicker">02 / DESCUBRE</p><h2 id="category-title">Una red.<br><span>Cada solución.</span></h2></div><a href="{{ route('home.service_categories') }}" class="proyetech-text-link">Ver todas las categorías <i class="fa fa-arrow-right" aria-hidden="true"></i></a></div>
-        <div class="proyetech-category-list">
-            @forelse($scategories->take(6) as $scategory)
-                <a class="proyetech-category-tile" href="{{ route('home.services_by_category', ['category_slug' => $scategory->slug]) }}">
-                    <span class="proyetech-tile-icon"><img src="{{ asset('images/categories') }}/{{ $scategory->image }}" alt=""></span><span>{{ $scategory->name }}</span><i class="fa fa-arrow-right" aria-hidden="true"></i>
-                </a>
-            @empty
-                <div class="proyetech-empty-state">Las categorías se están preparando para ti.</div>
-            @endforelse
-        </div>
-    </section>
-
-    <section class="proyetech-home-section proyetech-services-section" aria-labelledby="services-title">
-        <div class="proyetech-section-heading"><div><p class="proyetech-kicker">03 / PARA TI</p><h2 id="services-title">Soluciones que<br><span>sí funcionan.</span></h2></div><span class="proyetech-live-pill"><i class="proyetech-status-dot"></i> Disponibilidad activa</span></div>
-        <div class="proyetech-service-grid">
+    <!-- Popular Projects (Featured Services) -->
+    <section class="max-w-7xl mx-auto px-4 md:px-8 py-12" aria-labelledby="popular-projects">
+        <h2 id="popular-projects" class="text-2xl font-bold text-gray-900 mb-6">Servicios destacados</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             @forelse($fservices->take(4) as $service)
-                <a class="proyetech-service-card" href="{{ route('home.service_details', ['service_slug' => $service->slug]) }}">
-                    <div class="proyetech-service-image"><img src="{{ asset('images/services/thumbnails') }}/{{ $service->thumbnail }}" alt="{{ $service->name }}"><span>VERIFICADO</span></div>
-                    <div class="proyetech-service-info"><span>{{ $service->category->name ?? 'Servicio para el hogar' }}</span><h3>{{ $service->name }}</h3><p>{{ $service->tagline }}</p><strong>Desde ${{ $service->price }} <i class="fa fa-arrow-right" aria-hidden="true"></i></strong></div>
+                <a href="{{ route('home.service_details', ['service_slug' => $service->slug]) }}" class="group block border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow bg-white flex flex-col h-full">
+                    <div class="w-full h-40 overflow-hidden relative">
+                        <img src="{{ asset('images/services/thumbnails') }}/{{ $service->thumbnail }}" alt="{{ $service->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        <span class="absolute top-2 left-2 bg-white/90 text-gray-800 text-xs font-bold px-2 py-1 rounded">DESTACADO</span>
+                    </div>
+                    <div class="p-4 flex-grow flex flex-col">
+                        <h3 class="font-bold text-gray-900 text-lg mb-1 leading-tight group-hover:text-green-700">{{ $service->name }}</h3>
+                        <p class="text-gray-500 text-sm mb-3 flex-grow">{{ $service->category->name ?? 'Servicio' }}</p>
+                        <div class="text-gray-900 font-semibold text-lg border-t border-gray-100 pt-3">
+                            Desde ${{ number_format((float) $service->price, 2) }}
+                        </div>
+                    </div>
                 </a>
             @empty
-                <div class="proyetech-empty-state">Aquí aparecerán los servicios destacados de nuestros profesionales.</div>
+                <p class="text-gray-500">Pronto habrá más servicios destacados.</p>
             @endforelse
+        </div>
+    </section>
+
+    <!-- Everyday Help (Categories) -->
+    <section class="max-w-7xl mx-auto px-4 md:px-8 py-12 bg-gray-50 rounded-2xl mb-12" aria-labelledby="everyday-help">
+        <div class="flex justify-between items-end mb-8">
+            <h2 id="everyday-help" class="text-2xl font-bold text-gray-900">Ayuda para el día a día</h2>
+            <a href="{{ route('home.service_categories') }}" class="text-green-700 font-bold hover:underline">Ver todas</a>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            @forelse($scategories->take(6) as $scategory)
+                <a href="{{ route('home.services_by_category', ['category_slug' => $scategory->slug]) }}" class="flex items-center p-4 bg-white border border-gray-200 rounded-lg hover:border-green-600 hover:shadow-md transition-all group">
+                    <div class="w-12 h-12 flex-shrink-0 mr-4 rounded-full bg-green-50 flex items-center justify-center overflow-hidden p-2 group-hover:bg-green-100 transition-colors">
+                        <img src="{{ asset('images/categories') }}/{{ $scategory->image }}" alt="{{ $scategory->name }}" class="w-full h-full object-contain mix-blend-multiply">
+                    </div>
+                    <div class="flex-grow">
+                        <h3 class="font-bold text-gray-900 group-hover:text-green-700 transition-colors">{{ $scategory->name }}</h3>
+                    </div>
+                    <i class="fa fa-chevron-right text-gray-400 group-hover:text-green-700 text-sm"></i>
+                </a>
+            @empty
+                <p class="text-gray-500">Pronto habrá categorías.</p>
+            @endforelse
+        </div>
+    </section>
+
+    <!-- How it works & Metrics -->
+    <section class="max-w-7xl mx-auto px-4 md:px-8 py-16 border-t border-gray-200 text-center">
+        <h2 class="text-3xl font-bold text-gray-900 mb-12">Cómo funciona</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <div class="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center text-green-700 text-2xl font-bold mb-4">1</div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Busca lo que necesitas</h3>
+                <p class="text-gray-600">Elige la categoría o escribe el trabajo: plomería, jardinería, piscinas y más.</p>
+            </div>
+            <div>
+                <div class="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center text-green-700 text-2xl font-bold mb-4">2</div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Elige a tu proveedor</h3>
+                <p class="text-gray-600">Compara proveedores de tu zona por reseñas y precio.</p>
+            </div>
+            <div>
+                <div class="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center text-green-700 text-2xl font-bold mb-4">3</div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Contáctalo y listo</h3>
+                <p class="text-gray-600">Escríbele por WhatsApp o envía tu solicitud. Pagas directamente al proveedor cuando termina.</p>
+            </div>
         </div>
     </section>
 </div>
 
+
+
+{{-- MEJORA: módulo unificado de autenticación (Login + Registro en una sola ventana). --}}
+<div id="proyetech-auth-modal" class="proyetech-auth-modal" data-active="login" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="proyetech-auth-heading">
+    <div class="proyetech-auth-dialog" role="document">
+        <button type="button" class="proyetech-auth-close" id="proyetech-auth-close" aria-label="Cerrar"><i class="fa fa-times" aria-hidden="true"></i></button>
+        <div class="proyetech-auth-banner">
+            <p>ACCESO PROYETECH</p>
+            <h3 id="proyetech-auth-heading">Tu red de especialistas</h3>
+        </div>
+
+        <div class="proyetech-auth-tabs" id="proyetech-auth-tabs" data-active="login">
+            <span class="proyetech-auth-indicator" aria-hidden="true"></span>
+            <button type="button" class="proyetech-auth-tab is-active" data-auth-tab="login">Iniciar sesión</button>
+            <button type="button" class="proyetech-auth-tab" data-auth-tab="register">Crear cuenta</button>
+        </div>
+
+        <div class="proyetech-auth-panes">
+            <div class="proyetech-auth-track">
+                {{-- Panel: Iniciar sesión (Fortify POST /login) --}}
+                <div class="proyetech-auth-pane" data-auth-pane="login">
+                    <form method="POST" action="{{ route('login') }}">
+                        @csrf
+                        <div class="proyetech-auth-field">
+                            <label for="proyetech-login-email">Correo electrónico</label>
+                            <input class="proyetech-auth-input" id="proyetech-login-email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="email">
+                        </div>
+                        <div class="proyetech-auth-field">
+                            <label for="proyetech-login-password">Contraseña</label>
+                            <input class="proyetech-auth-input" id="proyetech-login-password" type="password" name="password" required autocomplete="current-password">
+                        </div>
+                        <div class="proyetech-auth-row">
+                            <label><input type="checkbox" name="remember"> Recordarme</label>
+                            <a href="{{ route('password.request') }}">¿Olvidaste tu contraseña?</a>
+                        </div>
+                        <button type="submit" class="proyetech-auth-submit">Entrar</button>
+                    </form>
+                    <div class="proyetech-auth-divider">o continúa con</div>
+                    <div class="proyetech-auth-social">
+                        <button type="button" data-social="google" title="Próximamente"><i class="fab fa-google" aria-hidden="true"></i> Google</button>
+                        <button type="button" data-social="apple" title="Próximamente"><i class="fab fa-apple" aria-hidden="true"></i> Apple</button>
+                    </div>
+                    <p class="proyetech-auth-alt">¿Aún no tienes cuenta? <button type="button" data-auth-goto="register">Regístrate gratis</button></p>
+                </div>
+
+                {{-- Panel: Crear cuenta (Fortify POST /register) --}}
+                <div class="proyetech-auth-pane" data-auth-pane="register">
+                    <form method="POST" action="{{ route('register') }}">
+                        @csrf
+                        <div class="proyetech-auth-field">
+                            <label for="proyetech-reg-name">Nombre completo</label>
+                            <input class="proyetech-auth-input" id="proyetech-reg-name" type="text" name="name" value="{{ old('name') }}" required autocomplete="name">
+                        </div>
+                        <div class="proyetech-auth-field">
+                            <label for="proyetech-reg-email">Correo electrónico</label>
+                            <input class="proyetech-auth-input" id="proyetech-reg-email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email">
+                        </div>
+                        <div class="proyetech-auth-field">
+                            <label for="proyetech-reg-phone">Teléfono</label>
+                            <input class="proyetech-auth-input" id="proyetech-reg-phone" type="text" name="phone" value="{{ old('phone') }}" required autocomplete="tel">
+                        </div>
+                        <div class="proyetech-auth-field">
+                            <label for="proyetech-reg-password">Contraseña</label>
+                            <input class="proyetech-auth-input" id="proyetech-reg-password" type="password" name="password" required autocomplete="new-password">
+                        </div>
+                        <div class="proyetech-auth-field">
+                            <label for="proyetech-reg-password-confirm">Confirmar contraseña</label>
+                            <input class="proyetech-auth-input" id="proyetech-reg-password-confirm" type="password" name="password_confirmation" required autocomplete="new-password">
+                        </div>
+                        <div class="proyetech-auth-field">
+                            <label for="proyetech-reg-as">Quiero registrarme como</label>
+                            <select class="proyetech-auth-input" id="proyetech-reg-as" name="registeras">
+                                <option value="CST">Cliente</option>
+                                <option value="SVP">Proveedor de servicios</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="proyetech-auth-submit">Crear cuenta</button>
+                    </form>
+                    <p class="proyetech-auth-alt">¿Ya tienes cuenta? <button type="button" data-auth-goto="login">Inicia sesión</button></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @push('scripts')
+{{-- MEJORA: estilos del placeholder CSS del hero (el layout solo expone @stack('scripts')). --}}
 <script>
-    (function () {
-        var canvas = document.getElementById('proyetech-network');
-        if (!canvas) return;
-        var context = canvas.getContext('2d');
-        var points = [], pointer = { x: 0, y: 0 }, reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        for (var index = 0; index < 72; index += 1) {
-            var angle = Math.acos(1 - (2 * (index + 0.5) / 72)), spin = Math.PI * (1 + Math.sqrt(5)) * index;
-            points.push({ x: Math.sin(angle) * Math.cos(spin), y: Math.sin(angle) * Math.sin(spin), z: Math.cos(angle) });
-        }
-        function draw(time) {
-            var width = canvas.width, center = width / 2, radius = width * .34, rotation = reducedMotion ? .25 : time * .00018 + pointer.x * .22;
-            context.clearRect(0, 0, width, width);
-            var projected = points.map(function (point) {
-                var x = point.x * Math.cos(rotation) - point.z * Math.sin(rotation), z = point.x * Math.sin(rotation) + point.z * Math.cos(rotation), y = point.y * Math.cos(pointer.y * .12) - z * Math.sin(pointer.y * .12);
-                return { x: center + x * radius, y: center + y * radius, z: z };
-            }).sort(function (a, b) { return a.z - b.z; });
-            context.lineWidth = 1;
-            for (var link = 0; link < projected.length; link += 1) {
-                for (var next = link + 1; next < projected.length; next += 1) {
-                    var distance = Math.hypot(projected[link].x - projected[next].x, projected[link].y - projected[next].y);
-                    if (distance < 58) { context.strokeStyle = 'rgba(0, 240, 255, ' + (.07 + Math.max(projected[link].z, projected[next].z) * .12) + ')'; context.beginPath(); context.moveTo(projected[link].x, projected[link].y); context.lineTo(projected[next].x, projected[next].y); context.stroke(); }
+    document.addEventListener("DOMContentLoaded", function() {
+        const slides = document.querySelectorAll('.carousel-slide');
+        if (!slides.length) return;
+        
+        let currentSlide = 0;
+        let slideInterval;
+        
+        const professions = ['hogar', 'proyecto', 'negocio'];
+        const profText = document.getElementById('hero-profession-text');
+        
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                if (i === index) {
+                    slide.classList.replace('opacity-0', 'opacity-100');
+                    slide.classList.replace('z-0', 'z-10');
+                } else {
+                    slide.classList.replace('opacity-100', 'opacity-0');
+                    slide.classList.replace('z-10', 'z-0');
                 }
-                var alpha = .25 + (projected[link].z + 1) * .35; context.fillStyle = 'rgba(0, 240, 255, ' + alpha + ')'; context.beginPath(); context.arc(projected[link].x, projected[link].y, 1.5 + (projected[link].z + 1), 0, Math.PI * 2); context.fill();
-            }
-            if (!reducedMotion) window.requestAnimationFrame(draw);
+            });
+            if (profText) profText.innerText = professions[index % professions.length];
         }
-        canvas.addEventListener('pointermove', function (event) { var bounds = canvas.getBoundingClientRect(); pointer.x = (event.clientX - bounds.left) / bounds.width - .5; pointer.y = (event.clientY - bounds.top) / bounds.height - .5; });
-        draw(0);
+        
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+        
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(currentSlide);
+        }
+        
+        function startCarousel() {
+            slideInterval = setInterval(nextSlide, 5000);
+        }
+        
+        function stopCarousel() {
+            clearInterval(slideInterval);
+        }
+        
+        document.getElementById('hero-next')?.addEventListener('click', () => {
+            stopCarousel();
+            nextSlide();
+            startCarousel();
+        });
+        
+        document.getElementById('hero-prev')?.addEventListener('click', () => {
+            stopCarousel();
+            prevSlide();
+            startCarousel();
+        });
+        
+        startCarousel();
+    });
+</script>
+<script>
+    // Módulo unificado de autenticación: tab toggle deslizable sin recargar.
+    (function () {
+        var modal = document.getElementById('proyetech-auth-modal');
+        if (!modal) return;
+        var tabsWrap = document.getElementById('proyetech-auth-tabs');
+
+        function setMode(mode) {
+            modal.setAttribute('data-active', mode);
+            if (tabsWrap) tabsWrap.setAttribute('data-active', mode);
+            document.querySelectorAll('.proyetech-auth-tab').forEach(function (tab) {
+                tab.classList.toggle('is-active', tab.getAttribute('data-auth-tab') === mode);
+            });
+        }
+
+        function openAuth(mode) {
+            setMode(mode || 'login');
+            modal.classList.add('is-open');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('proyetech-locked');
+        }
+
+        function closeAuth() {
+            modal.classList.remove('is-open');
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('proyetech-locked');
+        }
+
+        document.querySelectorAll('[data-auth-open]').forEach(function (trigger) {
+            trigger.addEventListener('click', function (event) { event.preventDefault(); openAuth(this.getAttribute('data-auth-open') || 'login'); });
+        });
+        document.querySelectorAll('[data-auth-tab]').forEach(function (tab) {
+            tab.addEventListener('click', function () { setMode(this.getAttribute('data-auth-tab')); });
+        });
+        document.querySelectorAll('[data-auth-goto]').forEach(function (link) {
+            link.addEventListener('click', function () { setMode(this.getAttribute('data-auth-goto')); });
+        });
+        var closeBtn = document.getElementById('proyetech-auth-close');
+        if (closeBtn) closeBtn.addEventListener('click', closeAuth);
+        modal.addEventListener('click', function (event) { if (event.target === modal) closeAuth(); });
+        document.addEventListener('keydown', function (event) { if (event.key === 'Escape') closeAuth(); });
+
+        document.querySelectorAll('[data-social]').forEach(function (button) {
+            button.addEventListener('click', function () {
+                if (window.Swal) {
+                    window.Swal.fire({ icon: 'info', title: 'Próximamente', text: 'El acceso con ' + this.getAttribute('data-social') + ' estará disponible pronto.' });
+                }
+            });
+        });
+
+        @if ($errors->any())
+            openAuth('{{ old('registeras') ? 'register' : 'login' }}');
+        @endif
     }());
 </script>
 <script>

@@ -8,6 +8,12 @@ module.exports = {
         './resources/views/**/*.blade.php',
     ],
 
+    // The legacy Bootstrap 3 theme (public/assets) provides the base styles;
+    // Tailwind's global reset would override it.
+    corePlugins: {
+        preflight: false,
+    },
+
     theme: {
         extend: {
             fontFamily: {

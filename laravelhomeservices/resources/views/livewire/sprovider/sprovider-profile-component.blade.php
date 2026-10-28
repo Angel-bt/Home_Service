@@ -1,19 +1,5 @@
-<div>   
-    <div class="section-title-01 honmob">
-        <div class="bg_parallax image_02_parallax"></div>
-        <div class="opacy_bg_02">
-            <div class="container">
-                <h1>Profile</h1>
-                <div class="crumbs">
-                    <ul>
-                        <li><a href="/">Home</a></li>
-                        <li>/</li>
-                        <li>Profile</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+<div>
+    @include('livewire.partials.page-header', ['title' => 'Mi perfil'])
     <section class="content-central">
         <div class="content_info">
             <div class="paddings-mini">
@@ -23,40 +9,38 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <div class="row">
+                                        <div class="col-md-6">Perfil de proveedor</div>
                                         <div class="col-md-6">
-                                            Profile
-                                        </div>
-                                        <div class="col-md-6">
-                                            
+                                            <a href="{{ route('sprovider.edit_profile') }}" class="btn btn-info pull-right">Editar perfil</a>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="panel-body">
-                                   <div class="row">
-                                       <div class="col-md-4">
-                                           @if($sprovider && $sprovider->image)
-                                                <img src="{{asset('images/sproviders')}}/{{$sprovider->image}}" width="100%" />
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            @if ($sprovider && $sprovider->image)
+                                                <img src="{{ asset('images/sproviders/' . $sprovider->image) }}" width="100%" alt=""/>
                                             @else
-                                                <img src="{{asset('images/sproviders/default.jpg')}}" width="100%" />
+                                                <img src="{{ asset('images/sproviders/default.jpg') }}" width="100%" alt=""/>
                                             @endif
-                                       </div>
-                                       <div class="col-md-8">
-                                           <h3>Name : {{Auth::user()->name}}</h3>
-                                           <p>{{$sprovider ? $sprovider->about : 'No information available.'}}</p>
-                                           <p><b>Email: </b>{{Auth::user()->email}}</p>
-                                           <p><b>Phone: </b>{{Auth::user()->phone}}</p>
-                                           <p><b>City : </b>{{$sprovider ? $sprovider->city : 'N/A'}}</p>
-                                           <p><b>Service Category : </b>
-                                            @if($sprovider && $sprovider->service_category_id)
-                                                {{$sprovider->category->name}}
-                                            @else
-                                                N/A
-                                            @endif                                               
+                                        </div>
+                                        <div class="col-md-8">
+                                            <h3>{{ Auth::user()->name }}</h3>
+                                            <p>{{ $sprovider?->about ?: 'Aún no has escrito una presentación.' }}</p>
+                                            <p><b>Correo:</b> {{ Auth::user()->email }}</p>
+                                            <p><b>Teléfono:</b> {{ Auth::user()->phone }}</p>
+                                            <p><b>WhatsApp:</b> {{ $sprovider?->whatsapp ?: 'Sin configurar' }}</p>
+                                            <p><b>Ciudad / parroquia:</b> {{ $sprovider?->city ?: '—' }}</p>
+                                            <p><b>Categoría principal:</b> {{ $sprovider?->category?->name ?? '—' }}</p>
+                                            <p><b>Zonas donde trabaja:</b>
+                                                {{ $sprovider && $sprovider->zones->isNotEmpty() ? $sprovider->zones->map->label()->implode(', ') : 'Sin zonas configuradas' }}
                                             </p>
-                                           <p><b>Service Location :</b> {{$sprovider ? $sprovider->service_location : 'N/A'}}</p>
-                                           <a href="{{route('sprovider.edit_profile')}}" class="btn btn-info pull-right">Edit Profile</a>                                          
-                                       </div>
-                                   </div>
+                                            <p><b>Referencia de ubicación:</b> {{ $sprovider?->service_location ?: '—' }}</p>
+                                            @if (! $sprovider || $sprovider->zones->isEmpty() || ! $sprovider->whatsapp)
+                                                <div class="alert alert-warning">Completa tu WhatsApp y tus zonas para que los clientes puedan encontrarte y contactarte.</div>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

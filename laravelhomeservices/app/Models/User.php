@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -55,6 +56,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'trial_ends_at' => 'datetime',
+        'plan_expires_at' => 'datetime',
     ];
 
     /**
@@ -71,9 +73,39 @@ class User extends Authenticatable
         return $this->hasMany(Service::class);
     }
 
+    public function serviceProvider(): HasOne
+    {
+        return $this->hasOne(ServiceProvider::class);
+    }
+
+    /**
+     * Number customers should write to on WhatsApp: the provider's own WhatsApp,
+     * then their registration phone.
+     */
+    public function whatsappNumber(): ?string
+    {
+        $whatsapp = $this->serviceProvider?->whatsapp;
+
+        return $whatsapp !== null && $whatsapp !== '' ? $whatsapp : $this->phone;
+    }
+
+    public function subscriptionPayments(): HasMany
+    {
+        return $this->hasMany(SubscriptionPayment::class);
+    }
+
+    /**
+     * Pro plan in force. A "pro" user without expiry date was upgraded manually and never expires.
+     */
+    public function isPro(): bool
+    {
+        return $this->subscription_plan === 'pro'
+            && ($this->plan_expires_at === null || $this->plan_expires_at->isFuture());
+    }
+
     public function servicePublicationLimit(): ?int
     {
-        if ($this->utype === 'ADM' || $this->subscription_plan === 'pro') {
+        if ($this->utype === 'ADM' || $this->isPro()) {
             return null;
         }
 

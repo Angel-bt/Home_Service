@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Admin\Service;
 
 use App\Models\Slider;
+use App\Services\ServiceAssetCleaner;
 use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -18,7 +19,7 @@ class AdminEditSlideComponent extends Component
 
     public function mount($slide_id)
     {
-        $slide = Slider::find($slide_id);
+        $slide = Slider::findOrFail($slide_id);
         $this->slide_id = $slide->id;
         $this->title = $slide->title;
         $this->image = $slide->image;
@@ -50,11 +51,11 @@ class AdminEditSlideComponent extends Component
             ]);
         }
 
-        $slide = Slider::find($this->slide_id);
+        $slide = Slider::findOrFail($this->slide_id);
         $slide->title = $this->title;
 
         if ($this->newimage) {
-            unlink('images/slider/' . $slide->image);
+            app(ServiceAssetCleaner::class)->deleteFile('images/slider', $slide->image);
             $imageName = Carbon::now()->timestamp . '.' . $this->newimage->extension();
             $this->newimage->storeAs('slider', $imageName);
             $slide->image = $imageName;
@@ -63,7 +64,7 @@ class AdminEditSlideComponent extends Component
         $slide->status = $this->status;
         $slide->save();
 
-        session()->flash('message', 'Slide has been updated successfully!');
+        session()->flash('message', 'La diapositiva se actualizó correctamente.');
     }
 
     public function render()

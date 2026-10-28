@@ -11,12 +11,12 @@
         <div class="bg_parallax image_02_parallax"></div>
         <div class="opacy_bg_02">
             <div class="container">
-                <h1>Service Providers</h1>
+                <h1>Proveedores de servicios</h1>
                 <div class="crumbs">
                     <ul>
-                        <li><a href="/">Home</a></li>
+                        <li><a href="/">Inicio</a></li>
                         <li>/</li>
-                        <li>Service Providers</li>
+                        <li>Proveedores de servicios</li>
                     </ul>
                 </div>
             </div>
@@ -47,13 +47,13 @@
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Image</th>
-                                                <th>Name</th>
-                                                <th>Email</th>
-                                                <th>Phone</th>
-                                                <th>City</th>
-                                                <th>Service Category</th>
-                                                <th>Service Locations</th>
+                                                <th>Imagen</th>
+                                                <th>Nombre</th>
+                                                <th>Correo</th>
+                                                <th>Teléfono</th>
+                                                <th>Ciudad</th>
+                                                <th>Categoría</th>
+                                                <th>Zona / ubicación</th>
                                             </tr>
                                         </thead>
                                         <tbody>

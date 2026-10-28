@@ -21,7 +21,7 @@ class ChangeLocationComponent extends Component
         session()->put('state', $this->state);
         session()->put('country', $this->country);
         session()->put('zipcode', $this->zipcode);
-        session()->flash('message', 'Location has been changed.');
+        session()->flash('message', 'Tu ubicación se guardó.');
         $this->emitTo('location-component', 'refreshComponent');
     }
 

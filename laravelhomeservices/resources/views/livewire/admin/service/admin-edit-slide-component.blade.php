@@ -3,12 +3,12 @@
         <div class="bg_parallax image_02_parallax"></div>
         <div class="opacy_bg_02">
             <div class="container">
-                <h1>Edit Slide</h1>
+                <h1>Editar diapositiva</h1>
                 <div class="crumbs">
                     <ul>
-                        <li><a href="/">Home</a></li>
+                        <li><a href="/">Inicio</a></li>
                         <li>/</li>
-                        <li>Edit Slide</li>
+                        <li>Editar diapositiva</li>
                     </ul>
                 </div>
             </div>
@@ -24,10 +24,10 @@
                                 <div class="panel-heading">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            Edit Slide
+                                            Editar diapositiva
                                         </div>
                                         <div class="col-md-6">
-                                            <a href="{{ route('admin.slider') }}" class="btn btn-info pull-right">All Slides</a>
+                                            <a href="{{ route('admin.slider') }}" class="btn btn-info pull-right">Todas las diapositivas</a>
                                         </div>
                                     </div>
                                 </div>
@@ -38,7 +38,7 @@
                                     <form class="form-horizontal" wire:submit.prevent="updateSlide">
                                         @csrf
                                         <div class="form-group">
-                                            <label for="title" class="control-label col-sm-3">Title: </label>
+                                            <label for="title" class="control-label col-sm-3">Título: </label>
                                             <div class="col-sm-9">
                                                 <input type="text" class="form-control" name="title" wire:model="title"/>
                                                 @error('title')
@@ -47,7 +47,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="newimage" class="control-label col-sm-3">Image: </label>
+                                            <label for="newimage" class="control-label col-sm-3">Imagen: </label>
                                             <div class="col-sm-9">
                                                 <input type="file" class="form-control-file" name="newimage" wire:model="newimage"/>
                                                 @error('newimage')
@@ -61,11 +61,11 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="status" class="control-label col-sm-3">Status: </label>
+                                            <label for="status" class="control-label col-sm-3">Estado: </label>
                                             <div class="col-sm-9">
                                                 <select class="form-control" name="status" wire:model="status">
-                                                    <option value="1">Active</option>
-                                                    <option value="0">Inactive</option>
+                                                    <option value="1">Activo</option>
+                                                    <option value="0">Inactivo</option>
                                                 </select>
                                                 @error('status')
                                                     <div class="text-danger">{{ $message }}</div>
@@ -75,7 +75,7 @@
                                         <div class="form-group">
                                             <label for="" class="control-label col-sm-3"></label>
                                             <div class="col-sm-9">
-                                                <button type="submit" class="btn btn-success pull-right">Update Slide</button>
+                                                <button type="submit" class="btn btn-success pull-right">Guardar diapositiva</button>
                                             </div>
                                         </div>
                                     </form>

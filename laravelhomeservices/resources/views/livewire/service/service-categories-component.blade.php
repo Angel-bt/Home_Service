@@ -4,13 +4,13 @@
         <div class="bg_parallax image_01_parallax"></div>
         <div class="opacy_bg_02">
             <div class="container">
-                <p class="proyetech-eyebrow">PROYETECH / MARKETPLACE</p>
-                <h1>Service Categories</h1>
+                <p class="proyetech-eyebrow">PROYETECH · MALACATOS</p>
+                <h1>Categorías de servicios</h1>
                 <div class="crumbs proyetech-breadcrumb" aria-label="Breadcrumb">
                     <ul>
-                        <li><a href="{{ route('home') }}">Home</a></li>
+                        <li><a href="{{ route('home') }}">Inicio</a></li>
                         <li aria-hidden="true">/</li>
-                        <li aria-current="page">Service Categories</li>
+                        <li aria-current="page">Categorías de servicios</li>
                     </ul>
                 </div>
             </div>
@@ -20,8 +20,8 @@
         <div class="container">
             <div class="row" style="margin-top: -30px;">
                 <div class="titles">
-                    <h2 id="categories-title">Find the right <span>specialist</span></h2>
-                    <p class="proyetech-section-copy">Explore trusted home services and choose the category that fits your need.</p>
+                    <h2 id="categories-title">Encuentra al <span>especialista</span></h2>
+                    <p class="proyetech-section-copy">Explora servicios para tu hogar o quinta y elige la categoría que necesitas.</p>
                     <hr class="tall">
                 </div>
             </div>
@@ -38,7 +38,9 @@
                                         src="{{ asset('images/categories') }}/{{ $scategory->image }}" alt=""></span>
                                     <span class="proyetech-category-content">
                                         <span class="proyetech-category-title">{{ $scategory->name }}</span>
-                                        <span class="proyetech-category-description">Encuentra profesionales verificados para tu hogar.</span>
+                                        <span class="proyetech-category-description">
+                                            {{ $scategory->services->count() }} {{ Str::plural('servicio', $scategory->services->count()) }} disponible{{ $scategory->services->count() !== 1 ? 's' : '' }}
+                                        </span>
                                     </span>
                                     <i class="fa fa-arrow-right proyetech-category-arrow" aria-hidden="true"></i>
                                 </a>

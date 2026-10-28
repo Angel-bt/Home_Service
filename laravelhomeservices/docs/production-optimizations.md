@@ -46,19 +46,18 @@ php artisan queue:restart
 
 For a database queue instead, set `QUEUE_CONNECTION=database` and use the supplied `jobs` migration. Set `LEAD_NOTIFICATION_ADDRESS` to the operations inbox; absent value intentionally skips the lead email.
 
-## 5. Freemium and Stripe readiness
+## 5. Freemium and Pro plan billing
 
-The user migration adds `subscription_plan`, Stripe customer/payment-method columns, and `trial_ends_at`. `User::canPublishService()` returns false once a free provider has `FREE_SERVICE_LIMIT` services (default: 3). `ServicePublicationGate` enforces that rule on service creation. `pro` and `ADM` are unlimited.
+Free providers can publish `FREE_SERVICE_LIMIT` services (default 3); `User::isPro()` (plan `pro` and `plan_expires_at` in the future, or `null` for a manual upgrade) and `ADM` are unlimited. `ServicePublicationGate` enforces the cap on creation.
 
-The current project does not install Cashier yet, so the plan gate is independent and deployable now. When billing is enabled, install the Laravel 9-compatible Cashier release and add its trait to `App\\Models\\User`:
+Stripe does not accept merchants based in Ecuador, so the Pro plan is sold with:
 
-```powershell
-composer require laravel/cashier:^13.0
-php artisan vendor:publish --tag="cashier-migrations"
-php artisan migrate --force
-```
+1. **Transfer / DeUna with receipt** (always available). The provider pays, uploads the receipt on `/sprovider/plan` (stored on the private `receipts` disk, `storage/app/receipts`) and an administrator approves or rejects it on `/admin/payments`. Approval extends `plan_expires_at` by `BILLING_PRO_PERIOD_DAYS` x periods, counting from the current expiry when renewing early.
+2. **Payphone card payments** (optional, `PAYPHONE_ENABLED=true`). `App\Services\PayphoneGateway` calls `api/button/Prepare`, redirects to Payphone and, on return to `/billing/payphone/return`, calls `api/button/V2/Confirm`. The plan is activated only when Payphone answers `statusCode` 3 for the same `clientTransactionId` and amount. Payphone reverses unconfirmed charges after 5 minutes. Register the production domain in Payphone Developer, which only allows the payment button from that domain.
 
-Then add `use Laravel\\Cashier\\Billable;` and `use Billable;` to `User`, configure `STRIPE_KEY`, `STRIPE_SECRET`, and `STRIPE_WEBHOOK_SECRET`, and register the Stripe webhook endpoint. Do not expose those secrets in source control.
+`php artisan billing:expire-plans` (scheduled hourly) moves expired plans back to `free` and closes card attempts that were never confirmed. Services published while on Pro stay online after expiry; the provider just cannot add more until they renew.
+
+Set the price and payment details through `BILLING_*` and `PAYPHONE_*` (see `.env.production.example` and `config/billing.php`). `BILLING_TAX_RATE` is the IVA share included in the price (0 if the business does not charge IVA); confirm it with an accountant. The unused `stripe_id`/`pm_*` user columns are left from the earlier Cashier plan.
 
 ## Required environment
 

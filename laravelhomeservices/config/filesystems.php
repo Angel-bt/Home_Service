@@ -37,6 +37,13 @@ return [
             'throw' => false,
         ],
 
+        // Comprobantes de pago: privados, fuera de public/. Solo el admin los ve vía ruta protegida.
+        'receipts' => [
+            'driver' => 'local',
+            'root' => storage_path('app/receipts'),
+            'throw' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

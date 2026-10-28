@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Admin\Service;
 
 use App\Models\Service;
+use App\Services\ServiceAssetCleaner;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -14,18 +16,18 @@ class AdminServicesComponent extends Component
 
     public function deleteService($service_id)
     {
+        abort_unless(Auth::check() && Auth::user()->utype === 'ADM', 403);
+
         $service = Service::find($service_id);
 
-        if ($service->thumbnail) {
-            unlink('images/services/thumbnails' . '/' . $service->thumbnail);
+        if ($service === null) {
+            return;
         }
 
-        if ($service->image) {
-            unlink('images/services' . '/' . $service->image);
-        }
+        app(ServiceAssetCleaner::class)->deleteFiles($service);
 
         $service->delete();
-        session()->flash('message', 'Service has been deleted successfully!');
+        session()->flash('message', 'El servicio se eliminó.');
     }
 
     public function render()

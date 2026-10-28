@@ -11,12 +11,12 @@
         <div class="bg_parallax image_02_parallax"></div>
         <div class="opacy_bg_02">
             <div class="container">
-                <h1>Contacts</h1>
+                <h1>Mensajes de contacto</h1>
                 <div class="crumbs">
                     <ul>
-                        <li><a href="/">Home</a></li>
+                        <li><a href="/">Inicio</a></li>
                         <li>/</li>
-                        <li>Contacts</li>
+                        <li>Mensajes de contacto</li>
                     </ul>
                 </div>
             </div>
@@ -44,11 +44,11 @@
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Name</th>
-                                                <th>Email</th>
-                                                <th>Phone</th>
-                                                <th>Message</th>
-                                                <th>Created At</th>
+                                                <th>Nombre</th>
+                                                <th>Correo</th>
+                                                <th>Teléfono</th>
+                                                <th>Mensaje</th>
+                                                <th>Creado el</th>
                                             </tr>
                                         </thead>
                                         <tbody>

@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -28,7 +27,21 @@ class AuthenticationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(RouteServiceProvider::HOME);
+        // LoginResponse sends each role to its own dashboard; factory users are customers.
+        $response->assertRedirect(route('customer.dashboard'));
+    }
+
+    public function test_admins_and_providers_are_redirected_to_their_dashboards()
+    {
+        $admin = User::factory()->create(['utype' => 'ADM']);
+        $this->post('/login', ['email' => $admin->email, 'password' => 'password'])
+            ->assertRedirect(route('admin.dashboard'));
+
+        $this->post('/logout');
+
+        $provider = User::factory()->create(['utype' => 'SVP']);
+        $this->post('/login', ['email' => $provider->email, 'password' => 'password'])
+            ->assertRedirect(route('sprovider.dashboard'));
     }
 
     public function test_users_can_not_authenticate_with_invalid_password()
