@@ -98,4 +98,4 @@ Objetivo: que el proyecto reciba parches de seguridad.
 |---|---|
 | `225f05c` | Fases 0–2 sobre el tutorial base. |
 | `d2e701a` | Fase 3: Laravel 13, Livewire 3, Jetstream 5 y seguridad. |
-| siguiente | Pagos solo por transferencia y efectivo; documentación completa. |
+| `2214269` | Pagos solo por transferencia y efectivo; zona horaria de Ecuador; documentación completa. |
