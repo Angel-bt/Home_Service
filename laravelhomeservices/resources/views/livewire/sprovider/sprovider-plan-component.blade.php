@@ -57,45 +57,58 @@
                                     </div>
 
                                     @if ($payphoneEnabled)
+                                        {{-- Pago con tarjeta: desactivado por defecto (PAYPHONE_ENABLED). --}}
                                         <form method="POST" action="{{ route('billing.payphone.start') }}" style="margin-bottom: 20px;">
                                             @csrf
                                             <input type="hidden" name="periods" value="{{ $periods }}">
                                             <button type="submit" class="btn btn-primary btn-block">
                                                 <i class="fa fa-credit-card"></i> Pagar ${{ number_format($total, 2) }} con tarjeta (Payphone)
                                             </button>
-                                            <small class="text-muted">Se activa al instante.</small>
                                         </form>
-                                        <p class="text-center text-muted">— o paga por transferencia / DeUna —</p>
+                                        <p class="text-center text-muted">— o paga por transferencia o en efectivo —</p>
                                     @endif
 
-                                    <h4>1. Paga ${{ number_format($total, 2) }}</h4>
-                                    @if ($bank['account_number'])
-                                        <p>
-                                            <b>Transferencia:</b> {{ $bank['bank'] }} · Cuenta de {{ mb_strtolower($bank['account_type']) }}
-                                            <b>{{ $bank['account_number'] }}</b><br>
-                                            A nombre de {{ $bank['holder'] }}@if ($bank['holder_id']) · C.I./RUC {{ $bank['holder_id'] }}@endif
-                                        </p>
-                                    @endif
-                                    @if ($deunaPhone)
-                                        <p><b>DeUna:</b> envía el pago al número <b>{{ $deunaPhone }}</b>.</p>
-                                    @endif
-                                    @if (! $bank['account_number'] && ! $deunaPhone)
-                                        <p class="text-muted">Escríbenos por WhatsApp al {{ config('marketplace.contact_phone') }} para recibir los datos de pago.</p>
-                                    @endif
+                                    <div class="form-group">
+                                        <label for="method">¿Cómo vas a pagar ${{ number_format($total, 2) }}?</label>
+                                        <select id="method" class="form-control" wire:model.live="method">
+                                            <option value="transfer">Transferencia bancaria</option>
+                                            <option value="cash">Efectivo</option>
+                                        </select>
+                                        @error('method') <div class="text-danger">{{ $message }}</div> @enderror
+                                    </div>
 
-                                    <h4>2. Sube tu comprobante</h4>
                                     @if ($hasPending)
                                         <div class="alert alert-info">Tienes un pago en revisión. Te avisaremos al activarlo.</div>
-                                    @else
+                                    @elseif ($method === 'cash')
+                                        <p>
+                                            Entrega el dinero a la administración de Proyetech. Coordina el lugar y la hora por WhatsApp
+                                            @if ($contactWhatsapp)
+                                                (<a href="{{ $contactWhatsapp }}" target="_blank" rel="noopener">{{ config('marketplace.contact_phone') }}</a>)
+                                            @endif
+                                            y avísanos aquí para que quede registrado. Activamos tu plan cuando recibimos el pago.
+                                        </p>
                                         <form wire:submit.prevent="submitReceipt">
                                             <div class="form-group">
-                                                <label for="method">Método</label>
-                                                <select id="method" class="form-control" wire:model="method">
-                                                    <option value="transfer">Transferencia bancaria</option>
-                                                    <option value="deuna">DeUna</option>
-                                                </select>
-                                                @error('method') <div class="text-danger">{{ $message }}</div> @enderror
+                                                <label for="reference">¿Cuándo y dónde entregarás el pago? (opcional)</label>
+                                                <input type="text" id="reference" class="form-control" wire:model="reference" placeholder="Ej.: viernes en el parque central de Malacatos">
+                                                @error('reference') <div class="text-danger">{{ $message }}</div> @enderror
                                             </div>
+                                            <button type="submit" class="btn btn-success" wire:loading.attr="disabled">Avisar pago en efectivo</button>
+                                        </form>
+                                    @else
+                                        <h4>1. Transfiere ${{ number_format($total, 2) }}</h4>
+                                        @if ($bank['account_number'])
+                                            <p>
+                                                {{ $bank['bank'] }} · Cuenta de {{ mb_strtolower($bank['account_type']) }}
+                                                <b>{{ $bank['account_number'] }}</b><br>
+                                                A nombre de {{ $bank['holder'] }}@if ($bank['holder_id']) · C.I./RUC {{ $bank['holder_id'] }}@endif
+                                            </p>
+                                        @else
+                                            <p class="text-muted">Escríbenos por WhatsApp al {{ config('marketplace.contact_phone') }} para recibir los datos de la cuenta.</p>
+                                        @endif
+
+                                        <h4>2. Sube tu comprobante</h4>
+                                        <form wire:submit.prevent="submitReceipt">
                                             <div class="form-group">
                                                 <label for="reference">Número de comprobante / referencia</label>
                                                 <input type="text" id="reference" class="form-control" wire:model="reference">

@@ -19,7 +19,6 @@ return [
         'holder' => env('BILLING_BANK_HOLDER'),
         'holder_id' => env('BILLING_BANK_HOLDER_ID'),
     ],
-    'deuna_phone' => env('BILLING_DEUNA_PHONE'),
 
     'payphone' => [
         'enabled' => (bool) env('PAYPHONE_ENABLED', false),

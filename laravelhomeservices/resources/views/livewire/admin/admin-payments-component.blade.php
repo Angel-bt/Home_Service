@@ -8,6 +8,30 @@
                         <div class="alert alert-success">{{ Session::get('message') }}</div>
                     @endif
                     <div class="panel panel-default">
+                        <div class="panel-heading">Registrar pago en efectivo recibido</div>
+                        <div class="panel-body">
+                            <form wire:submit.prevent="recordCashPayment" class="form-inline">
+                                <select class="form-control" wire:model="cashUserId" aria-label="Proveedor">
+                                    <option value="">Selecciona el proveedor</option>
+                                    @foreach ($providers as $provider)
+                                        <option value="{{ $provider->id }}">{{ $provider->name }} ({{ $provider->email }})</option>
+                                    @endforeach
+                                </select>
+                                <select class="form-control" wire:model="cashPeriods" aria-label="Periodo">
+                                    @foreach ($periodOptions as $option)
+                                        <option value="{{ $option }}">{{ $option * $periodDays }} días — ${{ number_format($price * $option, 2) }}</option>
+                                    @endforeach
+                                </select>
+                                <input type="text" class="form-control" wire:model="cashNote" placeholder="Nota (opcional), ej.: recibido en oficina">
+                                <button type="submit" class="btn btn-success" onclick="confirm('¿Confirmas que recibiste el dinero? El plan Pro se activará de inmediato.') || event.stopImmediatePropagation()">Registrar y activar Pro</button>
+                                @error('cashUserId') <div class="text-danger">{{ $message }}</div> @enderror
+                                @error('cashPeriods') <div class="text-danger">{{ $message }}</div> @enderror
+                                @error('cashNote') <div class="text-danger">{{ $message }}</div> @enderror
+                            </form>
+                            <small class="text-muted">Para avisos de efectivo que el proveedor ya registró, usa «Aprobar» en la lista de abajo.</small>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-md-6">Comprobantes y pagos ({{ $pendingCount }} en revisión)</div>

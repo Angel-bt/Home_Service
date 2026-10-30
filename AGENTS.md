@@ -11,7 +11,7 @@
 - `.env`: MySQL db `home` (root/root) and Redis for `CACHE/SESSION/QUEUE` (`phpredis`). A local Redis instance is required for `php artisan serve`; tests are not (see below).
 - Assets use **Laravel Mix** (`webpack.mix.js`), not Vite: `npm run dev` / `npm run watch` / `npm run prod`. `layouts/base.blade.php` loads `mix('css/app.css')` (Tailwind, used by the header and home) after the legacy Bootstrap 3 theme; Tailwind `preflight` is disabled so it doesn't reset that theme. Rebuild after adding Tailwind classes to views.
 - `php artisan db:seed --class=DemoMarketplaceSeeder` (local only) creates Spanish local categories, demo admin/providers/customer (`*@proyetech.test`, see the seeder) and a completed request with a review.
-- Locale is `es` (`APP_LOCALE`); Spanish strings live in `lang/es/*.php`, untranslated validation keys fall back to `lang/en`.
+- Timezone is `America/Guayaquil` (`APP_TIMEZONE`); timestamps are stored in local time. Locale is `es` (`APP_LOCALE`); Spanish strings live in `lang/es/*.php`, untranslated validation keys fall back to `lang/en`.
 - SMTP points at Mailpit-style `127.0.0.1:1025`.
 - `/change-location` loads Google Places only when `GOOGLE_MAPS_API_KEY` is set (`config('services.google_maps.key')`); without it the page shows a warning and manual fields.
 
@@ -30,7 +30,7 @@
 - `service_requests` flow: `pending` → `accepted`/`rejected` (provider or ADM) → `completed` (provider); customer may cancel `pending`/`accepted`. Transitions are enforced only in `ServiceRequest::transitionTo()`. Reviews: one per completed request, by its customer (`ServiceRequest::canBeReviewedBy()`).
 - WhatsApp links go through `App\Support\WhatsApp` (normalises Ecuadorian numbers to `593…`). Provider number = `service_providers.whatsapp`, else `users.phone`; non-provider services use `marketplace.contact_phone`.
 - Freemium cap: `FREE_SERVICE_LIMIT` (default 3) services for `free` plan; `ADM` and `User::isPro()` unlimited. Enforced by `ServicePublicationGate` on create; `User::canPublishService()`. `isPro()` also checks `plan_expires_at`, so an expired plan stops counting before `billing:expire-plans` runs.
-- Pro plan billing (no Stripe: it doesn't serve Ecuador): manual transfer/DeUna receipts on the private `receipts` disk, approved in `/admin/payments`, plus optional Payphone card payments (`PayphoneGateway`, `BillingController`). Always change plan state through `App\Services\ProPlanBilling::approve()/reject()` (idempotent, extends from current expiry). Payphone payments start as `initiated` and are approved only after a server-side Confirm matching `clientTransactionId` and amount; `/billing/payphone/return` is intentionally unauthenticated. Tests fake Payphone with `Http::fake()`.
+- Pro plan billing (no Stripe: it doesn't serve Ecuador): only bank transfer and cash for now (`SubscriptionPayment::MANUAL_METHODS`). Transfer = provider uploads a receipt to the private `receipts` disk; cash = provider notifies without receipt, or the admin records cash received (`AdminPaymentsComponent::recordCashPayment`, approved at once). Pending payments are approved/rejected in `/admin/payments`. Payphone card payments (`PayphoneGateway`, `BillingController`) exist but are off unless `PAYPHONE_ENABLED=true`; `deuna` is a legacy method label only. Always change plan state through `App\Services\ProPlanBilling::approve()/reject()` (idempotent, extends from current expiry). Payphone payments start as `initiated` and are approved only after a server-side Confirm matching `clientTransactionId` and amount; `/billing/payphone/return` is intentionally unauthenticated. Tests fake Payphone with `Http::fake()`.
 
 ## Gotchas
 
@@ -47,4 +47,4 @@
 - Newer PHP files use `declare(strict_types=1)` + typed signatures; older tutorial-era files do not. Match the file you are editing.
 - Visit counts are Redis counters (no DB write per view); `php artisan services:sync-visit-counters` flushes them to `services.views` and is scheduled every 5 minutes.
 - Registration/contact dispatch queued mail jobs (queue `mail`, 3 tries). `LEAD_NOTIFICATION_ADDRESS` unset intentionally skips the lead email.
-- See `docs/production-optimizations.md` — authoritative for schedulers, caching, queues, and freemium/Stripe setup.
+- Human documentation (Spanish) lives in `laravelhomeservices/README.md` and `laravelhomeservices/docs/01..07-*.md` (history/decisions, architecture, flows, payments, security, deployment, development/tests). `docs/06-despliegue-y-operacion.md` is authoritative for schedulers, caching, queues and env vars. Update the relevant doc when you change behaviour.

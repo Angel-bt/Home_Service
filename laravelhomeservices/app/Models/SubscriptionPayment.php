@@ -16,8 +16,14 @@ class SubscriptionPayment extends Model
     public const REJECTED = 'rejected';
 
     public const METHOD_TRANSFER = 'transfer';
+    public const METHOD_CASH = 'cash';
+    // No longer offered (only transfer and cash for now); kept so old records still get a label.
     public const METHOD_DEUNA = 'deuna';
+    // Card payments through Payphone, disabled unless PAYPHONE_ENABLED=true.
     public const METHOD_PAYPHONE = 'payphone';
+
+    /** Methods providers can choose on their plan page. */
+    public const MANUAL_METHODS = [self::METHOD_TRANSFER, self::METHOD_CASH];
 
     public const STATUS_LABELS = [
         self::INITIATED => 'Iniciado (sin confirmar)',
@@ -28,6 +34,7 @@ class SubscriptionPayment extends Model
 
     public const METHOD_LABELS = [
         self::METHOD_TRANSFER => 'Transferencia bancaria',
+        self::METHOD_CASH => 'Efectivo',
         self::METHOD_DEUNA => 'DeUna',
         self::METHOD_PAYPHONE => 'Tarjeta (Payphone)',
     ];

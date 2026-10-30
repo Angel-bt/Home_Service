@@ -55,9 +55,9 @@ class ProPlanBillingTest extends TestCase
         $provider = $this->provider();
 
         Livewire::actingAs($provider)->test(SproviderPlanComponent::class)
-            ->set('method', 'deuna')
+            ->set('method', 'transfer')
             ->set('periods', 3)
-            ->set('reference', 'DEUNA-123')
+            ->set('reference', 'TRF-123')
             ->set('receipt', UploadedFile::fake()->image('comprobante.jpg'))
             ->call('submitReceipt')
             ->assertHasNoErrors();
@@ -89,6 +89,68 @@ class ProPlanBillingTest extends TestCase
             ->assertHasErrors(['periods', 'reference', 'receipt']);
     }
 
+    public function test_provider_notifies_a_cash_payment_without_receipt(): void
+    {
+        Storage::fake('receipts');
+        $provider = $this->provider();
+
+        Livewire::actingAs($provider)->test(SproviderPlanComponent::class)
+            ->set('method', 'cash')
+            ->set('periods', 1)
+            ->set('reference', 'Viernes en el parque central')
+            ->call('submitReceipt')
+            ->assertHasNoErrors();
+
+        $payment = SubscriptionPayment::firstOrFail();
+        $this->assertSame('cash', $payment->method);
+        $this->assertSame('pending', $payment->status);
+        $this->assertNull($payment->receipt_path);
+        $this->assertFalse($provider->fresh()->isPro());
+
+        // The plan is only activated when an administrator confirms the money arrived.
+        Livewire::actingAs($this->admin())->test(AdminPaymentsComponent::class)->call('approve', $payment->id);
+        $this->assertTrue($provider->fresh()->isPro());
+    }
+
+    public function test_methods_other_than_transfer_and_cash_are_rejected(): void
+    {
+        Livewire::actingAs($this->provider())->test(SproviderPlanComponent::class)
+            ->set('method', 'deuna')
+            ->set('reference', 'X')
+            ->call('submitReceipt')
+            ->assertHasErrors('method');
+
+        $this->assertSame(0, SubscriptionPayment::count());
+    }
+
+    public function test_admin_records_cash_received_in_person(): void
+    {
+        Carbon::setTestNow('2026-11-01 10:00:00');
+        $provider = $this->provider();
+        $customer = User::factory()->create(['utype' => 'CST']);
+
+        // Only providers can receive a Pro plan.
+        Livewire::actingAs($this->admin())->test(AdminPaymentsComponent::class)
+            ->set('cashUserId', $customer->id)
+            ->call('recordCashPayment')
+            ->assertHasErrors('cashUserId');
+
+        Livewire::actingAs($this->admin())->test(AdminPaymentsComponent::class)
+            ->set('cashUserId', $provider->id)
+            ->set('cashPeriods', 3)
+            ->set('cashNote', 'Recibido en oficina')
+            ->call('recordCashPayment')
+            ->assertHasNoErrors();
+
+        $payment = SubscriptionPayment::where('user_id', $provider->id)->firstOrFail();
+        $this->assertSame('cash', $payment->method);
+        $this->assertSame('approved', $payment->status);
+        $this->assertEquals(24.00, (float) $payment->amount);
+        $this->assertSame('2027-01-30', $provider->fresh()->plan_expires_at->toDateString());
+
+        Carbon::setTestNow();
+    }
+
     public function test_admin_approval_activates_and_renewal_extends_pro(): void
     {
         Carbon::setTestNow('2026-11-01 10:00:00');
@@ -109,7 +171,7 @@ class ProPlanBillingTest extends TestCase
         $this->assertSame('2026-12-01', $provider->fresh()->plan_expires_at->toDateString());
 
         // Renewing early adds the days to the current expiry date.
-        $second = $provider->subscriptionPayments()->create(['method' => 'deuna', 'periods' => 3, 'amount' => 24, 'status' => 'pending', 'reference' => 'T2']);
+        $second = $provider->subscriptionPayments()->create(['method' => 'cash', 'periods' => 3, 'amount' => 24, 'status' => 'pending', 'reference' => 'T2']);
         app(ProPlanBilling::class)->approve($second, $admin);
         $this->assertSame('2027-03-01', $provider->fresh()->plan_expires_at->toDateString());
 

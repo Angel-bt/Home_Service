@@ -9,7 +9,7 @@
                             @php
                                 $faqs = [
                                     '¿Cuánto cuesta usar Proyetech?' => 'Para los clientes es gratis. Buscas, contactas y solicitas servicios sin pagar nada a la plataforma.',
-                                    '¿Cómo pago el servicio?' => 'Pagas directamente al proveedor (efectivo, transferencia o DeUna), según lo que acuerden. El precio publicado es referencial; el final depende del trabajo.',
+                                    '¿Cómo pago el servicio?' => 'Pagas directamente al proveedor (efectivo o transferencia), según lo que acuerden. El precio publicado es referencial; el final depende del trabajo.',
                                     '¿Cómo contacto a un proveedor?' => 'En cada servicio tienes un botón de WhatsApp para escribirle de inmediato y un formulario para enviar una solicitud con tu zona, dirección y fecha preferida.',
                                     '¿En qué zonas funciona?' => 'Malacatos y el valle: ' . implode(', ', config('marketplace.zones')) . '. Puedes filtrar los servicios por zona.',
                                     '¿Quién puede dejar reseñas?' => 'Solo los clientes cuya solicitud fue marcada como completada por el proveedor. Así las reseñas reflejan trabajos reales.',

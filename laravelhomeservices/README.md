@@ -1,90 +1,71 @@
-## Home Service Laravel Application
+# Proyetech · Servicios para el hogar en Malacatos
 
-## Demo
+Marketplace que conecta a clientes de **Malacatos y el valle** (Vilcabamba, Quinara, San Pedro de Vilcabamba, Yangana, Catamayo y Loja) con proveedores locales de servicios para el hogar y las quintas: gasfitería, electricidad, jardinería, piscinas, limpieza y más.
 
-https://home-services.jitinrathore.com/
+El proyecto nació del tutorial **"Laravel 8 Project Home Services"** de SurfsideMedia (enlaces en [`pasos .txt`](pasos%20.txt)). Sobre esa base se corrigieron errores, se convirtió el catálogo en un marketplace real, se añadió el cobro del plan Pro a proveedores y se actualizó todo a Laravel 13. La historia completa y el porqué de cada decisión está en [docs/01-historia-y-decisiones.md](docs/01-historia-y-decisiones.md).
 
-### Home Service Provider Home Page
+## Qué hace
 
-![Surf-Service-Home](https://user-images.githubusercontent.com/93995641/172636129-c202bcad-0971-4a44-bbeb-b4ba1ed0f6dd.png)
+| Rol | Qué puede hacer |
+|---|---|
+| **Visitante** | Ver categorías y servicios, buscar, filtrar por zona, escribir por WhatsApp a un proveedor. |
+| **Cliente** (`CST`) | Todo lo anterior, enviar solicitudes de servicio, cancelarlas y dejar reseñas de trabajos completados. |
+| **Proveedor** (`SVP`) | Publicar y editar sus servicios (3 gratis, ilimitados con el plan Pro), indicar su WhatsApp y zonas, atender solicitudes y pagar el plan Pro por transferencia o en efectivo. |
+| **Administrador** (`ADM`) | Gestionar categorías, servicios, slider y proveedores; ver todas las solicitudes; aprobar o rechazar pagos del plan Pro y registrar pagos en efectivo. |
 
-### Service Category Page
+## Tecnología
 
-![Surf-Service-Categories](https://user-images.githubusercontent.com/93995641/172636147-1e5a6d82-6502-49b6-b7b3-e66a96841c33.png)
+- **PHP 8.3+**, **Laravel 13**, **Livewire 3** (páginas completas como componentes), **Jetstream 5 / Fortify** (login, registro, 2FA, perfil), **Sanctum 4**.
+- **MySQL** para los datos y **Redis** para caché, sesiones, colas y el contador de visitas.
+- Interfaz: tema Bootstrap 3 heredado del tutorial (`public/assets/`) + Tailwind compilado con **Laravel Mix** (no Vite).
+- Idioma: español (`lang/es`, `lang/es.json`).
 
-### Service Category Details Page
+## Puesta en marcha local
 
-![Surf-Service-Category-Details](https://user-images.githubusercontent.com/93995641/172636161-3582e60a-9751-4c78-90e1-06565363861b.png)
+Requisitos: PHP 8.3+ (por ejemplo con [Laravel Herd](https://herd.laravel.com)), Composer, Node 18+, MySQL y Redis.
 
-### Admin All Services Details Page
+```bash
+composer install
+npm install
+npm run dev
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan db:seed --class=ServiceCategorySeeder
+php artisan db:seed --class=DemoMarketplaceSeeder   # datos de demo, solo local
+php artisan serve
+```
 
-![Surf-Service-Admin-All-Services](https://user-images.githubusercontent.com/93995641/172636173-94b9d39b-a3af-4609-b11c-a82a30fbadcc.png)
+El `.env` local usa la base de datos `home` (usuario y contraseña `root`) y Redis en `127.0.0.1:6379`.
 
-### Admin All Service Provider Details Page
+**Cuentas de demo** (creadas por `DemoMarketplaceSeeder`, la contraseña está en ese archivo): `admin@proyetech.test`, `proveedor@proyetech.test`, `proveedora@proyetech.test` y `cliente@proyetech.test`.
 
-![Surf-Service-Online-Service-Provider](https://user-images.githubusercontent.com/93995641/172636183-0b2d39b7-9d31-4b14-9126-32ab4128eb54.png)
+Para crear un administrador real, registra la cuenta y cambia `users.utype` a `ADM` en la base de datos.
 
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+## Comandos útiles
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+| Comando | Para qué |
+|---|---|
+| `php artisan test` | Ejecuta los tests (SQLite en memoria; no necesita MySQL ni Redis). |
+| `npm run dev` / `npm run prod` | Compila CSS (Tailwind) y JS. Vuelve a ejecutarlo si agregas clases de Tailwind a las vistas. |
+| `php artisan schedule:work` | Ejecuta las tareas programadas en local (visitas y vencimiento de planes). |
+| `php artisan queue:work redis --queue=mail,default` | Procesa los correos en cola. |
+| `php artisan cache:clear` | Limpia la caché de la portada tras editar datos directamente en la base. |
 
-## About Laravel
+## Documentación
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+| Documento | Contenido |
+|---|---|
+| [01 · Historia y decisiones](docs/01-historia-y-decisiones.md) | Auditoría inicial, qué se hizo en cada fase y por qué. |
+| [02 · Arquitectura](docs/02-arquitectura.md) | Carpetas, rutas, roles, modelos y tablas, servicios y caché. |
+| [03 · Flujos de uso](docs/03-flujos.md) | Registro, publicación de servicios, solicitudes, reseñas, búsqueda y zonas. |
+| [04 · Pagos del plan Pro](docs/04-pagos.md) | Transferencia y efectivo, aprobación, vencimiento y configuración. |
+| [05 · Seguridad](docs/05-seguridad.md) | Medidas aplicadas y por qué. |
+| [06 · Despliegue y operación](docs/06-despliegue-y-operacion.md) | Servidor, variables de entorno, cron, colas y caché. |
+| [07 · Desarrollo y tests](docs/07-desarrollo-y-tests.md) | Convenciones, cómo extender el proyecto y qué cubren los tests. |
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Para asistentes de código hay un resumen técnico en inglés en [`AGENTS.md`](../AGENTS.md).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Créditos
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Basado en el tutorial *Laravel 8 Project Home Services* de SurfsideMedia (demo original: https://home-services.jitinrathore.com/). Laravel es software libre bajo licencia MIT.
