@@ -122,7 +122,7 @@ Usan SQLite en memoria, caché y sesión en arreglo y cola síncrona (`phpunit.x
 | `MarketplaceSmokeTest` | Todas las páginas públicas, de admin, proveedor y cliente cargan; 404 en registros inexistentes; roles del registro; borrar una categoría no borra proveedores. |
 | `MarketplaceFlowTest` | Publicar con imágenes, límite del plan gratis, no tocar servicios ajenos, zonas del perfil, flujo completo solicitud → aceptación → completada → reseña, cancelaciones, búsqueda, filtro por zona, WhatsApp. |
 | `ProPlanBillingTest` | Comprobante privado, aviso de efectivo, registro de efectivo por el admin, aprobación y renovación, rechazo, vencimiento, métodos no permitidos, Payphone simulado con `Http::fake()`. |
-| `ServerlessDeploymentTest` | Lo que necesita un host sin disco, Redis, cola ni cron: rutas de imágenes, buckets, visitas en base de datos, fallos de correo, cron protegido e IP real detrás del proxy. |
+| `ServerlessDeploymentTest` | Lo que necesita un host sin disco, Redis, cola ni cron: rutas de imágenes, buckets, visitas en base de datos, fallos de correo, búsqueda sin tildes, cron protegido, autocomprobación del almacenamiento e IP real detrás del proxy. |
 | `RoleGuidanceTest` | Cada rol ve qué hacer (primeros pasos, pendientes, estados), el rol equivocado recibe una explicación, la validación es clara, los enlaces se numeran solos y hay páginas de error propias. |
 | `LandingPageTest` | La portada muestra datos reales (zonas, categorías, destacados, reseñas), no carga el tema pesado (jQuery, Bootstrap, Font Awesome…), modal para invitados y menú para usuarios, y la caché se refresca con nuevas reseñas. |
 | `SecurityHardeningTest` | Cabeceras de seguridad, límites de envío, respuesta neutral de recuperación de contraseña, sesiones JSON. |

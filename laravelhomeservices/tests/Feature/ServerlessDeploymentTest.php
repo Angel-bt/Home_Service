@@ -159,7 +159,35 @@ class ServerlessDeploymentTest extends TestCase
 
         $this->get('/cron/diario')->assertNotFound();
         $this->withToken('otro')->get('/cron/diario')->assertNotFound();
+        Storage::fake('local');
+        Storage::fake('receipts');
         $this->withToken('secreto')->get('/cron/diario')->assertOk()->assertJson(['billing:expire-plans' => 0]);
+    }
+
+    public function test_storage_check_passes_and_cleans_up_after_itself(): void
+    {
+        $media = Storage::fake('local');
+        $receipts = Storage::fake('receipts');
+        config([
+            'filesystems.disks.local' => ['driver' => 'local', 'root' => $media->path('')],
+            'filesystems.disks.receipts' => ['driver' => 'local', 'root' => $receipts->path('')],
+        ]);
+
+        $this->artisan('storage:check')->assertSuccessful();
+
+        $this->assertSame([], $media->allFiles());
+        $this->assertSame([], $receipts->allFiles());
+    }
+
+    public function test_daily_cron_fails_loudly_when_storage_is_broken(): void
+    {
+        config([
+            'services.cron.secret' => 'secreto',
+            'marketplace.visit_counter' => 'database',
+            'filesystems.disks.receipts' => ['driver' => 'not-a-driver'],
+        ]);
+
+        $this->withToken('secreto')->get('/cron/diario')->assertStatus(500);
     }
 
     public function test_real_client_ip_is_used_behind_a_trusted_proxy(): void

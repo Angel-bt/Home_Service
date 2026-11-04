@@ -141,17 +141,12 @@ Archivos: `vercel.json`, `.vercelignore` y `api/index.php` (lleva a `/tmp` lo qu
 - **Base de datos y almacenamiento:** Supabase, instalado desde el Marketplace de Vercel (plan gratuito, región `us-east-1`). Es **Postgres**, no MySQL: la app funciona en ambos y toda la batería de tests se corrió también sobre Postgres. `DB_CONNECTION=pgsql`; la conexión sale de `POSTGRES_URL_NON_POOLING`, que crea la integración. No se usa el pooler de transacciones (`POSTGRES_URL`) porque rompe las consultas preparadas de PDO.
 - **Buckets en Supabase Storage:** `media` (público) y `privado`. `AWS_ENDPOINT=<SUPABASE_URL>/storage/v1/s3`, `AWS_URL=<SUPABASE_URL>/storage/v1/object/public/media`, `AWS_USE_PATH_STYLE_ENDPOINT=true`.
 - **Datos de demostración:** cargados con `DemoMarketplaceSeeder`, con contraseñas aleatorias guardadas en `.vercel/cuentas-demo.txt` (privado, no se versiona). El sitio va con `X-Robots-Tag: noindex` en `vercel.json` hasta el lanzamiento.
-- **Pendiente para que funcione todo:** claves S3 de Supabase (para subir fotos y comprobantes) y SMTP (por ahora `MAIL_MAILER=log`: los correos solo van al registro).
+- **Pendiente para que funcione todo:** SMTP (por ahora `MAIL_MAILER=log`: los correos solo van al registro).
 - **Sin conexión a GitHub:** se despliega con `vercel deploy --prod` desde `laravelhomeservices/`. Para desplegar con cada push, conecta el repositorio con *Root Directory* = `laravelhomeservices`, porque la app no está en la raíz del repositorio.
 
-**Activar las subidas:** en Supabase, *Project Settings → Storage → S3 Connection → New access key*. Luego, en la terminal (pide cada valor sin mostrarlo):
-```bash
-vercel env add AWS_ACCESS_KEY_ID production --sensitive
-vercel env add AWS_SECRET_ACCESS_KEY production --sensitive
-vercel env add FILESYSTEM_DISK production --value s3 --yes
-vercel env add LIVEWIRE_TEMP_DISK production --value receipts --yes
-vercel deploy --prod
-```
+**Subidas activadas:** las claves S3 de Supabase están en `AWS_ACCESS_KEY_ID` y `AWS_SECRET_ACCESS_KEY` (se crean en *Project Settings → Storage → S3 Connection*), con `FILESYSTEM_DISK=s3` y `LIVEWIRE_TEMP_DISK=receipts`.
+
+**Autocomprobación:** el cron diario corre `php artisan storage:check`, que escribe, lee y borra un archivo en los dos buckets y hace una subida firmada completa con las mismas clases que una real. Si algo falla, `/cron/diario` responde 500 y el motivo queda en los registros de Vercel. Para probar en cualquier momento: `vercel crons run /cron/diario` y luego `vercel logs --no-follow --since 5m`.
 
 **Antes del lanzamiento real:** borra los datos de demostración, quita el `noindex` de `vercel.json`, conecta el SMTP, carga los datos bancarios (`BILLING_BANK_*`) y pasa Vercel al plan de pago (ver abajo).
 
