@@ -34,7 +34,7 @@ Todo el sitio usa un solo diseño. La portada añade animaciones; las demás pá
 
 La dirección visual, la referencia (Halo Lab) y las razones están en [01-historia-y-decisiones.md](01-historia-y-decisiones.md) (fase 4).
 
-- **Layout** `layouts/landing.blade.php`: no carga el tema Bootstrap. El `<body>` lleva `lp`, con un reset propio en `resources/css/app.css` envuelto en `:where()` (especificidad 0, **cualquier clase de Tailwind lo pisa**; mantenlo así).
+- **Layout** `layouts/landing.blade.php`: el `<body>` lleva `lp`, con un reset propio en `resources/css/app.css` envuelto en `:where()` (especificidad 0, **cualquier clase de Tailwind lo pisa**; mantenlo así).
 - **Paleta** (Tailwind): `noche-*` (fondos oscuros), `humo-*` (fondos claros), `grafito` / `grafito-400…600` (texto), `oro-*` (único acento: botón principal y tarjeta de proveedores), `menta-*` (brillo sutil). No agregues más colores de acento.
 - **Tipografía:** `font-body` (Inter Tight) para todo. Titulares con la clase `lp-title` (peso 500, interletrado cerrado). Para el acento usa `lp-accent` (Instrument Serif cursiva) en **una sola palabra o frase corta** por titular. Etiquetas de sección: `lp-eyebrow uppercase`.
 - **Patrones:** filas con línea fina (`border-t border-humo-300`) y flecha `arrow-up-right` en lugar de tarjetas; botones en píldora con texto `text-[13px] uppercase tracking-[.08em]`; `lp-glass` para elementos sobre fotos; `lp-noise` y `lp-glow` para dar profundidad a secciones oscuras.
@@ -85,6 +85,10 @@ Usan el mismo diseño. Antes de escribir HTML nuevo, reutiliza estas piezas:
 - En `/livewire/update`, `request()->routeIs()` no sirve: la ruta es la de Livewire. Por eso `x-ui.panel` resuelve la ruta con `Livewire::originalUrl()`.
 - Tras enviar un formulario la página va al primer `.ui-error`, y a un aviso `data-flash` si quedó fuera de pantalla (`components/ui/livewire-errors`).
 
+**Motores de base de datos:** en local es MySQL, en los tests SQLite y en la nube Postgres. Evita SQL propio de un motor y recuerda que Postgres distingue mayúsculas y tildes. Para correr los tests sobre Postgres, usa un esquema temporal con `DB_SCHEMA` (nunca `public`: `RefreshDatabase` borra las tablas).
+
+**Imágenes públicas:** siempre con `App\Support\Media` (`url`, `store`, `delete`), nunca con `asset('images/...')` ni `storeAs` directo: en Vercel viven en un bucket.
+
 **Tailwind:** se compila con Laravel Mix a `public/css/app.css`. Tras usar clases nuevas: `npm run dev` (o `npm run prod`) y sube el CSS compilado. `preflight` sigue desactivado (el reset propio es `:where(.lp …)`) y `darkMode: 'class'` evita que el sitio cambie a oscuro según el sistema.
 
 **La paginación** de Livewire usa `resources/views/vendor/livewire/tailwind.blade.php` (solo Anterior / Siguiente).
@@ -118,6 +122,7 @@ Usan SQLite en memoria, caché y sesión en arreglo y cola síncrona (`phpunit.x
 | `MarketplaceSmokeTest` | Todas las páginas públicas, de admin, proveedor y cliente cargan; 404 en registros inexistentes; roles del registro; borrar una categoría no borra proveedores. |
 | `MarketplaceFlowTest` | Publicar con imágenes, límite del plan gratis, no tocar servicios ajenos, zonas del perfil, flujo completo solicitud → aceptación → completada → reseña, cancelaciones, búsqueda, filtro por zona, WhatsApp. |
 | `ProPlanBillingTest` | Comprobante privado, aviso de efectivo, registro de efectivo por el admin, aprobación y renovación, rechazo, vencimiento, métodos no permitidos, Payphone simulado con `Http::fake()`. |
+| `ServerlessDeploymentTest` | Lo que necesita un host sin disco, Redis, cola ni cron: rutas de imágenes, buckets, visitas en base de datos, fallos de correo, cron protegido e IP real detrás del proxy. |
 | `RoleGuidanceTest` | Cada rol ve qué hacer (primeros pasos, pendientes, estados), el rol equivocado recibe una explicación, la validación es clara, los enlaces se numeran solos y hay páginas de error propias. |
 | `LandingPageTest` | La portada muestra datos reales (zonas, categorías, destacados, reseñas), no carga el tema pesado (jQuery, Bootstrap, Font Awesome…), modal para invitados y menú para usuarios, y la caché se refresca con nuevas reseñas. |
 | `SecurityHardeningTest` | Cabeceras de seguridad, límites de envío, respuesta neutral de recuperación de contraseña, sesiones JSON. |

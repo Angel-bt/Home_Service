@@ -53,6 +53,8 @@
     @stack('modals')
     @livewireScripts
     @stack('scripts')
+    {{-- Solo en la primera página de la sesión: otra petición en curso podría consumir el aviso de un formulario. --}}
+    @unless (session()->has('visit_counted'))
     <script>
         // Contador global de visitas (una vez por sesión; lo resuelve VisitController).
         fetch('{{ route('increment.visit') }}', {
@@ -61,5 +63,6 @@
             credentials: 'same-origin',
         }).catch(function () {});
     </script>
+    @endunless
 </body>
 </html>

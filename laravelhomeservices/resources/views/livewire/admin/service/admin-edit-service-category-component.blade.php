@@ -10,7 +10,7 @@
             <x-ui.field label="Imagen" name="newimage" for="category-image" optional>
                 <input type="file" id="category-image" accept="image/*" class="ui-file" wire:model="newimage">
                 <p wire:loading wire:target="newimage" class="ui-hint">Subiendo imagen…</p>
-                <img src="{{ $newimage ? $newimage->temporaryUrl() : asset('images/categories/' . $image) }}" alt="Imagen de la categoría" class="mt-3 h-20 w-20 rounded-xl object-contain">
+                <img src="{{ $newimage ? $newimage->temporaryUrl() : \App\Support\Media::url('categories', $image) }}" alt="Imagen de la categoría" class="mt-3 h-20 w-20 rounded-xl object-contain">
             </x-ui.field>
             <x-ui.field label="¿Destacarla?" name="featured" for="featured">
                 <select id="featured" class="ui-input" wire:model="featured">

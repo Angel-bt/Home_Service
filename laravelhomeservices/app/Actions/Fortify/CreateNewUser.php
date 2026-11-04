@@ -51,7 +51,12 @@ class CreateNewUser implements CreatesNewUsers
             ]);
         }
 
-        SendWelcomeEmail::dispatch($user);
+        // Sin cola (QUEUE_CONNECTION=sync) el correo sale ahora: si falla, la cuenta ya está creada.
+        try {
+            SendWelcomeEmail::dispatch($user);
+        } catch (\Throwable $exception) {
+            report($exception);
+        }
 
         // Establecer un mensaje de sesión de éxito
         Session::flash('success', '¡Registro exitoso! Bienvenido a Malakplace.');

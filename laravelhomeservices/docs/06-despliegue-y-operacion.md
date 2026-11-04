@@ -117,3 +117,64 @@ Alternativa sin Redis para colas: `QUEUE_CONNECTION=database` (la tabla `jobs` y
 - `public/images/` (imágenes subidas).
 - `storage/app/receipts/` (comprobantes de pago; datos sensibles).
 - El archivo `.env` (guardado fuera del servidor y del repositorio).
+
+## Vercel
+
+Vercel no tiene disco permanente, ni procesos en segundo plano, ni `schedule:run`. La app se adapta con variables de entorno, sin cambiar de código: `.env.vercel.example` trae la lista completa.
+
+| En un servidor normal | En Vercel | Por qué |
+|---|---|---|
+| Fotos en `public/images` | Bucket con lectura pública (`FILESYSTEM_DISK=s3`) | El disco es de solo lectura. Las imágenes que vienen en el repositorio se siguen sirviendo desde `public/images` (`App\Support\Media`). |
+| Comprobantes en `storage/app/receipts` | Bucket **privado** (`RECEIPTS_BUCKET`) | Solo el admin los ve, por la ruta protegida. |
+| Subidas temporales en `storage/app/uploads` | Directo del navegador al bucket privado (`LIVEWIRE_TEMP_DISK=receipts`) | Cada petición puede caer en otra instancia, y Vercel corta los cuerpos de más de 4,5 MB. |
+| Redis para sesiones y caché | Base de datos (`SESSION_DRIVER`, `CACHE_DRIVER=database`) | Un servicio menos que contratar. |
+| Contador de visitas en Redis | Escritura directa (`VISIT_COUNTER=database`) | Sin Redis. |
+| Colas con `queue:work` | Envío en el momento (`QUEUE_CONNECTION=sync`, `MAIL_TIMEOUT=5`) | No hay trabajadores. Si el correo falla, la cuenta o el mensaje igual se guardan y el error queda en el registro. |
+| `schedule:run` | Vercel Cron llama a `/cron/diario` con `CRON_SECRET` | El plan Hobby solo permite una vez al día, y alcanza: `isPro()` ya revisa la fecha de vencimiento. |
+| Registros en archivo | `LOG_CHANNEL=stderr` | Se ven en el panel de Vercel. |
+
+Archivos: `vercel.json`, `.vercelignore` y `api/index.php` (lleva a `/tmp` lo que Laravel genera al arrancar). Los assets compilados se suben al repositorio, así que Vercel no compila nada.
+
+### El despliegue actual
+
+- **Sitio:** https://malakplace.vercel.app (proyecto `malakplace` del equipo `angel-a824`).
+- **Base de datos y almacenamiento:** Supabase, instalado desde el Marketplace de Vercel (plan gratuito, región `us-east-1`). Es **Postgres**, no MySQL: la app funciona en ambos y toda la batería de tests se corrió también sobre Postgres. `DB_CONNECTION=pgsql`; la conexión sale de `POSTGRES_URL_NON_POOLING`, que crea la integración. No se usa el pooler de transacciones (`POSTGRES_URL`) porque rompe las consultas preparadas de PDO.
+- **Buckets en Supabase Storage:** `media` (público) y `privado`. `AWS_ENDPOINT=<SUPABASE_URL>/storage/v1/s3`, `AWS_URL=<SUPABASE_URL>/storage/v1/object/public/media`, `AWS_USE_PATH_STYLE_ENDPOINT=true`.
+- **Datos de demostración:** cargados con `DemoMarketplaceSeeder`, con contraseñas aleatorias guardadas en `.vercel/cuentas-demo.txt` (privado, no se versiona). El sitio va con `X-Robots-Tag: noindex` en `vercel.json` hasta el lanzamiento.
+- **Pendiente para que funcione todo:** claves S3 de Supabase (para subir fotos y comprobantes) y SMTP (por ahora `MAIL_MAILER=log`: los correos solo van al registro).
+- **Sin conexión a GitHub:** se despliega con `vercel deploy --prod` desde `laravelhomeservices/`. Para desplegar con cada push, conecta el repositorio con *Root Directory* = `laravelhomeservices`; sin eso desplegaría la copia antigua de la raíz.
+
+**Activar las subidas:** en Supabase, *Project Settings → Storage → S3 Connection → New access key*. Luego, en la terminal (pide cada valor sin mostrarlo):
+```bash
+vercel env add AWS_ACCESS_KEY_ID production --sensitive
+vercel env add AWS_SECRET_ACCESS_KEY production --sensitive
+vercel env add FILESYSTEM_DISK production --value s3 --yes
+vercel env add LIVEWIRE_TEMP_DISK production --value receipts --yes
+vercel deploy --prod
+```
+
+**Antes del lanzamiento real:** borra los datos de demostración, quita el `noindex` de `vercel.json`, conecta el SMTP, carga los datos bancarios (`BILLING_BANK_*`) y pasa Vercel al plan de pago (ver abajo).
+
+### Antes de desplegar, conviene saber
+
+- **El runtime PHP no es oficial de Vercel.** `vercel-php` es comunitario y su repositorio está archivado. Funciona, pero nadie garantiza que siga funcionando si Vercel cambia su plataforma.
+- **El plan Hobby es solo para uso no comercial.** Con el plan Pro de proveedores cobrando dinero real, corresponde el plan de pago de Vercel.
+- **La base de datos debe estar cerca de la función** (región `iad1` por defecto): cada página hace varias consultas.
+
+### Pasos
+
+1. **Crea los servicios:** una base MySQL o Postgres accesible desde internet, dos buckets compatibles con S3 (Supabase Storage o Cloudflare R2 tienen capa gratuita) y un SMTP.
+   - Bucket de fotos: lectura pública. Su dirección va en `AWS_URL`.
+   - Bucket privado: sin acceso público, con CORS que permita `PUT` y `GET` desde tu dominio, y una regla que borre `livewire-tmp/` después de 1 día.
+2. **Prepara la base desde tu computadora,** con un `.env.produccion` temporal que apunte a ella:
+   ```bash
+   php artisan migrate --force --env=produccion
+   php artisan db:seed --class=ServiceCategorySeeder --force --env=produccion
+   ```
+   Luego registra tu cuenta en el sitio y cambia su `utype` a `ADM` en la base. Borra ese archivo al terminar.
+3. **Crea el proyecto en Vercel** con *Root Directory* = `laravelhomeservices` y Node 22, y carga las variables de `.env.vercel.example` en *Settings → Environment Variables*. `APP_KEY` sale de `php artisan key:generate --show`.
+4. **Despliega** y prueba: registro, foto de perfil, publicar un servicio, solicitud, comprobante y aprobación.
+
+### Ensayo local
+
+Para probar esta configuración sin Vercel: un S3 simulado (moto) y un `.env` con los valores de arriba, Redis y correo apuntando a puertos cerrados. Así se validó la versión actual; lo único que no cubre es el runtime de Vercel en sí.

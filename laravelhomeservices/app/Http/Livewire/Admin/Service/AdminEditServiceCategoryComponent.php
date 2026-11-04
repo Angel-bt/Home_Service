@@ -68,7 +68,7 @@ class AdminEditServiceCategoryComponent extends Component
 
         if ($this->newimage) {
             $imageName = Carbon::now()->timestamp . '.' . $this->newimage->extension();
-            $this->newimage->storeAs('categories', $imageName);
+            \App\Support\Media::store($this->newimage, 'categories', $imageName);
             $scategory->image = $imageName;
         }
 

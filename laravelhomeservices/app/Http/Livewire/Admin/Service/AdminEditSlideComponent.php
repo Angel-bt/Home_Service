@@ -57,7 +57,7 @@ class AdminEditSlideComponent extends Component
         if ($this->newimage) {
             app(ServiceAssetCleaner::class)->deleteFile('images/slider', $slide->image);
             $imageName = Carbon::now()->timestamp . '.' . $this->newimage->extension();
-            $this->newimage->storeAs('slider', $imageName);
+            \App\Support\Media::store($this->newimage, 'slider', $imageName);
             $slide->image = $imageName;
         }
 

@@ -29,7 +29,7 @@
 
         <div class="ui-card ui-card-pad grid gap-8 md:grid-cols-[200px_1fr]">
             <div>
-                <img src="{{ asset('images/sproviders/' . ($sprovider?->image ?: 'default.jpg')) }}" alt="Tu foto de perfil" class="aspect-square w-full max-w-[200px] rounded-3xl object-cover">
+                <img src="{{ \App\Support\Media::url('sproviders', ($sprovider?->image ?: 'default.jpg')) }}" alt="Tu foto de perfil" class="aspect-square w-full max-w-[200px] rounded-3xl object-cover">
                 @unless ($sprovider?->image)
                     <p class="ui-hint">Aún no subes tu foto.</p>
                 @endunless

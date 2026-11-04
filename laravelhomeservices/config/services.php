@@ -35,4 +35,8 @@ return [
         'key' => env('GOOGLE_MAPS_API_KEY'),
     ],
 
+    'cron' => [
+        'secret' => env('CRON_SECRET'),
+    ],
+
 ];

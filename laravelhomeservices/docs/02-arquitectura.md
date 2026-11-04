@@ -32,8 +32,7 @@ resources/views/components/site       Componentes del nuevo diseño: header, foo
 resources/views/components/ui         Piezas de la aplicación: panel, page, field, flash, status, empty, checklist, stat, help, auth-card, livewire-errors
 resources/views/errors                Páginas de error autónomas (403, 404, 419, 429, 500, 503)
 resources/js/landing.js                Animaciones de la portada (GSAP + ScrollTrigger + Lenis)
-public/assets                          Tema Bootstrap 3 del tutorial: ya no se carga; solo se usa el favicon (pendiente de limpiar)
-public/images                          Imágenes subidas (servicios, categorías, slider, proveedores)
+public/images                          Imágenes del sitio (logo, favicon) y subidas (servicios, categorías, slider, proveedores)
 storage/app/receipts                   Comprobantes de pago (privados, fuera de public/)
 ```
 

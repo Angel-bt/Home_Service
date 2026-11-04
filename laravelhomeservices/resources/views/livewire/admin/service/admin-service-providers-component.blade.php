@@ -11,7 +11,7 @@
                         $wa = \App\Support\WhatsApp::link((string) $phone, 'Hola ' . $sprovider->user?->name . ', te escribimos de Malakplace.');
                     @endphp
                     <li wire:key="provider-{{ $sprovider->id }}" class="ui-card flex flex-col gap-4 p-4 sm:flex-row sm:items-center">
-                        <img src="{{ asset('images/sproviders/' . ($sprovider->image ?: 'default.jpg')) }}" alt="" loading="lazy" class="h-14 w-14 shrink-0 rounded-full object-cover">
+                        <img src="{{ \App\Support\Media::url('sproviders', ($sprovider->image ?: 'default.jpg')) }}" alt="" loading="lazy" class="h-14 w-14 shrink-0 rounded-full object-cover">
                         <div class="min-w-0 flex-1">
                             <h2 class="flex flex-wrap items-center gap-2 text-[17px] font-medium">
                                 {{ $sprovider->user?->name ?? 'Usuario eliminado' }}

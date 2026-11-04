@@ -10,7 +10,7 @@
     <ul class="space-y-3">
         @foreach ($services as $service)
             <li wire:key="service-{{ $service->id }}" class="ui-card flex flex-col gap-4 p-4 sm:flex-row sm:items-center">
-                <img src="{{ asset('images/services/thumbnails/' . $service->thumbnail) }}" alt="" loading="lazy" class="h-20 w-full shrink-0 rounded-2xl object-cover sm:w-28">
+                <img src="{{ \App\Support\Media::url('services/thumbnails', $service->thumbnail) }}" alt="" loading="lazy" class="h-20 w-full shrink-0 rounded-2xl object-cover sm:w-28">
                 <div class="min-w-0 flex-1">
                     <h2 class="flex flex-wrap items-center gap-2 text-[17px] font-medium">
                         <span class="min-w-0 truncate">{{ $service->name }}</span>

@@ -13,6 +13,13 @@ final class ServiceVisitCounter
 
     public function increment(Service $service): int
     {
+        if (! $this->usesRedis()) {
+            // Sin Redis (Vercel): se escribe directo. El tráfico esperado no lo hace notar.
+            Service::query()->whereKey($service->getKey())->toBase()->increment('views');
+
+            return 1;
+        }
+
         $key = $this->counterKey($service->getKey());
         $count = (int) Redis::incr($key);
         Redis::sadd(self::PENDING_SERVICE_IDS_KEY, (string) $service->getKey());
@@ -22,6 +29,10 @@ final class ServiceVisitCounter
 
     public function total(Service $service): int
     {
+        if (! $this->usesRedis()) {
+            return (int) Service::query()->whereKey($service->getKey())->value('views');
+        }
+
         return (int) $service->views + (int) Redis::get($this->counterKey($service->getKey()));
     }
 
@@ -30,6 +41,10 @@ final class ServiceVisitCounter
      */
     public function pendingServiceIds(): array
     {
+        if (! $this->usesRedis()) {
+            return [];
+        }
+
         return array_map('intval', Redis::smembers(self::PENDING_SERVICE_IDS_KEY));
     }
 
@@ -57,6 +72,11 @@ final class ServiceVisitCounter
             self::PENDING_SERVICE_IDS_KEY,
             (string) $serviceId
         );
+    }
+
+    private function usesRedis(): bool
+    {
+        return config('marketplace.visit_counter') === 'redis';
     }
 
     private function counterKey(int $serviceId): string

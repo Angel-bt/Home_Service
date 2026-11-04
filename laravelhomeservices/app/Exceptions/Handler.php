@@ -43,8 +43,15 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        // Servidor de correo caído (p. ej. al pedir recuperar la contraseña): explicarlo, no una página de error.
+        $this->renderable(function (\Symfony\Component\Mailer\Exception\TransportExceptionInterface $e, $request) {
+            if ($request->expectsJson()) {
+                return null;
+            }
+
+            return back()->withInput($request->only('email'))->withErrors([
+                'email' => 'No pudimos enviar el correo en este momento. Intenta de nuevo en unos minutos o escríbenos por WhatsApp.',
+            ]);
         });
     }
 }

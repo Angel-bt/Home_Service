@@ -34,7 +34,7 @@ class AdminAddSlideComponent extends Component
         $slide->title = $this->title;
 
         $imageName = Carbon::now()->timestamp . '.' . $this->image->extension();
-        $this->image->storeAs('slider', $imageName);
+        \App\Support\Media::store($this->image, 'slider', $imageName);
         $slide->image = $imageName;
 
         $slide->status = $this->status;

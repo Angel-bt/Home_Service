@@ -21,21 +21,11 @@ final class ServiceAssetCleaner
     }
 
     /**
-     * Remove a single image file from a directory inside the public folder.
-     *
-     * Uses absolute paths so the operation is independent of the current
-     * working directory, and silently ignores files that no longer exist.
+     * Remove a single image file. See Media::delete(): it works with absolute paths or
+     * object storage, and silently ignores files that no longer exist.
      */
     public function deleteFile(string $directory, ?string $filename): void
     {
-        if ($filename === null || $filename === '') {
-            return;
-        }
-
-        $path = public_path($directory . '/' . $filename);
-
-        if (is_file($path)) {
-            unlink($path);
-        }
+        \App\Support\Media::delete(\Illuminate\Support\Str::after($directory, 'images/'), $filename);
     }
 }

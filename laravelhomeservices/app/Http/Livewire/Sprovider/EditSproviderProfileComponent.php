@@ -73,7 +73,7 @@ class EditSproviderProfileComponent extends Component
         if ($this->newimage) {
             app(ServiceAssetCleaner::class)->deleteFile('images/sproviders', $sprovider->image);
             $imageName = now()->timestamp . '_' . Str::random(8) . '.' . $this->newimage->extension();
-            $this->newimage->storeAs('sproviders', $imageName);
+            \App\Support\Media::store($this->newimage, 'sproviders', $imageName);
             $sprovider->image = $imageName;
             $this->image = $imageName;
             $this->newimage = null;

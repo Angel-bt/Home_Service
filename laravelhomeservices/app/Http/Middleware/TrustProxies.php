@@ -15,6 +15,15 @@ class TrustProxies extends Middleware
     protected $proxies;
 
     /**
+     * TRUSTED_PROXIES=* on hosts that are only reachable through their proxy (Vercel):
+     * without it every visitor shares one IP for rate limits and https is not detected.
+     */
+    protected function proxies()
+    {
+        return config('app.trusted_proxies');
+    }
+
+    /**
      * The headers that should be used to detect proxies.
      *
      * @var int

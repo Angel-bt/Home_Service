@@ -7,7 +7,7 @@
             <x-ui.field label="Imagen" name="newimage" for="slide-image" optional>
                 <input type="file" id="slide-image" accept="image/*" class="ui-file" wire:model="newimage">
                 <p wire:loading wire:target="newimage" class="ui-hint">Subiendo imagen…</p>
-                <img src="{{ $newimage ? $newimage->temporaryUrl() : asset('images/slider/' . $image) }}" alt="Imagen de la diapositiva" class="mt-3 h-24 rounded-xl object-cover">
+                <img src="{{ $newimage ? $newimage->temporaryUrl() : \App\Support\Media::url('slider', $image) }}" alt="Imagen de la diapositiva" class="mt-3 h-24 rounded-xl object-cover">
             </x-ui.field>
             <x-ui.field label="Estado" name="status" for="status">
                 <select id="status" class="ui-input @error('status') ui-input-invalid @enderror" wire:model="status">

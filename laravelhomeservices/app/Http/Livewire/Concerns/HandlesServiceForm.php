@@ -144,8 +144,7 @@ trait HandlesServiceForm
     private function storeServiceUpload(UploadedFile $file, string $directory): string
     {
         $fileName = now()->timestamp . '_' . Str::random(8) . '.' . $file->extension();
-        // Disco explícito: sin él, Livewire usa su disco de subidas temporales.
-        $file->storeAs($directory, $fileName, config('filesystems.default'));
+        \App\Support\Media::store($file, $directory, $fileName);
 
         return $fileName;
     }

@@ -188,11 +188,32 @@ GSAP + ScrollTrigger + SplitText y Lenis (desplazamiento suave), en `resources/j
 - **Fallos de Livewire** (sin internet, sesión vencida, error del servidor): aviso en español en lugar del de Livewire en inglés; una sesión vencida recarga la página sola (`components/ui/livewire-errors`). Con `APP_DEBUG=true` se ve el error técnico.
 - **Eliminar una categoría** también borra sus servicios (la base de datos lo hace en cascada), y la confirmación ahora lo advierte con el número exacto.
 
-**Pendiente de limpieza:** `public/assets`, `public/css/proyetech.css`, los estilos `proyetech-*` de `app.css` y las vistas `welcome`, `dashboard` y `navigation-menu` ya no se usan, y sin ese tema ya se puede agregar una Content-Security-Policy.
+## Limpieza de lo que dejó de usarse
+
+Con el rediseño ya guardado se quitó lo que nada usaba (se comprobó buscando referencias a cada cosa, y todo sigue en el historial de git):
+
+- **Tema Bootstrap 3:** toda la carpeta `public/assets` (150 archivos). Lo único que se usaba era el favicon, que ahora está en `public/images/favicon.png`.
+- **Estilos viejos:** `public/css/proyetech.css` y el bloque `proyetech-*` de `resources/css/app.css` (500 líneas). El CSS compilado bajó de 117 KB a 86 KB.
+- **Vistas de Jetstream sin ruta:** `welcome`, `dashboard` y `navigation-menu`, junto con los componentes que solo ellas usaban.
+- **Términos y privacidad de Jetstream:** `terms`, `policy`, `layouts/guest`, `GuestLayout` y `resources/markdown`. Esa función de Jetstream está apagada y el sitio tiene sus propias páginas `/terms` y `/privacy`, editables desde el panel. **No activar `Features::termsAndPrivacyPolicy()`:** sus vistas ya no existen.
+
+## Fase 6: recorrido completo y preparación para Vercel
+
+**Pedido:** recorrer el flujo completo y dejarlo listo para desplegar en Vercel.
+
+Se recorrió en el navegador, con tres roles y archivos reales: registro, perfil con foto, publicar, buscar por zona, solicitar, aceptar, terminar, reseñar, pagar con comprobante, rechazar con motivo, reintentar en efectivo y aprobar. Luego se repitió con la configuración de Vercel, sobre una base vacía, con S3 simulado, sin Redis y con el correo caído. Los detalles de la adaptación están en [06-despliegue-y-operacion.md](06-despliegue-y-operacion.md).
+
+**Errores que encontró el recorrido:**
+
+- **Comprobantes en una carpeta pública:** las subidas temporales de Livewire quedaban en `public/images/livewire-tmp`, accesibles desde la web y algunas incluso en git. Ahora van a un disco privado (`uploads`).
+- **Correo caído:** «olvidé mi contraseña» daba error 500, y sin cola el registro y el contacto habrían hecho lo mismo. Ahora se explica al usuario o se registra el error, sin perder la acción.
+- **Avisos perdidos:** el ping de visitas de cada página podía consumir el mensaje de un formulario enviado justo en ese momento. Ahora solo sale en la primera página de la sesión.
+
+**Publicación:** se eligió Supabase desde el Marketplace de Vercel porque da base de datos y almacenamiento en un solo servicio, sin cuentas aparte. Implica Postgres en vez de MySQL. La app ya era casi compatible; lo que cambió es la búsqueda: Postgres distingue mayúsculas y tildes, y buscar «tuberias» no encontraba «tuberías». Se detectó probando el sitio ya publicado y se corrigió en `Service::scopeSearch()`.
 
 ## Decisiones pendientes o deliberadamente postergadas
 
-- **Content-Security-Policy:** no se configuró porque el sitio aún tiene scripts en línea (Livewire, contador de visitas, mapa). El tema heredado que usaba varios CDN ya no se carga.
+- **Content-Security-Policy:** no se configuró porque el sitio aún tiene scripts en línea (Livewire, contador de visitas, mapa). El tema heredado que usaba varios CDN ya se eliminó.
 - **Notificaciones por correo** de solicitudes y pagos: hoy el aviso es por el panel y WhatsApp.
 - **Facturación electrónica (SRI)** de los pagos Pro: la app no la genera; se hace por fuera.
 - **Estructura moderna de Laravel 11+** (`bootstrap/app.php` sin `Kernel`): opcional, no aporta funcionalidad.
@@ -205,4 +226,5 @@ GSAP + ScrollTrigger + SplitText y Lenis (desplazamiento suave), en `resources/j
 | `225f05c` | Fases 0–2 sobre el tutorial base. |
 | `d2e701a` | Fase 3: Laravel 13, Livewire 3, Jetstream 5 y seguridad. |
 | `2214269` | Pagos solo por transferencia y efectivo; zona horaria de Ecuador; documentación completa. |
-| siguiente | Fase 4: nueva landing "Valle de noche" (inspirada en Halo Lab) y zonas limitadas a Malacatos, Vilcabamba, Yangana y Quinara. Fase 5: todo el sitio con ese diseño y paneles guiados por rol. |
+| `6039de7` | Fase 4: nueva landing "Valle de noche" (inspirada en Halo Lab) y zonas limitadas a Malacatos, Vilcabamba, Yangana y Quinara. Fase 5: todo el sitio con ese diseño y paneles guiados por rol. |
+| siguiente | Fase 6: limpieza del tema Bootstrap, los estilos `proyetech-*` y las vistas sin uso de Jetstream. |

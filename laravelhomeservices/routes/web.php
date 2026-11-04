@@ -87,6 +87,9 @@ Route::post('/search', [SearchController::class, 'searchService'])->name('search
 
 
 
+// Tareas programadas en hosts sin schedule:run (Vercel Cron). Protegida con CRON_SECRET.
+Route::get('/cron/diario', [\App\Http\Controllers\CronController::class, 'daily'])->middleware('throttle:10,1')->name('cron.daily');
+
 // Ruta para incrementar el contador de visitas (POST: efecto secundario, no debe ser GET)
 Route::post('/increment-visit', [VisitController::class, 'incrementVisit'])->middleware('throttle:60,1')->name('increment.visit');
 

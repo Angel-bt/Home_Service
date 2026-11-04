@@ -15,7 +15,7 @@
             <ul class="space-y-3">
                 @foreach ($scategories as $scategory)
                     <li wire:key="category-{{ $scategory->id }}" class="ui-card flex flex-col gap-4 p-4 sm:flex-row sm:items-center">
-                        <img src="{{ asset('images/categories/' . $scategory->image) }}" alt="" loading="lazy" class="h-14 w-14 shrink-0 rounded-xl bg-humo-100 object-contain p-1.5">
+                        <img src="{{ \App\Support\Media::url('categories', $scategory->image) }}" alt="" loading="lazy" class="h-14 w-14 shrink-0 rounded-xl bg-humo-100 object-contain p-1.5">
                         <div class="min-w-0 flex-1">
                             <h2 class="flex flex-wrap items-center gap-2 text-[17px] font-medium">
                                 {{ $scategory->name }}

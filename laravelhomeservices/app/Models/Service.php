@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Support\WhatsApp;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -68,13 +69,20 @@ class Service extends Model
             return $query;
         }
 
+        // Mucha gente busca sin tildes. El cotejo de MySQL ya las ignora; Postgres no, así que ahí se quitan a ambos lados.
+        $postgres = $query->getConnection()->getDriverName() === 'pgsql';
+        $term = $postgres ? mb_strtolower(Str::ascii($term)) : $term;
         $like = '%' . str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $term) . '%';
 
-        return $query->where(function (Builder $query) use ($like): void {
-            $query->where('name', 'like', $like)
-                ->orWhere('tagline', 'like', $like)
-                ->orWhere('description', 'like', $like)
-                ->orWhereHas('category', fn (Builder $category) => $category->where('name', 'like', $like));
+        $contains = fn (Builder $query, string $column, string $boolean = 'and'): Builder => $postgres
+            ? $query->whereRaw("translate(lower({$column}), 'áéíóúüñ', 'aeiouun') like ?", [$like], $boolean)
+            : $query->whereLike($column, $like, false, $boolean);
+
+        return $query->where(function (Builder $query) use ($contains): void {
+            $contains($query, 'name');
+            $contains($query, 'tagline', 'or');
+            $contains($query, 'description', 'or');
+            $query->orWhereHas('category', fn (Builder $category) => $contains($category, 'name'));
         });
     }
 

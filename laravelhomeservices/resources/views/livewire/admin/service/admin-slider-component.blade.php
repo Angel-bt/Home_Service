@@ -10,7 +10,7 @@
             <ul class="space-y-3">
                 @foreach ($slides as $slide)
                     <li wire:key="slide-{{ $slide->id }}" class="ui-card flex flex-col gap-4 p-4 sm:flex-row sm:items-center">
-                        <img src="{{ asset('images/slider/' . $slide->image) }}" alt="" loading="lazy" class="h-20 w-full shrink-0 rounded-2xl object-cover sm:w-32">
+                        <img src="{{ \App\Support\Media::url('slider', $slide->image) }}" alt="" loading="lazy" class="h-20 w-full shrink-0 rounded-2xl object-cover sm:w-32">
                         <div class="min-w-0 flex-1">
                             <h2 class="text-[17px] font-medium">{{ $slide->title }}</h2>
                             <div class="mt-1"><x-ui.status :status="$slide->status ? 'approved' : 'cancelled'" :label="$slide->status ? 'Activa' : 'Inactiva'" /></div>

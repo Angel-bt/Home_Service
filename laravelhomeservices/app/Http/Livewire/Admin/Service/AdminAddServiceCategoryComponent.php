@@ -42,7 +42,7 @@ class AdminAddServiceCategoryComponent extends Component
         $scategory->name = $this->name;
         $scategory->slug = $this->slug;
         $imageName = Carbon::now()->timestamp . '.' . $this->image->extension();
-        $this->image->storeAs('categories', $imageName);
+        \App\Support\Media::store($this->image, 'categories', $imageName);
         $scategory->image = $imageName;
         $scategory->save();
         session()->flash('message', 'La categoría se creó correctamente.');

@@ -47,7 +47,13 @@ class ContactComponent extends Component
         $contact->phone = $this->phone;
         $contact->message = $this->message;
         $contact->save();
-        SendNewLeadNotification::dispatch($contact);
+
+        // Sin cola (QUEUE_CONNECTION=sync) el aviso sale ahora: si falla, el mensaje ya está guardado en el panel.
+        try {
+            SendNewLeadNotification::dispatch($contact);
+        } catch (\Throwable $exception) {
+            report($exception);
+        }
 
         session()->flash('message', 'Tu mensaje fue enviado. Te responderemos pronto.');
     }

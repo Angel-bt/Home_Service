@@ -14,3 +14,8 @@ yarn-error.log
 /.vscode
 
 HomeServices.zip
+/public/images/livewire-tmp
+/storage/app/uploads
+.vercel
+.env*
+!.env*.example

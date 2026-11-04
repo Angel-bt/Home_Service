@@ -104,7 +104,7 @@
                                 <li class="mr-3 shrink-0">
                                     <a href="{{ route('home.service_details', ['service_slug' => $item['slug']]) }}" @if ($copy) tabindex="-1" @endif
                                        class="group flex w-[260px] items-center gap-3.5 rounded-2xl border border-white/10 bg-noche-950/40 p-2 pr-4 backdrop-blur-md transition hover:border-white/25 hover:bg-noche-950/60 sm:w-[300px]">
-                                        <img src="{{ asset('images/services/thumbnails/' . $item['thumbnail']) }}" alt="" loading="lazy" width="64" height="64"
+                                        <img src="{{ \App\Support\Media::url('services/thumbnails', $item['thumbnail']) }}" alt="" loading="lazy" width="64" height="64"
                                              class="h-16 w-16 shrink-0 rounded-xl object-cover">
                                         <span class="min-w-0 flex-1">
                                             <span class="block truncate text-[15px] font-medium text-white">{{ $item['name'] }}</span>
@@ -181,7 +181,7 @@
             <div class="mt-14 grid md:grid-cols-2 md:gap-x-16">
                 @foreach ($categories as $i => $category)
                     <a data-row href="{{ route('home.services_by_category', ['category_slug' => $category['slug']]) }}"
-                       @if ($category['preview']) data-preview="{{ asset('images/services/thumbnails/' . $category['preview']) }}" @endif
+                       @if ($category['preview']) data-preview="{{ \App\Support\Media::url('services/thumbnails', $category['preview']) }}" @endif
                        class="group flex items-center gap-5 border-t border-humo-300 py-6 {{ $loop->last ? 'border-b' : ($loop->remaining === 1 && $loop->count % 2 === 0 ? 'md:border-b' : '') }}">
                         <span class="w-8 text-[13px] tabular-nums text-grafito-400">{{ str_pad((string) ($i + 1), 2, '0', STR_PAD_LEFT) }}</span>
                         <span class="lp-title flex-1 text-2xl text-grafito transition duration-300 group-hover:translate-x-2 lg:text-[1.75rem]">{{ $category['name'] }}</span>
@@ -212,7 +212,7 @@
                     @foreach ($featured as $service)
                         <a data-stack href="{{ route('home.service_details', ['service_slug' => $service['slug']]) }}"
                            class="group relative block h-[72vh] min-h-[460px] overflow-hidden rounded-[32px] lg:sticky lg:top-24">
-                            <img src="{{ asset('images/services/' . $service['image']) }}" alt="{{ $service['name'] }}" loading="lazy" class="absolute inset-0 h-full w-full object-cover transition duration-[1.2s] group-hover:scale-105">
+                            <img src="{{ \App\Support\Media::url('services', $service['image']) }}" alt="{{ $service['name'] }}" loading="lazy" class="absolute inset-0 h-full w-full object-cover transition duration-[1.2s] group-hover:scale-105">
                             <div class="absolute inset-0 bg-gradient-to-t from-noche-950/90 via-noche-950/35 to-noche-950/10" aria-hidden="true"></div>
                             <div class="relative flex h-full flex-col justify-end p-7 sm:p-10 lg:p-14">
                                 <p class="lp-eyebrow uppercase text-white/60">{{ $service['category'] }}@if ($service['zones']) · {{ $service['zones'] }}@endif</p>

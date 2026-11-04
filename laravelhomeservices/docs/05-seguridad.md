@@ -52,7 +52,7 @@ Los límites de las acciones Livewire usan `Concerns\ThrottlesActions`, porque e
 - `Permissions-Policy` — desactiva cámara, micrófono y pagos del navegador; geolocalización solo para el propio sitio.
 - `Strict-Transport-Security` — solo cuando la petición llega por https.
 
-**No hay Content-Security-Policy** todavía: quedan scripts en línea (Livewire, contador de visitas, mapa). El tema heredado con varios CDN ya no se carga, así que es la siguiente mejora de seguridad recomendada.
+**No hay Content-Security-Policy** todavía: quedan scripts en línea (Livewire, contador de visitas, mapa). El tema heredado con varios CDN ya se eliminó, así que es la siguiente mejora de seguridad recomendada.
 
 **Rol equivocado:** `AuthAdmin` y `AuthSprovider` bloquean el acceso y redirigen al panel propio del usuario con un aviso, sin cerrar su sesión. También corren en `/livewire/update` (middleware persistente).
 
@@ -60,3 +60,5 @@ Los límites de las acciones Livewire usan `Concerns\ThrottlesActions`, porque e
 
 - Laravel 13 y paquetes actualizados (soporte de seguridad vigente). Revisa con `composer audit` y `npm audit`.
 - `APP_DEBUG=false` en producción (ya en `.env.production.example`): con `true` se muestran trazas con datos internos.
+
+**Subidas temporales:** nunca en `public/` (disco `uploads`, o el bucket privado en Vercel), porque pueden ser comprobantes de pago. **`/cron/diario`** responde 404 sin `CRON_SECRET`. **`TRUSTED_PROXIES=*`** solo en hosts accesibles únicamente a través de su proxy, como Vercel: en otro servidor permitiría falsificar la IP y saltarse los límites de intentos.

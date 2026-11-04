@@ -1,0 +1,20 @@
+/.env
+/.env.*
+!/.env.vercel.example
+/node_modules
+/vendor
+/tests
+/docs
+/storage/logs/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/framework/cache/data/*
+/storage/app/*
+/bootstrap/cache/*.php
+/public/images/livewire-tmp
+/resources/css
+/resources/js
+/estructura.txt
+/pasos .txt
+/.phpunit.result.cache
+/phpunit.xml

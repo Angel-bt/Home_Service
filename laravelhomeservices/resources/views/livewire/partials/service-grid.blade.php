@@ -12,7 +12,7 @@
         @foreach ($services as $service)
             <a href="{{ route('home.service_details', ['service_slug' => $service->slug]) }}" class="group block" wire:key="service-card-{{ $service->id }}">
                 <div class="aspect-[4/3] overflow-hidden rounded-3xl bg-humo-200">
-                    <img src="{{ asset('images/services/thumbnails/' . $service->thumbnail) }}" alt="{{ $service->name }}" loading="lazy"
+                    <img src="{{ \App\Support\Media::url('services/thumbnails', $service->thumbnail) }}" alt="{{ $service->name }}" loading="lazy"
                          class="h-full w-full object-cover transition duration-700 group-hover:scale-105">
                 </div>
                 <p class="mt-4 flex items-center gap-2 text-[13px] text-grafito-500">

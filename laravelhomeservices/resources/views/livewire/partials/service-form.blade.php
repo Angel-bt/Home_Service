@@ -66,7 +66,7 @@
                 @if ($thumbUpload && method_exists($thumbUpload, 'temporaryUrl'))
                     <img src="{{ $thumbUpload->temporaryUrl() }}" alt="Vista previa" class="mt-3 h-28 w-40 rounded-2xl object-cover">
                 @elseif ($editing && $thumbnail)
-                    <img src="{{ asset('images/services/thumbnails/' . $thumbnail) }}" alt="Foto actual" class="mt-3 h-28 w-40 rounded-2xl object-cover">
+                    <img src="{{ \App\Support\Media::url('services/thumbnails', $thumbnail) }}" alt="Foto actual" class="mt-3 h-28 w-40 rounded-2xl object-cover">
                 @endif
             </x-ui.field>
             <x-ui.field label="Foto grande" :name="$imageField" for="image-upload" hint="Aparece en la página del servicio.">
@@ -75,7 +75,7 @@
                 @if ($imageUpload && method_exists($imageUpload, 'temporaryUrl'))
                     <img src="{{ $imageUpload->temporaryUrl() }}" alt="Vista previa" class="mt-3 h-28 w-40 rounded-2xl object-cover">
                 @elseif ($editing && $image)
-                    <img src="{{ asset('images/services/' . $image) }}" alt="Foto actual" class="mt-3 h-28 w-40 rounded-2xl object-cover">
+                    <img src="{{ \App\Support\Media::url('services', $image) }}" alt="Foto actual" class="mt-3 h-28 w-40 rounded-2xl object-cover">
                 @endif
             </x-ui.field>
         </div>

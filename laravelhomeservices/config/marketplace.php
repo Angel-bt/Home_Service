@@ -22,4 +22,7 @@ return [
         'quinara' => 'Quinara',
     ],
     'main_zone' => 'malacatos',
+
+    // redis: contadores en memoria que sync-visit-counters vuelca a la base. database: escritura directa (sin Redis).
+    'visit_counter' => env('VISIT_COUNTER', 'redis'),
 ];

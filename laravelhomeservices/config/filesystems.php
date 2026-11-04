@@ -38,9 +38,25 @@ return [
         ],
 
         // Comprobantes de pago: privados, fuera de public/. Solo el admin los ve vía ruta protegida.
-        'receipts' => [
+        'receipts' => env('RECEIPTS_BUCKET') ? [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('RECEIPTS_BUCKET'),
+            'endpoint' => env('AWS_ENDPOINT'),
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+            'throw' => false,
+        ] : [
             'driver' => 'local',
             'root' => storage_path('app/receipts'),
+            'throw' => false,
+        ],
+
+        // Subidas de Livewire antes de guardarse: nunca en public/, porque pueden ser comprobantes de pago.
+        'uploads' => [
+            'driver' => 'local',
+            'root' => storage_path('app/uploads'),
             'throw' => false,
         ],
 

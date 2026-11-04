@@ -27,7 +27,7 @@
                 @elseif (! $isProvider)
                     <span class="flex items-center gap-1.5"><x-site.icon name="pin" class="h-4 w-4" /> Todas las zonas</span>
                 @endif
-                <span class="flex items-center gap-1.5"><x-site.icon name="eye" class="h-4 w-4" /> {{ number_format($views) }} visitas</span>
+                <span class="flex items-center gap-1.5"><x-site.icon name="eye" class="h-4 w-4" /> {{ number_format($views) }} {{ $views === 1 ? 'visita' : 'visitas' }}</span>
             </p>
         </section>
 
@@ -35,7 +35,7 @@
             {{-- Columna principal --}}
             <div class="min-w-0">
                 <div class="aspect-[16/10] overflow-hidden rounded-[28px] bg-humo-200">
-                    <img src="{{ asset('images/services/' . $service->image) }}" alt="{{ $service->name }}" class="h-full w-full object-cover">
+                    <img src="{{ \App\Support\Media::url('services', $service->image) }}" alt="{{ $service->name }}" class="h-full w-full object-cover">
                 </div>
 
                 @if ($service->tagline)
@@ -123,7 +123,7 @@
                     <div class="ui-card ui-card-pad">
                         <p class="text-[13px] font-medium uppercase tracking-[.08em] text-grafito-400">Quién hace el trabajo</p>
                         <div class="mt-4 flex items-center gap-4">
-                            <img src="{{ asset('images/sproviders/' . ($provider?->image ?: 'default.jpg')) }}" alt="" class="h-14 w-14 rounded-full object-cover">
+                            <img src="{{ \App\Support\Media::url('sproviders', ($provider?->image ?: 'default.jpg')) }}" alt="" class="h-14 w-14 rounded-full object-cover">
                             <div>
                                 <p class="text-[17px] font-medium">{{ $service->user->name }}</p>
                                 @if ($provider?->city)<p class="text-[14px] text-grafito-500">{{ $provider->city }}</p>@endif
@@ -193,7 +193,7 @@
 
                 @if ($r_service)
                     <a href="{{ route('home.service_details', ['service_slug' => $r_service->slug]) }}" class="ui-card group flex items-center gap-4 p-4 hover:border-grafito-400">
-                        <img src="{{ asset('images/services/thumbnails/' . $r_service->thumbnail) }}" alt="" loading="lazy" class="h-16 w-16 shrink-0 rounded-xl object-cover">
+                        <img src="{{ \App\Support\Media::url('services/thumbnails', $r_service->thumbnail) }}" alt="" loading="lazy" class="h-16 w-16 shrink-0 rounded-xl object-cover">
                         <span class="min-w-0 flex-1">
                             <span class="block text-[12px] uppercase tracking-[.08em] text-grafito-400">También te puede servir</span>
                             <span class="mt-0.5 block truncate text-[15px] font-medium">{{ $r_service->name }}</span>

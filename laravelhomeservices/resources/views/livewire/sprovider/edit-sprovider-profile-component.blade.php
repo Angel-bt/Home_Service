@@ -29,7 +29,7 @@
                 <div class="mt-6 grid gap-5 sm:grid-cols-2">
                     <x-ui.field label="Tu foto" name="newimage" for="photo" class="sm:col-span-2" hint="Una foto clara de tu cara o trabajando. JPG, PNG o WebP de hasta 4 MB." optional>
                         <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
-                            <img src="{{ $newimage ? $newimage->temporaryUrl() : asset('images/sproviders/' . ($image ?: 'default.jpg')) }}" alt="Tu foto" class="h-24 w-24 shrink-0 rounded-full object-cover">
+                            <img src="{{ $newimage ? $newimage->temporaryUrl() : \App\Support\Media::url('sproviders', ($image ?: 'default.jpg')) }}" alt="Tu foto" class="h-24 w-24 shrink-0 rounded-full object-cover">
                             <div class="flex-1">
                                 <input type="file" id="photo" accept="image/*" class="ui-file" wire:model="newimage">
                                 <p wire:loading wire:target="newimage" class="ui-hint">Subiendo foto…</p>
