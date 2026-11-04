@@ -11,6 +11,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\FileUploadConfiguration;
 use Livewire\Features\SupportFileUploads\GenerateSignedUploadUrl;
@@ -28,6 +29,9 @@ final class CheckStorage extends Command
     protected $signature = 'storage:check';
 
     protected $description = 'Write, read and delete a test file on the media and receipts disks, and test direct uploads';
+
+    // A real 1x1 PNG: Livewire and the image rule look at the actual type of the file.
+    private const PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
 
     private bool $failed = false;
 
@@ -91,7 +95,7 @@ final class CheckStorage extends Command
         $hashName = basename(rawurldecode((string) parse_url($signed['url'], PHP_URL_PATH)));
         $headers = collect($signed['headers'])->except(['Host', 'host'])->map(fn ($value) => is_array($value) ? implode(',', $value) : $value)->all();
 
-        $response = Http::withHeaders($headers)->withBody('ok', $headers['Content-Type'] ?? 'image/png')->put($signed['url']);
+        $response = Http::withHeaders($headers)->withBody(base64_decode(self::PNG), $headers['Content-Type'] ?? 'image/png')->put($signed['url']);
         $this->assert($response->successful(), 'el bucket rechazó la subida firmada (' . $response->status() . '): ' . Str::limit($response->body(), 200));
 
         $temporary = TemporaryUploadedFile::createFromLivewire($hashName);
@@ -100,6 +104,9 @@ final class CheckStorage extends Command
         try {
             $this->assert($temporary->exists(), 'la subida no quedó en el disco temporal');
             $this->assert(Http::get($temporary->temporaryUrl())->successful(), 'la vista previa de la subida no se puede abrir');
+            // Las mismas reglas que aplican los formularios de servicios y perfil.
+            $validator = Validator::make(['foto' => $temporary], ['foto' => ['image', 'mimes:png,jpg,jpeg,webp', 'max:4096']]);
+            $this->assert($validator->passes(), 'una imagen válida no pasó la validación: ' . $validator->errors()->first());
             Media::store($temporary, 'salud', $name);
             $this->assert($this->disk(config('filesystems.default'))->exists('salud/' . $name), 'la subida no se copió al disco de fotos');
         } finally {

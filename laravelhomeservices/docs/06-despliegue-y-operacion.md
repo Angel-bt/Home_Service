@@ -142,7 +142,7 @@ Archivos: `vercel.json`, `.vercelignore` y `api/index.php` (lleva a `/tmp` lo qu
 - **Buckets en Supabase Storage:** `media` (público) y `privado`. `AWS_ENDPOINT=<SUPABASE_URL>/storage/v1/s3`, `AWS_URL=<SUPABASE_URL>/storage/v1/object/public/media`, `AWS_USE_PATH_STYLE_ENDPOINT=true`.
 - **Datos de demostración:** cargados con `DemoMarketplaceSeeder`, con contraseñas aleatorias guardadas en `.vercel/cuentas-demo.txt` (privado, no se versiona). El sitio va con `X-Robots-Tag: noindex` en `vercel.json` hasta el lanzamiento.
 - **Pendiente para que funcione todo:** SMTP (por ahora `MAIL_MAILER=log`: los correos solo van al registro).
-- **Sin conexión a GitHub:** se despliega con `vercel deploy --prod` desde `laravelhomeservices/`. Para desplegar con cada push, conecta el repositorio con *Root Directory* = `laravelhomeservices`, porque la app no está en la raíz del repositorio.
+- **Despliegue automático:** cada push a `main` en GitHub publica el sitio (*Root Directory* = `laravelhomeservices`, porque la app no está en la raíz del repositorio). Para desplegar a mano, usa `vercel deploy --prod` desde la **raíz del repositorio**, no desde `laravelhomeservices/`.
 
 **Subidas activadas:** las claves S3 de Supabase están en `AWS_ACCESS_KEY_ID` y `AWS_SECRET_ACCESS_KEY` (se crean en *Project Settings → Storage → S3 Connection*), con `FILESYSTEM_DISK=s3` y `LIVEWIRE_TEMP_DISK=receipts`.
 
