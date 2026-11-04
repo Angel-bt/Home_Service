@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Artisan;
 /**
  * Scheduled tasks for hosts without a process running `schedule:run` (Vercel Cron calls this
  * URL sending CRON_SECRET as a bearer token). Without a configured secret the route does not exist.
- * Answers 500 when storage fails, so it stands out in the host's logs.
+ * Answers 500 when storage or mail fail, so it stands out in the host's logs.
  */
 class CronController extends Controller
 {
@@ -22,11 +22,13 @@ class CronController extends Controller
         abort_if($secret === '' || ! hash_equals($secret, (string) $request->bearerToken()), 404);
 
         $storage = Artisan::call('storage:check');
+        $mail = Artisan::call('mail:check');
 
         return response()->json([
             'billing:expire-plans' => Artisan::call('billing:expire-plans'),
             'services:sync-visit-counters' => config('marketplace.visit_counter') === 'redis' ? Artisan::call('services:sync-visit-counters') : 'not needed',
             'storage:check' => $storage,
-        ], $storage === 0 ? 200 : 500);
+            'mail:check' => $mail,
+        ], $storage === 0 && $mail === 0 ? 200 : 500);
     }
 }

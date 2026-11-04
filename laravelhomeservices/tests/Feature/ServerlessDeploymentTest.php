@@ -179,6 +179,15 @@ class ServerlessDeploymentTest extends TestCase
         $this->assertSame([], $receipts->allFiles());
     }
 
+    public function test_mail_check_fails_without_sending_when_the_server_is_unreachable(): void
+    {
+        $this->artisan('mail:check')->assertSuccessful();
+
+        config(['mail.default' => 'caido', 'mail.mailers.caido' => ['transport' => 'smtp', 'host' => '127.0.0.1', 'port' => 1, 'timeout' => 1]]);
+
+        $this->artisan('mail:check')->assertFailed();
+    }
+
     public function test_daily_cron_fails_loudly_when_storage_is_broken(): void
     {
         config([
