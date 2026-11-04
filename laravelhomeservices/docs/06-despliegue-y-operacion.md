@@ -140,7 +140,7 @@ Archivos: `vercel.json`, `.vercelignore` y `api/index.php` (lleva a `/tmp` lo qu
 - **Sitio:** https://malakplace.vercel.app (proyecto `malakplace` del equipo `angel-a824`).
 - **Base de datos y almacenamiento:** Supabase, instalado desde el Marketplace de Vercel (plan gratuito, región `us-east-1`). Es **Postgres**, no MySQL: la app funciona en ambos y toda la batería de tests se corrió también sobre Postgres. `DB_CONNECTION=pgsql`; la conexión sale de `POSTGRES_URL_NON_POOLING`, que crea la integración. No se usa el pooler de transacciones (`POSTGRES_URL`) porque rompe las consultas preparadas de PDO.
 - **Buckets en Supabase Storage:** `media` (público) y `privado`. `AWS_ENDPOINT=<SUPABASE_URL>/storage/v1/s3`, `AWS_URL=<SUPABASE_URL>/storage/v1/object/public/media`, `AWS_USE_PATH_STYLE_ENDPOINT=true`.
-- **Datos de demostración:** cargados con `DemoMarketplaceSeeder`, con contraseñas aleatorias guardadas en `.vercel/cuentas-demo.txt` (privado, no se versiona). El sitio va con `X-Robots-Tag: noindex` en `vercel.json` hasta el lanzamiento.
+- **Datos:** el sitio arrancó sin proveedores, con los 14 oficios de `MarketplaceCategoriesSeeder`. Los datos de demostración se borraron el 04/11/2026; nunca corras `DemoMarketplaceSeeder` en esta base. El administrador es la cuenta `malacatosangel06@gmail.com`; para nombrar a otro, se cambia su `utype` a `ADM` en la base.
 - **Pendiente para que funcione todo:** SMTP (por ahora `MAIL_MAILER=log`: los correos solo van al registro).
 - **Despliegue automático:** cada push a `main` en GitHub publica el sitio (*Root Directory* = `laravelhomeservices`, porque la app no está en la raíz del repositorio). Para desplegar a mano, usa `vercel deploy --prod` desde la **raíz del repositorio**, no desde `laravelhomeservices/`.
 
@@ -148,7 +148,9 @@ Archivos: `vercel.json`, `.vercelignore` y `api/index.php` (lleva a `/tmp` lo qu
 
 **Autocomprobación:** el cron diario corre `php artisan storage:check`, que escribe, lee y borra un archivo en los dos buckets y hace una subida firmada completa con las mismas clases que una real. Si algo falla, `/cron/diario` responde 500 y el motivo queda en los registros de Vercel. Para probar en cualquier momento: `vercel crons run /cron/diario` y luego `vercel logs --no-follow --since 5m`.
 
-**Antes del lanzamiento real:** borra los datos de demostración, quita el `noindex` de `vercel.json`, conecta el SMTP, carga los datos bancarios (`BILLING_BANK_*`) y pasa Vercel al plan de pago (ver abajo).
+**Pendiente:** conectar el SMTP, cargar los datos bancarios (`BILLING_BANK_*`), revisar términos y privacidad con un profesional, y pasar Vercel al plan de pago antes de cobrar el plan Pro.
+
+**Correo con Gmail:** activa la verificación en dos pasos, crea una *contraseña de aplicación* en https://myaccount.google.com/apppasswords y cárgala con `vercel env add MAIL_PASSWORD production --sensitive`. Luego `vercel env add MAIL_MAILER production --value smtp --yes --force` y vuelve a desplegar. `MAIL_HOST`, `MAIL_PORT`, `MAIL_ENCRYPTION`, `MAIL_USERNAME` y `MAIL_TIMEOUT` ya están cargados. Mientras `MAIL_MAILER=log`, «olvidé mi contraseña» manda a la gente a WhatsApp en lugar de prometer un correo que no saldría.
 
 ### Antes de desplegar, conviene saber
 
@@ -164,7 +166,7 @@ Archivos: `vercel.json`, `.vercelignore` y `api/index.php` (lleva a `/tmp` lo qu
 2. **Prepara la base desde tu computadora,** con un `.env.produccion` temporal que apunte a ella:
    ```bash
    php artisan migrate --force --env=produccion
-   php artisan db:seed --class=ServiceCategorySeeder --force --env=produccion
+   php artisan db:seed --class=MarketplaceCategoriesSeeder --force --env=produccion
    ```
    Luego registra tu cuenta en el sitio y cambia su `utype` a `ADM` en la base. Borra ese archivo al terminar.
 3. **Crea el proyecto en Vercel** con *Root Directory* = `laravelhomeservices` y Node 22, y carga las variables de `.env.vercel.example` en *Settings → Environment Variables*. `APP_KEY` sale de `php artisan key:generate --show`.

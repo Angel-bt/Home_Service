@@ -22,10 +22,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/api/index.php",
-      "headers": {
-        "X-Robots-Tag": "noindex"
-      }
+      "dest": "/api/index.php"
     }
   ],
   "crons": [

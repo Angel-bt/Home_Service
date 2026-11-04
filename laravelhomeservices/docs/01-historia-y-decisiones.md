@@ -227,6 +227,7 @@ Se recorrieron los tres roles en vista de celular, desde una base vacía, con Po
 - **Sitio sin servicios:** invita a sumarse en lugar de mostrar tres ceros.
 - **Oficios:** `MarketplaceCategoriesSeeder` trae 14 reales, con «Otros oficios» para quien no encaje.
 - **Sin SMTP:** «olvidé mi contraseña» manda a WhatsApp en lugar de prometer un correo que no saldría.
+- **Lanzamiento (04/11/2026):** con autorización del dueño se borraron los datos de demostración, porque tenían teléfonos inventados que podrían ser de personas reales. Su cuenta pasó a administrador y el sitio quedó abierto a los buscadores.
 
 ## Decisiones pendientes o deliberadamente postergadas
 
