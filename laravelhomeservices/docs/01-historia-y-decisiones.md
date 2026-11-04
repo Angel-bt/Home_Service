@@ -196,6 +196,8 @@ Con el rediseño ya guardado se quitó lo que nada usaba (se comprobó buscando 
 - **Estilos viejos:** `public/css/proyetech.css` y el bloque `proyetech-*` de `resources/css/app.css` (500 líneas). El CSS compilado bajó de 117 KB a 86 KB.
 - **Vistas de Jetstream sin ruta:** `welcome`, `dashboard` y `navigation-menu`, junto con los componentes que solo ellas usaban.
 - **Términos y privacidad de Jetstream:** `terms`, `policy`, `layouts/guest`, `GuestLayout` y `resources/markdown`. Esa función de Jetstream está apagada y el sitio tiene sus propias páginas `/terms` y `/privacy`, editables desde el panel. **No activar `Features::termsAndPrivacyPolicy()`:** sus vistas ya no existen.
+- **Copia antigua en la raíz del repositorio:** la raíz guardaba una versión de septiembre de 2026 de la app (`app/`, `public/`, `resources/`…, 492 archivos) que nadie usaba. Allí solo quedan `laravelhomeservices/`, `README.md`, `AGENTS.md` y la configuración de git y del editor. La copia sigue en el historial de git.
+- **`.git` dentro de `laravelhomeservices/`:** era un repositorio viejo, de 5 commits ya incluidos en el principal, que apuntaba al mismo GitHub. Ahora git funciona igual desde cualquier carpeta del proyecto.
 
 ## Fase 6: recorrido completo y preparación para Vercel
 
@@ -227,4 +229,6 @@ Se recorrió en el navegador, con tres roles y archivos reales: registro, perfil
 | `d2e701a` | Fase 3: Laravel 13, Livewire 3, Jetstream 5 y seguridad. |
 | `2214269` | Pagos solo por transferencia y efectivo; zona horaria de Ecuador; documentación completa. |
 | `6039de7` | Fase 4: nueva landing "Valle de noche" (inspirada en Halo Lab) y zonas limitadas a Malacatos, Vilcabamba, Yangana y Quinara. Fase 5: todo el sitio con ese diseño y paneles guiados por rol. |
-| siguiente | Fase 6: limpieza del tema Bootstrap, los estilos `proyetech-*` y las vistas sin uso de Jetstream. |
+| `6584a0a` | Limpieza del tema Bootstrap, los estilos `proyetech-*` y las vistas sin uso de Jetstream. |
+| `9347892` | Fase 6: preparación para Vercel y errores del recorrido completo. |
+| siguiente | Limpieza de la copia antigua de la app en la raíz del repositorio. |

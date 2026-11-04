@@ -2,7 +2,7 @@
 
 ## Layout
 
-- The application lives in `laravelhomeservices/`; tutorial notes/links live in `laravelhomeservices/pasos .txt`. Run every app command from `laravelhomeservices/`, but run **git from the repo root**: `laravelhomeservices/` contains its own stale nested `.git`, so git commands inside it read the wrong repository. The root also tracks an older copy of the app (`app/`, `public/`, `resources/`…) that is not the one in use.
+- The application lives in `laravelhomeservices/`; tutorial notes/links live in `laravelhomeservices/pasos .txt`. Run every app command from `laravelhomeservices/`. The repo root only holds this folder plus `README.md`, `AGENTS.md` and git/editor config.
 - Laravel 13 + Livewire 3 full-page components + Jetstream 5/Fortify auth + Sanctum 4 + Tailwind (via Mix). PHP `^8.3`. The favicon is `public/images/favicon.png`.
 - The app keeps the pre-Laravel-11 structure (`app/Http/Kernel.php`, `app/Console/Kernel.php`, `RouteServiceProvider`, `Exceptions/Handler`); Laravel 13 still supports it. Register middleware in `Kernel::$middlewareAliases`.
 
