@@ -132,6 +132,6 @@ class ServiceDetailsComponent extends Component
             'r_service' => $rService,
             'reviews' => $reviews,
             'zones' => config('marketplace.zones'),
-        ])->layout('layouts.base');
+        ])->layout('layouts.base')->title($service?->name ?? 'Servicio no disponible');
     }
 }

@@ -13,14 +13,13 @@ return [
     'contact_email' => env('MARKETPLACE_CONTACT_EMAIL', 'gameri7@hotmail.com'),
     'whatsapp_country_code' => env('MARKETPLACE_WHATSAPP_COUNTRY_CODE', '593'),
 
-    // Zones a provider can cover (slug => label). Keep slugs stable: they are stored in provider_zones.
+    // Zones a provider can cover (slug => label). Malacatos is the main one and is listed first.
+    // Keep slugs stable: they are stored in provider_zones and service_requests.
     'zones' => [
         'malacatos' => 'Malacatos',
         'vilcabamba' => 'Vilcabamba',
-        'quinara' => 'Quinara',
-        'san-pedro-de-vilcabamba' => 'San Pedro de Vilcabamba',
         'yangana' => 'Yangana',
-        'catamayo' => 'Catamayo',
-        'loja' => 'Loja (ciudad)',
+        'quinara' => 'Quinara',
     ],
+    'main_zone' => 'malacatos',
 ];

@@ -46,7 +46,7 @@ class BillingController extends Controller
                 $payment->client_transaction_id,
                 route('billing.payphone.return'),
                 route('sprovider.plan'),
-                'Plan Pro Proyetech ' . ($periods * (int) config('billing.pro_period_days')) . ' días',
+                'Plan Pro Malakplace ' . ($periods * (int) config('billing.pro_period_days')) . ' días',
                 $user->email,
             );
         } catch (Throwable $exception) {

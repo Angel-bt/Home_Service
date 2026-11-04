@@ -1,138 +1,47 @@
 <x-base-layout>
-    <div class="section-title-01 honmob">
-        <div class="bg_parallax image_02_parallax"></div>
-        <div class="opacy_bg_02">
-            <div class="container">
-                <h1>Registro</h1>
-                <div class="crumbs">
-                    <ul>
-                        <li><a href="/">Inicio</a></li>
-                        <li>/</li>
-                        <li>Registro</li>
-                    </ul>
+    <x-ui.auth-card title="Crea tu" accent="cuenta" lede="Es gratis y toma un minuto." wide>
+        <form method="POST" action="{{ route('register') }}" class="space-y-5" x-data="{ as: '{{ old('registeras', request('como') === 'SVP' ? 'SVP' : 'CST') }}', sending: false }" @submit="sending = true">
+            @csrf
+            <fieldset>
+                <legend class="ui-label">¿Para qué quieres tu cuenta?</legend>
+                <div class="grid gap-2 sm:grid-cols-2">
+                    @foreach ([['CST', 'Busco servicios', 'Quiero contratar a alguien.'], ['SVP', 'Ofrezco servicios', 'Tengo un oficio y busco clientes.']] as [$value, $optionTitle, $hint])
+                        <label class="cursor-pointer rounded-2xl border p-4 transition" :class="as === '{{ $value }}' ? 'border-noche-900 bg-humo-50 ring-1 ring-noche-900' : 'border-humo-300 hover:border-grafito-400'">
+                            <input type="radio" name="registeras" value="{{ $value }}" x-model="as" class="sr-only">
+                            <span class="block text-[15px] font-medium">{{ $optionTitle }}</span>
+                            <span class="mt-0.5 block text-[13px] text-grafito-500">{{ $hint }}</span>
+                        </label>
+                    @endforeach
                 </div>
+                @error('registeras')
+                    <p class="ui-error"><x-site.icon name="alert" class="mt-px h-4 w-4 shrink-0" /> {{ $message }}</p>
+                @enderror
+            </fieldset>
+            <x-ui.field label="Tu nombre completo" name="name">
+                <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" class="ui-input @error('name') ui-input-invalid @enderror">
+            </x-ui.field>
+            <div class="grid gap-5 sm:grid-cols-2">
+                <x-ui.field label="Tu correo" name="email">
+                    <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" class="ui-input @error('email') ui-input-invalid @enderror">
+                </x-ui.field>
+                <x-ui.field label="Tu celular" name="phone" hint="Ej.: 0991234567">
+                    <input id="phone" type="tel" name="phone" value="{{ old('phone') }}" required autocomplete="tel" inputmode="tel" class="ui-input @error('phone') ui-input-invalid @enderror">
+                </x-ui.field>
+                <x-ui.field label="Crea una contraseña" name="password" hint="Mínimo 8 letras o números.">
+                    <input id="password" type="password" name="password" required autocomplete="new-password" class="ui-input @error('password') ui-input-invalid @enderror">
+                </x-ui.field>
+                <x-ui.field label="Repite la contraseña" for="password_confirmation">
+                    <input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password" class="ui-input">
+                </x-ui.field>
             </div>
-        </div>
-    </div>
-    <section class="glass-card content-central">
-        <div class="neomorph-card">
-            <div class="paddings-mini">
-                <div class="neomorph-card">
-                    <div class="row portfolioContainer">
-                        <div class="col-xs-12 col-sm-3 col-md-3 profile1"></div>
-                        <div class="col-xs-12 col-sm-6 col-md-6 profile1" style="min-height: 300px;">
-                            <div class="thinborder-ontop">
-                                <h3>Tus datos</h3>
-                                <x-validation-errors class="mb-4" />
-                                <form id="userregistrationform" method="POST" action="{{ route('register') }}">
-                                    @csrf
-                                    <div class="form-group row">
-                                        <label for="name" class="col-md-4 col-form-label text-md-right">Nombre</label>
-                                        <div class="col-md-6">
-                                            <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required autofocus>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="email" class="col-md-4 col-form-label text-md-right">Correo electrónico</label>
-                                        <div class="col-md-6">
-                                            <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="password" class="col-md-4 col-form-label text-md-right">Contraseña</label>
-                                        <div class="col-md-6">
-                                            <input id="password" type="password" class="form-control" name="password" required>
-                                            <button type="button" id="togglePassword" class="btn btn-outline-secondary mt-2">👁️</button>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="password-confirm" class="col-md-4 col-form-label text-md-right">Confirmar contraseña</label>
-                                        <div class="col-md-6">
-                                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="phone" class="col-md-4 col-form-label text-md-right">Teléfono</label>
-                                        <div class="col-md-6">
-                                            <input id="phone" type="text" class="form-control" name="phone" value="{{ old('phone') }}" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="registeras" class="col-md-4 col-form-label text-md-right">Registrarme como</label>
-                                        <div class="col-md-6">
-                                            <select class="form-control" name="registeras" id="registeras">
-                                                <option value="CST">Cliente</option>
-                                                <option value="SVP">Proveedor de servicios</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row mb-0">
-                                        <div class="col-md-10">
-                                            <span style="font-size: 14px;">Si ya tienes una cuenta, <a href="{{ route('login') }}" title="Login">haz clic aquí</a> para iniciar sesión</span>
-                                            <button type="submit" class="btn btn-primary pull-right">Registrarme</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-sm-3 col-md-3 profile1"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SweetAlert2 Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    @if (session('error'))
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: '{{ session('error') }}',
-        });
-    </script>
-    @endif
-
-    @if (session('success'))
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: '{{ session('success') }}',
-        });
-    </script>
-    @endif
-
-    <script>
-        // Manejar el envío del formulario
-        document.getElementById('userregistrationform').addEventListener('submit', function (e) {
-            e.preventDefault();
-            Swal.fire({
-                title: 'Registering...',
-                text: 'Please wait while we process your request.',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
-            this.submit();
-        });
-
-        // Alternar visibilidad de la contraseña
-        const togglePassword = document.querySelector('#togglePassword');
-        const password = document.querySelector('#password');
-        togglePassword.addEventListener('click', () => {
-            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-            password.setAttribute('type', type);
-            togglePassword.textContent = type === 'password' ? '👁️' : '🙈';
-        });
-    </script>
+            <button type="submit" class="ui-btn ui-btn-primary ui-btn-lg w-full" :disabled="sending">
+                <span x-show="!sending">Crear mi cuenta gratis</span>
+                <span x-show="sending" x-cloak>Creando tu cuenta…</span>
+            </button>
+            <p class="text-center text-[13px] text-grafito-500">Al crear tu cuenta aceptas los <a href="{{ route('home.terms') }}" class="ui-link">términos</a> y la <a href="{{ route('home.privacy') }}" class="ui-link">privacidad</a>.</p>
+        </form>
+        <x-slot:footer>
+            ¿Ya tienes cuenta? <a href="{{ route('login') }}" class="ui-link">Ingresa aquí</a>
+        </x-slot:footer>
+    </x-ui.auth-card>
 </x-base-layout>

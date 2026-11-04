@@ -20,8 +20,7 @@ class AuthAdmin
         if (Auth::user()->utype === 'ADM') {
             return $next($request);
         } else {
-            session()->flush();
-            return redirect()->route('login');
+            return redirect()->route(Auth::user()->dashboardRoute())->with('error', 'Esa página es solo para la administración. Te trajimos a tu panel.');
         }
     }
 }

@@ -71,9 +71,9 @@ class CustomerDashboardComponent extends Component
     {
         return view('livewire.customer.customer-dashboard-component', [
             'requests' => ServiceRequest::where('customer_id', Auth::id())
-                ->with(['service:id,name,slug', 'provider:id,name', 'review'])
+                ->with(['service:id,name,slug', 'provider:id,name,phone,utype', 'provider.serviceProvider:id,user_id,whatsapp', 'review'])
                 ->latest()
                 ->paginate(10),
-        ])->layout('layouts.base');
+        ])->layout('layouts.base')->title('Mis solicitudes');
     }
 }

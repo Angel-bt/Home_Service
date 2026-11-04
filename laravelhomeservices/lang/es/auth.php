@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'failed' => 'El correo o la contraseña no son correctos.',
+    'failed' => 'El correo o la contraseña no coinciden. Revísalos, o toca «¿Olvidaste tu contraseña?».',
     'password' => 'La contraseña no es correcta.',
-    'throttle' => 'Demasiados intentos de acceso. Intenta de nuevo en :seconds segundos.',
+    'throttle' => 'Hubo muchos intentos seguidos. Espera :seconds segundos y prueba otra vez; si olvidaste tu contraseña, puedes recuperarla.',
 ];

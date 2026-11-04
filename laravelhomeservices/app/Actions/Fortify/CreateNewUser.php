@@ -54,7 +54,7 @@ class CreateNewUser implements CreatesNewUsers
         SendWelcomeEmail::dispatch($user);
 
         // Establecer un mensaje de sesión de éxito
-        Session::flash('success', '¡Registro exitoso! Bienvenido a Proyetech.');
+        Session::flash('success', '¡Registro exitoso! Bienvenido a Malakplace.');
         return $user;
     }
 }

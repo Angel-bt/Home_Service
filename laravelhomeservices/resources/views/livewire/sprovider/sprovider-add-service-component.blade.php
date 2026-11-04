@@ -1,31 +1,18 @@
 <div>
-    @include('livewire.partials.page-header', ['title' => 'Publicar servicio'])
-    <section class="content-central">
-        <div class="content_info">
-            <div class="paddings-mini">
-                <div class="container">
-                    <div class="row portfolioContainer">
-                        <div class="col-md-12 profile1">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <div class="row">
-                                        <div class="col-md-6">Publicar servicio</div>
-                                        <div class="col-md-6">
-                                            <a href="{{ route('sprovider.services') }}" class="btn btn-info pull-right">Mis servicios</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel-body">
-                                    @if ($limit !== null)
-                                        <div class="alert alert-info">Plan gratuito: puedes publicar hasta {{ $limit }} servicios ({{ $used }} usados). <a href="{{ route('sprovider.plan') }}">Ver plan Pro</a></div>
-                                    @endif
-                                    @include('livewire.partials.service-form', ['submit' => 'createService', 'submitLabel' => 'Publicar servicio', 'editing' => false])
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <x-ui.panel title="Publicar un" accent="servicio" help="Llena estos datos. Cuando toques «Publicar servicio», los clientes ya podrán verlo.">
+        @if ($limit !== null && $used >= $limit)
+            <x-ui.empty icon="card" title="Ya usaste tus {{ $limit }} servicios gratis">
+                Para publicar otro, pásate al plan Pro o elimina uno que ya no ofrezcas.
+                <x-slot:actions>
+                    <a href="{{ route('sprovider.plan') }}" class="ui-btn ui-btn-gold">Ver plan Pro</a>
+                    <a href="{{ route('sprovider.services') }}" class="ui-btn ui-btn-secondary">Ver mis servicios</a>
+                </x-slot:actions>
+            </x-ui.empty>
+        @else
+            @if ($limit !== null)
+                <p class="mb-6 text-[14px] text-grafito-500">Plan gratuito: llevas {{ $used }} de {{ $limit }} servicios. <a href="{{ route('sprovider.plan') }}" class="ui-link">Ver plan Pro</a></p>
+            @endif
+            @include('livewire.partials.service-form', ['submit' => 'createService', 'submitLabel' => 'Publicar servicio', 'editing' => false, 'cancelUrl' => route('sprovider.services')])
+        @endif
+    </x-ui.panel>
 </div>

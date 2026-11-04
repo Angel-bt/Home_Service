@@ -21,6 +21,11 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // Tras ingresar o registrarse, cada rol llega a su panel.
+        $this->app->singleton(\Laravel\Fortify\Contracts\LoginResponse::class, \App\Http\Responses\RoleHomeResponse::class);
+        $this->app->singleton(\Laravel\Fortify\Contracts\RegisterResponse::class, \App\Http\Responses\RoleHomeResponse::class);
+        $this->app->singleton(\Laravel\Fortify\Contracts\TwoFactorLoginResponse::class, \App\Http\Responses\RoleHomeResponse::class);
+
         $this->app->singleton(
             \Laravel\Fortify\Contracts\LoginResponse::class,
             \App\Http\Responses\LoginResponse::class

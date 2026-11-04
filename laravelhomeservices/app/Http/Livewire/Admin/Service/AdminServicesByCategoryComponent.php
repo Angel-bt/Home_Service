@@ -41,7 +41,7 @@ class AdminServicesByCategoryComponent extends Component
     public function render()
     {
         $category = ServiceCategory::where('slug', $this->category_slug)->firstOrFail();
-        $services = Service::query()->with(['category:id,name,slug', 'user:id,name'])->where('service_category_id', $category->id)->paginate(10);
-        return view('livewire.admin.service.admin-services-by-category-component', ['category_name' => $category->name, 'services' => $services])->layout('layouts.base');
+        $services = Service::query()->with(['category:id,name,slug', 'user:id,name,utype'])->where('service_category_id', $category->id)->latest()->paginate(10);
+        return view('livewire.admin.service.admin-services-by-category-component', ['category_name' => $category->name, 'services' => $services])->layout('layouts.base')->title($category->name);
     }
 }

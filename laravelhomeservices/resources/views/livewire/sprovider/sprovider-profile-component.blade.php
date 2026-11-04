@@ -1,52 +1,51 @@
 <div>
-    @include('livewire.partials.page-header', ['title' => 'Mi perfil'])
-    <section class="content-central">
-        <div class="content_info">
-            <div class="paddings-mini">
-                <div class="container">
-                    <div class="row portfolioContainer">
-                        <div class="col-md-8 col-md-offset-2 profile1">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <div class="row">
-                                        <div class="col-md-6">Perfil de proveedor</div>
-                                        <div class="col-md-6">
-                                            <a href="{{ route('sprovider.edit_profile') }}" class="btn btn-info pull-right">Editar perfil</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            @if ($sprovider && $sprovider->image)
-                                                <img src="{{ asset('images/sproviders/' . $sprovider->image) }}" width="100%" alt=""/>
-                                            @else
-                                                <img src="{{ asset('images/sproviders/default.jpg') }}" width="100%" alt=""/>
-                                            @endif
-                                        </div>
-                                        <div class="col-md-8">
-                                            <h3>{{ Auth::user()->name }}</h3>
-                                            <p>{{ $sprovider?->about ?: 'Aún no has escrito una presentación.' }}</p>
-                                            <p><b>Correo:</b> {{ Auth::user()->email }}</p>
-                                            <p><b>Teléfono:</b> {{ Auth::user()->phone }}</p>
-                                            <p><b>WhatsApp:</b> {{ $sprovider?->whatsapp ?: 'Sin configurar' }}</p>
-                                            <p><b>Ciudad / parroquia:</b> {{ $sprovider?->city ?: '—' }}</p>
-                                            <p><b>Categoría principal:</b> {{ $sprovider?->category?->name ?? '—' }}</p>
-                                            <p><b>Zonas donde trabaja:</b>
-                                                {{ $sprovider && $sprovider->zones->isNotEmpty() ? $sprovider->zones->map->label()->implode(', ') : 'Sin zonas configuradas' }}
-                                            </p>
-                                            <p><b>Referencia de ubicación:</b> {{ $sprovider?->service_location ?: '—' }}</p>
-                                            @if (! $sprovider || $sprovider->zones->isEmpty() || ! $sprovider->whatsapp)
-                                                <div class="alert alert-warning">Completa tu WhatsApp y tus zonas para que los clientes puedan encontrarte y contactarte.</div>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+    @php
+        $user = auth()->user();
+        $missing = array_filter([
+            ! $sprovider?->whatsapp ? 'tu WhatsApp' : null,
+            (! $sprovider || $sprovider->zones->isEmpty()) ? 'las zonas donde trabajas' : null,
+        ]);
+        $rows = [
+            ['Correo', $user->email],
+            ['Teléfono', $user->phone ?: '—'],
+            ['WhatsApp', $sprovider?->whatsapp ?: 'Sin configurar'],
+            ['Zonas donde trabajas', $sprovider && $sprovider->zones->isNotEmpty() ? $sprovider->zones->map->label()->implode(', ') : 'Sin configurar'],
+            ['Ciudad o parroquia', $sprovider?->city ?: '—'],
+            ['Oficio principal', $sprovider?->category?->name ?? '—'],
+            ['Referencia de ubicación', $sprovider?->service_location ?: '—'],
+        ];
+    @endphp
+    <x-ui.panel title="Mi perfil" help="Esto es lo que los clientes ven de ti junto a tus servicios.">
+        <x-slot:actions>
+            <a href="{{ route('sprovider.edit_profile') }}" class="ui-btn ui-btn-primary"><x-site.icon name="edit" class="h-4 w-4" /> Editar perfil</a>
+        </x-slot:actions>
+
+        @if ($missing)
+            <div class="mb-6 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-[15px] text-amber-950" role="status">
+                <x-site.icon name="alert" class="mt-0.5 h-5 w-5 shrink-0 text-amber-700" />
+                <p>Te falta poner {{ implode(' y ', $missing) }}. Sin eso los clientes no pueden encontrarte ni escribirte.</p>
+            </div>
+        @endif
+
+        <div class="ui-card ui-card-pad grid gap-8 md:grid-cols-[200px_1fr]">
+            <div>
+                <img src="{{ asset('images/sproviders/' . ($sprovider?->image ?: 'default.jpg')) }}" alt="Tu foto de perfil" class="aspect-square w-full max-w-[200px] rounded-3xl object-cover">
+                @unless ($sprovider?->image)
+                    <p class="ui-hint">Aún no subes tu foto.</p>
+                @endunless
+            </div>
+            <div>
+                <h2 class="lp-title text-3xl">{{ $user->name }}</h2>
+                <p class="mt-3 text-[16px] leading-relaxed text-grafito-600">{{ $sprovider?->about ?: 'Aún no has escrito una presentación. Cuenta tu experiencia en dos líneas: ayuda a que te elijan.' }}</p>
+                <dl class="mt-6 divide-y divide-humo-200 border-t border-humo-200 text-[15px]">
+                    @foreach ($rows as [$label, $value])
+                        <div class="flex flex-col gap-0.5 py-3 sm:flex-row sm:gap-6">
+                            <dt class="text-grafito-500 sm:w-52 sm:shrink-0">{{ $label }}</dt>
+                            <dd class="min-w-0 break-words {{ $value === 'Sin configurar' ? 'font-medium text-amber-800' : '' }}">{{ $value }}</dd>
                         </div>
-                    </div>
-                </div>
+                    @endforeach
+                </dl>
             </div>
         </div>
-    </section>
+    </x-ui.panel>
 </div>

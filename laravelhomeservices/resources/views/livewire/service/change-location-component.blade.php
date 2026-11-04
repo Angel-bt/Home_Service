@@ -1,94 +1,42 @@
 <div>
-    <div class="section-title-01 honmob">
-        <div class="bg_parallax image_01_parallax"></div>
-        <div class="opacy_bg_02">
-            <div class="container">
-                <h1>Cambiar ubicación</h1>
-                <div class="crumbs">
-                    <ul>
-                        <li><a href="/">Inicio</a></li>
-                        <li>/</li>
-                        <li>Cambiar ubicación</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="content-central">
-        <div class="semiboxshadow text-center">
-            <img src="img/img-theme/shp.png" class="img-responsive" alt="">
-        </div>
-        <div class="content_info">
-            <div class="paddings-mini">
-                <div class="container">
-                    <div class="row">
-                        <form wire:submit.prevent='changeLocation'>
-                            @if (Session::has('message'))
-                                <div class="alert alert-success" role="alert">{{ Session::get('message') }}</div>
-                            @endif
-                            <div class="col-md-8">
-                                <h3>Busca tu ubicación</h3>
-                                <p class="lead">
-                                </p>
-                                <input type="text" class="form-control" id="autocomplete" name="location" wire:ignore
-                                    placeholder="Buscar ubicación...">
-                                <div id="map" style="height: 400px; margin-top: 20px;" wire:ignore></div>
-                                @if (! config('services.google_maps.key'))
-                                    <div class="alert alert-warning" role="alert" style="margin-top: 10px;">
-                                        The map is unavailable (GOOGLE_MAPS_API_KEY is not set). You can still fill in your location manually.
-                                    </div>
-                                @endif
-                            </div>
+    <x-ui.page title="Tu" accent="ubicación" eyebrow="Ubicación" lede="Busca tu dirección en el mapa o escríbela a mano. La usamos para mostrarte servicios cercanos." />
 
-                            <div class="col-md-4">
-                                <aside class="addlocation">
-                                    <h4>Tu ubicación<input type="submit" class="btn btn-primary pull-right"
-                                            name="submit" value="Guardar ubicación"></h4>
-                                    <address>
-                                        <div class="form-group">
-                                            <label for="streetnumber" class="col-form-label">Número:</label>
-                                            <input type="text" class="form-control" id="street_number" wire:model='streetnumber'
-                                                name="streetnumber">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="routes" class="col-form-label">Calle:</label>
-                                            <input type="text" class="form-control" id="route" name="routes" wire:model='routes'>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="city" class="col-form-label">Ciudad:</label>
-                                            <input type="text" class="form-control" id="locality" name="city" wire:model='city'>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="state" class="col-form-label">Provincia:</label>
-                                            <input type="text" class="form-control" id="administrative_area_level_1" wire:model='state'
-                                                name="state">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="country" class="col-form-label">País:</label>
-                                            <input type="text" class="form-control" id="country" name="country" wire:model='country'>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="pincode" class="col-form-label">Código postal:</label>
-                                            <input type="text" class="form-control" id="postal_code" name="pincode" wire:model='zipcode'>
-                                        </div>
-                                    </address>
-                                </aside>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+    <section class="mx-auto max-w-[84rem] px-5 py-12 sm:px-8 lg:py-16">
+        <x-ui.flash class="mb-8" />
+        <form wire:submit="changeLocation" class="grid gap-10 lg:grid-cols-[1.5fr_1fr]">
+            <div>
+                <label for="autocomplete" class="ui-label">Busca tu dirección</label>
+                <input type="text" class="ui-input" id="autocomplete" name="location" wire:ignore placeholder="Ej.: Parque central de Malacatos">
+                <div id="map" class="mt-4 h-[400px] overflow-hidden rounded-3xl bg-humo-200" wire:ignore></div>
+                @if (! config('services.google_maps.key'))
+                    <p class="mt-4 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-[15px] text-amber-950">
+                        <x-site.icon name="info" class="mt-0.5 h-5 w-5 shrink-0" /> El mapa no está disponible por ahora. Llena tu dirección a mano en los campos de la derecha.
+                    </p>
+                @endif
             </div>
-        </div>
-        <div class="section-twitter content_resalt border-top">
-            <i class="fa fa-twitter icon-big"></i>
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                    </div>
-                </div>
+            <div class="ui-card ui-card-pad space-y-5 self-start">
+                    <x-ui.field label="Número" for="street_number">
+                        <input type="text" id="street_number" class="ui-input" wire:model="streetnumber">
+                    </x-ui.field>
+                    <x-ui.field label="Calle" for="route">
+                        <input type="text" id="route" class="ui-input" wire:model="routes">
+                    </x-ui.field>
+                    <x-ui.field label="Ciudad" for="locality">
+                        <input type="text" id="locality" class="ui-input" wire:model="city">
+                    </x-ui.field>
+                    <x-ui.field label="Provincia" for="administrative_area_level_1">
+                        <input type="text" id="administrative_area_level_1" class="ui-input" wire:model="state">
+                    </x-ui.field>
+                    <x-ui.field label="País" for="country">
+                        <input type="text" id="country" class="ui-input" wire:model="country">
+                    </x-ui.field>
+                    <x-ui.field label="Código postal" for="postal_code">
+                        <input type="text" id="postal_code" class="ui-input" wire:model="zipcode">
+                    </x-ui.field>
+                <button type="submit" class="ui-btn ui-btn-primary w-full">Guardar ubicación</button>
             </div>
-        </div>
-    </div>
+        </form>
+    </section>
     @push('scripts')
         @if (config('services.google_maps.key'))
             <script>
@@ -118,7 +66,7 @@
                         const place = autocomplete.getPlace();
 
                         if (!place.geometry || !place.geometry.location) {
-                            alert("No details available for the selected location.");
+                            alert("No encontramos detalles de ese lugar. Prueba con otro o llena los campos a mano.");
                             return;
                         }
 

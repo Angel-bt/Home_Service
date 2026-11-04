@@ -85,6 +85,6 @@ class SecurityHardeningTest extends TestCase
     public function test_session_uses_json_serialization(): void
     {
         $this->assertSame('json', config('session.serialization'));
-        $this->assertContains(Service::class, config('cache.serializable_classes'));
+        $this->assertFalse(config('cache.serializable_classes'));
     }
 }

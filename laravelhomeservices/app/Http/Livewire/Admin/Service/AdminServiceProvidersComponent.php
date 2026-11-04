@@ -9,7 +9,7 @@ class AdminServiceProvidersComponent extends Component
 {
     public function render()
     {
-        $sproviders = ServiceProvider::paginate(12);
-        return view('livewire.admin.service.admin-service-providers-component', ['sproviders' => $sproviders])->layout('layouts.base');
+        $sproviders = ServiceProvider::with(['user:id,name,email,phone,subscription_plan,plan_expires_at', 'category:id,name', 'zones'])->latest()->paginate(12);
+        return view('livewire.admin.service.admin-service-providers-component', ['sproviders' => $sproviders])->layout('layouts.base')->title('Proveedores');
     }
 }

@@ -97,6 +97,18 @@ class User extends Authenticatable
     /**
      * Pro plan in force. A "pro" user without expiry date was upgraded manually and never expires.
      */
+    /**
+     * Route name of this user's own panel.
+     */
+    public function dashboardRoute(): string
+    {
+        return match ($this->utype) {
+            'ADM' => 'admin.dashboard',
+            'SVP' => 'sprovider.dashboard',
+            default => 'customer.dashboard',
+        };
+    }
+
     public function isPro(): bool
     {
         return $this->subscription_plan === 'pro'

@@ -1,85 +1,48 @@
 <div>
-    <div class="section-title-01 honmob">
-        <div class="bg_parallax image_02_parallax"></div>
-        <div class="opacy_bg_02">
-            <div class="container">
-                <h1>Contáctanos</h1>
-                <div class="crumbs">
-                    <ul>
-                    <li><a href="/"><button class="glass-button">Inicio</button></a></li>
-                        <li>/</li>
-                        <li>Contáctanos</li>
-                    </ul>
+    @php $whatsapp = \App\Support\WhatsApp::link(config('marketplace.contact_phone'), 'Hola, tengo una consulta sobre Malakplace.'); @endphp
+    <x-ui.page title="¿Una duda?" accent="Escríbenos." eyebrow="Contacto"
+               lede="Atendemos desde Malacatos. Por WhatsApp respondemos el mismo día; por este formulario, en uno o dos días." />
+
+    <section class="mx-auto grid max-w-[84rem] gap-10 px-5 py-12 sm:px-8 lg:grid-cols-[1fr_1.4fr] lg:gap-16 lg:py-16">
+        <div class="space-y-8">
+            @if ($whatsapp)
+                <div class="ui-card ui-card-pad">
+                    <p class="text-[15px] font-medium">Lo más rápido</p>
+                    <p class="mt-1 text-[15px] text-grafito-500">Escríbenos por WhatsApp y te respondemos hoy.</p>
+                    <a href="{{ $whatsapp }}" target="_blank" rel="noopener" class="ui-btn ui-btn-whatsapp mt-5"><x-site.icon name="whatsapp" class="h-5 w-5" /> {{ config('marketplace.contact_phone') }}</a>
                 </div>
-            </div>
+            @endif
+            <dl class="space-y-5 text-[15px]">
+                <div class="flex gap-4"><x-site.icon name="pin" class="h-5 w-5 shrink-0 text-grafito-400" /><div><dt class="text-grafito-500">Dónde estamos</dt><dd class="mt-0.5">Malacatos, Loja · Ecuador</dd></div></div>
+                @if (config('marketplace.contact_email'))
+                    <div class="flex gap-4"><x-site.icon name="mail" class="h-5 w-5 shrink-0 text-grafito-400" /><div><dt class="text-grafito-500">Correo</dt><dd class="mt-0.5"><a href="mailto:{{ config('marketplace.contact_email') }}" class="ui-link break-all">{{ config('marketplace.contact_email') }}</a></dd></div></div>
+                @endif
+            </dl>
         </div>
-    </div>
-    <div class="content-central">
-        <div class="semiboxshadow text-center">
-            <img src="img/img-theme/shp.png" class="img-responsive" alt="">
-        </div>
-        <div id="map" class="honmob"> </div>
-        <div class="content_info">
-            <div class="paddings-mini">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <aside>
-                                <h4>Nuestra oficina</h4>
-                                <address>
-                                    <strong>Proyetech · Servicios para el hogar</strong><br>
-                                    <i class="fa fa-map-marker"></i> <strong>Dirección:</strong> Malacatos, Loja, Ecuador<br>
-                                    <i class="fa fa-phone"></i> <strong>Teléfono:</strong> <a href="tel:{{ config('marketplace.contact_phone') }}">{{ config('marketplace.contact_phone') }}</a><br>
-                                    <i class="fab fa-whatsapp"></i> <strong>WhatsApp:</strong> <a href="{{ \App\Support\WhatsApp::link(config('marketplace.contact_phone')) }}" target="_blank" rel="noopener">Escríbenos</a>
-                                </address>
-                                <address>
-                                    <i class="fa fa-envelope"></i> <strong>Correo:</strong> <a href="mailto:{{ config('marketplace.contact_email') }}">{{ config('marketplace.contact_email') }}</a>
-                                </address>
-                            </aside>
-                            <hr class="tall">
-                        </div>
-                        <div class="col-md-8">
-                            <h3>Escríbenos</h3>
-                            <p class="lead">
-                            </p>
-                            @if (Session::has('message'))
-                                <div class="alert alert-success" role="alert">{{ Session::get('message') }}</div>
-                            @endif
-                            <form id="contactform" class="form-theme" wire:submit.prevent='sendMessage'>
-                                <input type="text" placeholder="Nombre" name="name" id="name" required=""wire:model="name">
-                                @error('name')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                                <input type="email" placeholder="Correo" name="email" id="email" required=""wire:model="email">
-                                @error('email')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                                <input type="text" placeholder="Teléfono" name="phone" id="phone" required=""wire:model="phone">
-                                @error('phone')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                                <textarea placeholder="Tu mensaje" name="message" id="message" required=""wire:model="message"></textarea>
-                                @error('message')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                                <input type="submit" name="Submit" value="Enviar mensaje" class="btn btn-primary">
-                            </form>
-                            <div id="result"></div>
-                        </div>
-                    </div>
+
+        <div class="ui-card ui-card-pad">
+            <h2 class="lp-title text-2xl">Envíanos un mensaje</h2>
+            <x-ui.flash class="mt-6" />
+            <form wire:submit="sendMessage" class="mt-6 grid gap-5 sm:grid-cols-2">
+                <x-ui.field label="Tu nombre" name="name" for="c-name">
+                    <input type="text" id="c-name" class="ui-input @error('name') ui-input-invalid @enderror" wire:model="name" autocomplete="name">
+                </x-ui.field>
+                <x-ui.field label="Tu celular" name="phone" for="c-phone">
+                    <input type="tel" id="c-phone" class="ui-input @error('phone') ui-input-invalid @enderror" wire:model="phone" placeholder="0991234567" autocomplete="tel">
+                </x-ui.field>
+                <x-ui.field label="Tu correo" name="email" for="c-email" class="sm:col-span-2" hint="Te responderemos a este correo.">
+                    <input type="email" id="c-email" class="ui-input @error('email') ui-input-invalid @enderror" wire:model="email" autocomplete="email">
+                </x-ui.field>
+                <x-ui.field label="Tu mensaje" name="message" for="c-message" class="sm:col-span-2">
+                    <textarea id="c-message" rows="5" class="ui-input @error('message') ui-input-invalid @enderror" wire:model="message" placeholder="Cuéntanos en qué te ayudamos"></textarea>
+                </x-ui.field>
+                <div class="sm:col-span-2">
+                    <button type="submit" class="ui-btn ui-btn-primary ui-btn-lg" wire:loading.attr="disabled" wire:target="sendMessage">
+                        <span wire:loading.remove wire:target="sendMessage">Enviar mensaje</span>
+                        <span wire:loading wire:target="sendMessage">Enviando…</span>
+                    </button>
                 </div>
-            </div>
+            </form>
         </div>
-        <div class="section-twitter content_resalt border-top">
-            <i class="fa fa-twitter icon-big"></i>
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="text-center">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    </section>
 </div>

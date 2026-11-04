@@ -1,57 +1,24 @@
 <x-base-layout>
-    <x-authentication-card>
-        <x-slot name="logo">
-            <x-authentication-card-logo />
-        </x-slot>
-
-        <div x-data="{ recovery: false }">
-            <div class="mb-4 text-sm text-gray-600" x-show="! recovery">
-                {{ __('Please confirm access to your account by entering the authentication code provided by your authenticator application.') }}
-            </div>
-
-            <div class="mb-4 text-sm text-gray-600" x-show="recovery">
-                {{ __('Please confirm access to your account by entering one of your emergency recovery codes.') }}
-            </div>
-
-            <x-validation-errors class="mb-4" />
-
-            <form method="POST" action="{{ route('two-factor.login') }}">
+    <div x-data="{ recovery: false }">
+        <x-ui.auth-card title="Un paso" accent="más" lede="Tu cuenta tiene verificación en dos pasos.">
+            <p class="mb-5 text-[15px] text-grafito-600" x-show="! recovery">Escribe el código de 6 números que aparece en tu app de autenticación.</p>
+            <p class="mb-5 text-[15px] text-grafito-600" x-cloak x-show="recovery">Escribe uno de los códigos de recuperación que guardaste al activar esta opción.</p>
+            <form method="POST" action="{{ route('two-factor.login') }}" class="space-y-5">
                 @csrf
-
-                <div class="mt-4" x-show="! recovery">
-                    <x-label for="code" value="{{ __('Code') }}" />
-                    <x-input id="code" class="block mt-1 w-full" type="text" inputmode="numeric" name="code" autofocus x-ref="code" autocomplete="one-time-code" />
+                <div x-show="! recovery">
+                    <x-ui.field label="Código" name="code">
+                        <input id="code" type="text" inputmode="numeric" name="code" autofocus x-ref="code" autocomplete="one-time-code" class="ui-input @error('code') ui-input-invalid @enderror">
+                    </x-ui.field>
                 </div>
-
-                <div class="mt-4" x-show="recovery">
-                    <x-label for="recovery_code" value="{{ __('Recovery Code') }}" />
-                    <x-input id="recovery_code" class="block mt-1 w-full" type="text" name="recovery_code" x-ref="recovery_code" autocomplete="one-time-code" />
+                <div x-cloak x-show="recovery">
+                    <x-ui.field label="Código de recuperación" name="recovery_code">
+                        <input id="recovery_code" type="text" name="recovery_code" x-ref="recovery_code" autocomplete="one-time-code" class="ui-input @error('recovery_code') ui-input-invalid @enderror">
+                    </x-ui.field>
                 </div>
-
-                <div class="flex items-center justify-end mt-4">
-                    <button type="button" class="text-sm text-gray-600 hover:text-gray-900 underline cursor-pointer"
-                                    x-show="! recovery"
-                                    x-on:click="
-                                        recovery = true;
-                                        $nextTick(() => { $refs.recovery_code.focus() })
-                                    ">
-                        {{ __('Use a recovery code') }}
-                    </button>
-
-                    <button type="button" class="text-sm text-gray-600 hover:text-gray-900 underline cursor-pointer"
-                                    x-show="recovery"
-                                    x-on:click="
-                                        recovery = false;
-                                        $nextTick(() => { $refs.code.focus() })
-                                    ">
-                        {{ __('Use an authentication code') }}
-                    </button>
-
-                    <x-button class="ml-4">
-                        {{ __('Log in') }}
-                    </x-button>
-                </div>
+                <button type="submit" class="ui-btn ui-btn-primary ui-btn-lg w-full">Ingresar</button>
+                <button type="button" class="ui-link w-full text-center text-[14px]" x-show="! recovery" x-on:click="recovery = true; $nextTick(() => { $refs.recovery_code.focus() })">No tengo el código: usar un código de recuperación</button>
+                <button type="button" class="ui-link w-full text-center text-[14px]" x-cloak x-show="recovery" x-on:click="recovery = false; $nextTick(() => { $refs.code.focus() })">Usar el código de la app</button>
             </form>
-        </div>
-    </x-authentication-card>
+        </x-ui.auth-card>
+    </div>
 </x-base-layout>

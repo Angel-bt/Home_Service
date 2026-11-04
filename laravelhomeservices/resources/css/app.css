@@ -503,3 +503,135 @@ body.proyetech-locked { overflow: hidden; }
     .proyetech-auth-track, .proyetech-auth-tabs .proyetech-auth-indicator, .proyetech-cat-dialog { transition: none; }
 }
 
+
+/* ==========================================================================
+   NUEVO DISEÑO "Valle de noche" (layouts/landing + components/site + home)
+   Sobrio: verde noche, humo claro, un solo acento oro, Inter Tight + Instrument
+   Serif cursiva como acento, líneas finas y mucho aire. Todo va bajo body.lp,
+   que no carga el tema Bootstrap. Las animaciones las hace GSAP
+   (resources/js/landing.js); el CSS nunca oculta contenido.
+   ========================================================================== */
+
+/* Reset acotado. :where() = especificidad 0, cualquier utilidad de Tailwind lo pisa. */
+:where(.lp, .lp *, .lp *::before, .lp *::after) { box-sizing: border-box; border-width: 0; border-style: solid; border-color: currentColor; }
+:where(.lp) { margin: 0; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; font-feature-settings: "ss01", "cv11"; }
+:where(.lp) :where(h1, h2, h3, h4, p, figure, blockquote, dl, dd) { margin: 0; }
+:where(.lp) :where(ul, ol) { margin: 0; padding: 0; list-style: none; }
+:where(.lp) :where(img, svg) { display: block; max-width: 100%; }
+:where(.lp) :where(a) { color: inherit; text-decoration: none; }
+:where(.lp) :where(button) { font: inherit; color: inherit; background: none; cursor: pointer; padding: 0; }
+:where(.lp) :where(input, select, textarea) { font: inherit; }
+:where(.lp) :where(fieldset, legend) { margin: 0; padding: 0; min-inline-size: 0; }
+.lp [x-cloak] { display: none !important; }
+.lp :focus-visible { outline: 2px solid #ecc663; outline-offset: 3px; border-radius: 8px; }
+.lp ::selection { background: #ecc663; color: #06110d; }
+
+/* Titulares: grotesk en peso medio, interletrado cerrado; el acento va en serif cursiva. */
+.lp-title { font-weight: 500; letter-spacing: -.035em; line-height: 1.02; }
+.lp-accent { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -.01em; }
+
+/* Etiqueta pequeña de sección. */
+.lp-eyebrow { font-size: .8125rem; font-weight: 500; letter-spacing: .02em; }
+
+/* Vidrio para el buscador y el encabezado sobre fotos. */
+.lp-glass { background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .16); -webkit-backdrop-filter: blur(18px) saturate(140%); backdrop-filter: blur(18px) saturate(140%); }
+
+/* Ruido muy suave sobre fondos oscuros (profundidad, sin imagen). */
+.lp-noise::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .07; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Brillo verde de fondo (como el halo de la referencia). */
+.lp-glow { background: radial-gradient(60% 50% at 50% 0%, rgba(108, 196, 157, .18), transparent 70%); }
+
+/* Palabras del manifiesto: GSAP sube su opacidad con el scroll. */
+.lp-word { display: inline-block; }
+
+/* Encabezado: a todo lo ancho, cambia de tono según la sección de abajo (data-tone lo pone landing.js). */
+.lp-header { color: #fff; border-bottom: 1px solid transparent; transition: transform .6s cubic-bezier(.2, .8, .2, 1), background-color .4s ease, color .4s ease, border-color .4s ease; }
+.lp-header.is-hidden { transform: translateY(-100%); }
+.lp-header.is-scrolled[data-tone="dark"] { background: rgba(4, 11, 8, .78); border-color: rgba(255, 255, 255, .08); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
+.lp-header[data-tone="light"] { color: #14181a; }
+.lp-header.is-scrolled[data-tone="light"] { background: rgba(243, 242, 238, .86); border-color: rgba(20, 24, 26, .08); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
+.lp-header-link { opacity: .72; transition: opacity .2s ease; }
+.lp-header-link:hover, .lp-header-link:focus-visible { opacity: 1; }
+.lp-header-cta { background: #fff; color: #06110d; transition: background-color .3s ease, color .3s ease; }
+.lp-header-cta:hover { background: #f2d58a; }
+.lp-header[data-tone="light"] .lp-header-cta { background: #06110d; color: #fff; }
+.lp-header[data-tone="light"] .lp-header-cta:hover { background: #1c3529; }
+.lp-header-rule { border-color: rgba(255, 255, 255, .12); }
+.lp-header[data-tone="light"] .lp-header-rule { border-color: rgba(20, 24, 26, .12); }
+
+/* Cinta de servicios del hero: bucle continuo (la lista va duplicada y se desplaza la mitad). Se pausa con el cursor o el foco. */
+.lp-marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); }
+.lp-marquee-track { display: flex; width: max-content; animation: lp-marquee var(--lp-marquee-duration, 36s) linear infinite; }
+.lp-marquee:hover .lp-marquee-track, .lp-marquee:focus-within .lp-marquee-track { animation-play-state: paused; }
+@keyframes lp-marquee { to { transform: translate3d(-50%, 0, 0); } }
+
+/* Lenis (desplazamiento suave). */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* Movimiento reducido: se detienen animaciones continuas. html.lp-motion-full (?motion=full) fuerza la versión completa. */
+@media (prefers-reduced-motion: reduce) {
+    :root:not(.lp-motion-full) .lp *, :root:not(.lp-motion-full) .lp *::before, :root:not(.lp-motion-full) .lp *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    /* Excepción: la cinta de servicios es contenido, no adorno; sigue moviéndose, más lenta, y se pausa con el cursor o el foco. */
+    :root:not(.lp-motion-full) .lp .lp-marquee-track { animation-duration: calc(var(--lp-marquee-duration, 36s) * 1.6) !important; animation-iteration-count: infinite !important; }
+}
+
+/* ==========================================================================
+   PIEZAS DE LA APLICACIÓN (catálogo, paneles, formularios) con el mismo estilo
+   "Valle de noche". Se usan en layouts/base y en components/ui/*.
+   Regla de oro: un botón principal por pantalla, textos que dicen qué pasa
+   al hacer clic, y cada error explica cómo arreglarlo.
+   ========================================================================== */
+@layer components {
+    /* Botones: el texto dice la acción ("Publicar servicio", no "Enviar"). */
+    .ui-btn { @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-[14px] font-medium leading-none transition disabled:cursor-not-allowed disabled:opacity-50; }
+    .ui-btn-sm { @apply px-4 py-2.5 text-[13px]; }
+    .ui-btn-lg { @apply px-7 py-4 text-[15px]; }
+    .ui-btn-primary { @apply bg-noche-900 text-white hover:bg-noche-700; }
+    .ui-btn-gold { @apply bg-oro-400 text-noche-900 hover:bg-oro-300; }
+    .ui-btn-secondary { @apply border border-humo-300 bg-white text-grafito hover:border-grafito-400; }
+    .ui-btn-ghost { @apply text-grafito-500 hover:bg-humo-200 hover:text-grafito; }
+    .ui-btn-danger { @apply border border-red-200 bg-white text-red-700 hover:border-red-400 hover:bg-red-50; }
+    .ui-btn-success { @apply bg-emerald-700 text-white hover:bg-emerald-800; }
+    .ui-btn-whatsapp { @apply bg-[#25D366] text-noche-900 hover:bg-[#1fbe5a]; }
+
+    /* Campos de formulario. */
+    .ui-label { @apply mb-2 block text-[14px] font-medium text-grafito; }
+    .ui-hint { @apply mt-1.5 text-[13px] leading-snug text-grafito-500; }
+    .ui-error { @apply mt-1.5 flex items-start gap-1.5 text-[13px] font-medium leading-snug text-red-700; }
+    .ui-input { @apply block w-full rounded-xl border border-humo-300 bg-white px-4 py-3 text-[16px] text-grafito placeholder-grafito-400 shadow-none transition focus:border-noche-600 focus:outline-none focus:ring-4 focus:ring-noche-600/10; }
+    .ui-input-invalid { @apply border-red-400 bg-red-50/40 focus:border-red-500 focus:ring-red-500/10; }
+    select.ui-input { @apply cursor-pointer appearance-none bg-[length:20px] bg-[right_12px_center] bg-no-repeat pr-11; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2314181a' stroke-width='1.8' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); }
+    textarea.ui-input { @apply min-h-[120px] leading-relaxed; }
+    .ui-file { @apply block w-full cursor-pointer rounded-xl border border-dashed border-humo-300 bg-white px-4 py-4 text-[14px] text-grafito-500 file:mr-4 file:cursor-pointer file:rounded-full file:border-0 file:bg-noche-900 file:px-4 file:py-2 file:text-[13px] file:font-medium file:text-white hover:border-grafito-400; }
+    .ui-check { @apply h-5 w-5 cursor-pointer rounded border-humo-300 text-noche-900 focus:ring-noche-600/20; }
+
+    /* Tarjetas y tablas. */
+    .ui-card { @apply rounded-3xl border border-humo-300/70 bg-white; }
+    .ui-card-pad { @apply p-6 sm:p-8; }
+    .ui-table { @apply w-full text-left text-[14px]; }
+    .ui-table th { @apply border-b border-humo-300 px-4 py-3 text-[12px] font-medium uppercase tracking-[.08em] text-grafito-400; }
+    .ui-table td { @apply border-b border-humo-200 px-4 py-4 align-middle; }
+    .ui-table tr:last-child td { @apply border-b-0; }
+
+    /* Enlaces dentro de texto. */
+    .ui-link { @apply font-medium text-noche-700 underline decoration-noche-700/30 underline-offset-4 hover:decoration-noche-700; }
+
+    /* Contenido de texto largo (términos, privacidad). */
+    .ui-prose { @apply max-w-3xl text-[17px] leading-relaxed text-grafito-600; }
+    .ui-prose h2 { @apply lp-title mb-3 mt-12 text-2xl text-grafito; }
+    .ui-prose p { @apply mb-4; }
+    .ui-prose ul { @apply mb-4 space-y-2; }
+    .ui-prose li { @apply relative pl-6; }
+    .ui-prose li::before { content: ""; @apply absolute left-0 top-[.7em] h-px w-3 bg-grafito-400; }
+    .ui-prose a { @apply ui-link; }
+}
+
+/* Barras del panel (gráfico simple sin librerías). */
+.ui-bar { transform-origin: left; animation: ui-grow .8s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes ui-grow { from { transform: scaleX(0); } }

@@ -26,8 +26,13 @@ config/billing.php                     Precio del plan Pro y datos de pago
 lang/es, lang/es.json                  Traducciones
 resources/views/livewire               Vistas de cada componente
 resources/views/livewire/partials      Fragmentos reutilizables (encabezado, formulario de servicio, tarjetas…)
-resources/views/layouts/base.blade.php Layout del sitio (encabezado, menús, pie)
-public/assets                          Tema Bootstrap 3 del tutorial (CSS/JS/imágenes)
+resources/views/layouts/base.blade.php Layout de todas las páginas salvo la portada (Tailwind + Alpine, sin jQuery ni Bootstrap)
+resources/views/layouts/landing.blade.php Layout de la portada (igual, más las animaciones de landing.js)
+resources/views/components/site       Componentes del nuevo diseño: header, footer, auth-modal, icon
+resources/views/components/ui         Piezas de la aplicación: panel, page, field, flash, status, empty, checklist, stat, help, auth-card, livewire-errors
+resources/views/errors                Páginas de error autónomas (403, 404, 419, 429, 500, 503)
+resources/js/landing.js                Animaciones de la portada (GSAP + ScrollTrigger + Lenis)
+public/assets                          Tema Bootstrap 3 del tutorial: ya no se carga; solo se usa el favicon (pendiente de limpiar)
 public/images                          Imágenes subidas (servicios, categorías, slider, proveedores)
 storage/app/receipts                   Comprobantes de pago (privados, fuera de public/)
 ```
@@ -39,6 +44,8 @@ Casi todas las páginas son **componentes Livewire de página completa**: la rut
 ```php
 Route::get('/buscar', SearchComponent::class)->name('search');
 ```
+
+La **portada** es la excepción: `HomeComponent` usa `layouts.landing`, un layout propio y liviano (ver [01-historia-y-decisiones.md](01-historia-y-decisiones.md), fase 4).
 
 Las acciones (guardar, aprobar, filtrar) son métodos públicos del componente que Livewire llama por AJAX (`/livewire/update`). Lo que no es interactivo (retorno de Payphone, comprobantes, autocompletado) usa controladores normales.
 
@@ -148,7 +155,7 @@ Las columnas `stripe_id`, `pm_type`, `pm_last_four` y `trial_ends_at` de `users`
 
 ## Caché, colas y tareas programadas
 
-- **Portada:** categorías, destacados y slider se guardan en caché (`home:*`, 1 hora por defecto). Se invalidan solos al guardar o borrar un servicio, categoría o diapositiva. Si editas la base a mano: `php artisan cache:clear`.
+- **Portada:** todos sus datos (cifras, las 4 zonas con su número de proveedores, oficios con foto de muestra, destacados, reseñas) se guardan como un solo arreglo en `home:landing` (como máximo 10 minutos). Se invalida al guardar o borrar un servicio, una categoría o una reseña. Si editas la base a mano: `php artisan cache:clear`.
 - **Visitas a servicios:** contadores en Redis; `services:sync-visit-counters` los pasa a MySQL cada 5 minutos.
 - **Planes Pro:** `billing:expire-plans` cada hora pasa a gratis los planes vencidos.
 - **Correos:** bienvenida y aviso de nuevo contacto van a la cola `mail` (3 reintentos).

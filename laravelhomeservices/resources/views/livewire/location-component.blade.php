@@ -1,11 +1,5 @@
 <div>
-    <div class="col-md-6">
-        <ul class="visible-md visible-lg text-right">
-            @if (Session::has('city'))
-                <li class="no-wrap"><a href="{{ route('home.change_location') }}"><i class="fa fa-map-marker"></i> {{ Session::get('city') }}, {{ Session::get('state') }}</a></li>
-            @else
-                <li class="no-wrap"><a href="{{ route('home.change_location') }}"><i class="fa fa-map-marker"></i> Loja, Malacatos</a></li>
-            @endif
-        </ul>
-    </div>
+    <a href="{{ route('home.change_location') }}" class="inline-flex items-center gap-1.5 text-[14px] text-grafito-500 hover:text-grafito">
+        <x-site.icon name="pin" class="h-4 w-4" /> {{ Session::has('city') ? Session::get('city') . ', ' . Session::get('state') : 'Loja, Malacatos' }}
+    </a>
 </div>

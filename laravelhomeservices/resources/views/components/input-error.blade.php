@@ -1,5 +1,5 @@
 @props(['for'])
 
 @error($for)
-    <p {{ $attributes->merge(['class' => 'text-sm text-red-600 dark:text-red-400']) }}>{{ $message }}</p>
+    <p {{ $attributes->merge(['class' => 'ui-error']) }}><x-site.icon name="alert" class="mt-px h-4 w-4 shrink-0" /> {{ $message }}</p>
 @enderror

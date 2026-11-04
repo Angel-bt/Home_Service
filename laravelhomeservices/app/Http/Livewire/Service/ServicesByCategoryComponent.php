@@ -29,12 +29,13 @@ class ServicesByCategoryComponent extends Component
         $services = Service::query()
             ->active()
             ->where('service_category_id', $scategory->id)
+            ->with(['category:id,name,slug', 'user:id,name,utype'])
             ->withAvg('reviews', 'rating')
             ->inZone($this->zona)
             ->orderByDesc('featured')
             ->orderBy('name')
             ->paginate(12);
 
-        return view('livewire.service.services-by-category-component', ['scategory' => $scategory, 'services' => $services])->layout('layouts.base');
+        return view('livewire.service.services-by-category-component', ['scategory' => $scategory, 'services' => $services])->layout('layouts.base')->title($scategory->name);
     }
 }

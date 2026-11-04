@@ -1,85 +1,23 @@
 <div>
-    <div class="section-title-01 honmob">
-        <div class="bg_parallax image_02_parallax"></div>
-        <div class="opacy_bg_02">
-            <div class="container">
-                <h1>Agregar categoría</h1>
-                <div class="crumbs">
-                    <ul>
-                        <li><a href="/">Inicio</a></li>
-                        <li>/</li>
-                        <li>Agregar categoría</li>
-                    </ul>
-                </div>
+    <x-ui.panel title="Agregar" accent="categoría" help="Una categoría es un oficio, por ejemplo «Gasfitería» o «Jardinería».">
+        <form wire:submit="createNewCategory" class="ui-card ui-card-pad max-w-2xl space-y-5">
+            <x-ui.field label="Nombre" name="name">
+                <input type="text" id="name" class="ui-input @error('name') ui-input-invalid @enderror" wire:model.blur="name" wire:change="generateSlug" placeholder="Ej.: Gasfitería">
+            </x-ui.field>
+            <x-ui.field label="Enlace" name="slug" hint="Se crea solo a partir del nombre. Normalmente no hace falta cambiarlo.">
+                <input type="text" id="slug" class="ui-input @error('slug') ui-input-invalid @enderror" wire:model.blur="slug">
+            </x-ui.field>
+            <x-ui.field label="Imagen" name="image" for="category-image" hint="Un ícono o foto cuadrada. JPG o PNG.">
+                <input type="file" id="category-image" accept="image/*" class="ui-file" wire:model="image">
+                <p wire:loading wire:target="image" class="ui-hint">Subiendo imagen…</p>
+                @if ($image)
+                    <img src="{{ $image->temporaryUrl() }}" alt="Vista previa" class="mt-3 h-20 w-20 rounded-xl object-contain">
+                @endif
+            </x-ui.field>
+            <div class="flex flex-wrap gap-3 pt-2">
+                <button type="submit" class="ui-btn ui-btn-primary" wire:loading.attr="disabled" wire:target="createNewCategory, image">Agregar categoría</button>
+                <a href="{{ route('admin.service_categories') }}" class="ui-btn ui-btn-ghost">Cancelar</a>
             </div>
-        </div>
-    </div>
-    <section class="content-central">
-        <div class="content_info">
-            <div class="paddings-mini">
-                <div class="container">
-                    <div class="row portfolioContainer">
-                        <div class="col-md-12 profile1">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            Add New Service Category
-                                        </div>
-                                        <div class="col-md-6">
-                                            <a href="{{ route('admin.service_categories') }}" class="btn btn-info pull-right">Todas las categorías</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel-body">
-                                    @if (Session::has('message'))
-                                        <div class="alert alert-success" role="alert">{{ Session::get('message') }}</div>
-                                    @endif
-                                    <form class="form-horizontal" wire:submit.prevent="createNewCategory">
-                                        @csrf
-                                        <div class="form-group">
-                                            <label for="name" class="control-label col-sm-3">Nombre de la categoría: </label>
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" name="name" wire:model="name" wire:keyup="generateSlug"/>
-                                                @error('name')
-                                                    <div class="text-danger">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="slug" class="control-label col-sm-3">Slug de la categoría: </label>
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" name="slug" wire:model="slug"/>
-                                                @error('slug')
-                                                    <div class="text-danger">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="image" class="control-label col-sm-3">Imagen de la categoría: </label>
-                                            <div class="col-sm-9">
-                                                <input type="file" class="form-control-file" name="image" wire:model="image"/>
-                                                @error('image')
-                                                    <div class="text-danger">{{ $message }}</div>
-                                                @enderror
-                                                @if ($image)
-                                                    <img src="{{ $image->temporaryUrl() }}" width="60" />
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="" class="control-label col-sm-3"></label>
-                                            <div class="col-sm-9">
-                                                <button type="submit" class="btn btn-success pull-right">Agregar categoría</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        </form>
+    </x-ui.panel>
 </div>

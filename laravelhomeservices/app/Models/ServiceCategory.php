@@ -28,10 +28,7 @@ class ServiceCategory extends Model
     protected static function booted(): void
     {
         $forgetHomeCategoryCaches = static function (): void {
-            Cache::forget('home:service-categories');
-            Cache::forget('home:featured-categories');
-            Cache::forget('home:appliance-services');
-            Cache::forget('home:category-modals');
+            Cache::forget(\App\Http\Livewire\HomeComponent::CACHE_KEY);
         };
 
         static::saved($forgetHomeCategoryCaches);

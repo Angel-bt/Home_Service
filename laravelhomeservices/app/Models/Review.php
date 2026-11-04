@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Http\Livewire\HomeComponent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Cache;
 
 class Review extends Model
 {
@@ -28,5 +30,12 @@ class Review extends Model
     public function serviceRequest(): BelongsTo
     {
         return $this->belongsTo(ServiceRequest::class);
+    }
+
+    protected static function booted(): void
+    {
+        // The landing shows recent reviews and the average rating.
+        static::saved(static fn () => Cache::forget(HomeComponent::CACHE_KEY));
+        static::deleted(static fn () => Cache::forget(HomeComponent::CACHE_KEY));
     }
 }

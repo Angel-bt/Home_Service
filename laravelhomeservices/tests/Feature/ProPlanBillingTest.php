@@ -76,7 +76,7 @@ class ProPlanBillingTest extends TestCase
         $this->assertSame(1, SubscriptionPayment::count());
 
         // The receipt is only reachable by administrators.
-        $this->actingAs($provider)->get(route('admin.payment_receipt', $payment))->assertRedirect('/login');
+        $this->actingAs($provider)->get(route('admin.payment_receipt', $payment))->assertRedirect(route('sprovider.dashboard'));
         $this->actingAs($this->admin())->get(route('admin.payment_receipt', $payment))->assertOk();
     }
 
@@ -194,7 +194,7 @@ class ProPlanBillingTest extends TestCase
         $this->assertSame('rejected', $payment->fresh()->status);
         $this->assertFalse($provider->fresh()->isPro());
 
-        $this->actingAs($provider)->get(route('admin.payments'))->assertRedirect('/login');
+        $this->actingAs($provider)->get(route('admin.payments'))->assertRedirect(route('sprovider.dashboard'));
     }
 
     public function test_expired_plans_fall_back_to_the_free_limit(): void

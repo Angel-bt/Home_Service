@@ -1,30 +1,46 @@
 <div>
-    @include('livewire.partials.page-header', ['title' => 'Preguntas frecuentes'])
-    <section class="content-central">
-        <div class="content_info">
-            <div class="paddings-mini">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-10 col-md-offset-1" style="font-size: 16px; line-height: 1.7;">
-                            @php
-                                $faqs = [
-                                    '¿Cuánto cuesta usar Proyetech?' => 'Para los clientes es gratis. Buscas, contactas y solicitas servicios sin pagar nada a la plataforma.',
-                                    '¿Cómo pago el servicio?' => 'Pagas directamente al proveedor (efectivo o transferencia), según lo que acuerden. El precio publicado es referencial; el final depende del trabajo.',
-                                    '¿Cómo contacto a un proveedor?' => 'En cada servicio tienes un botón de WhatsApp para escribirle de inmediato y un formulario para enviar una solicitud con tu zona, dirección y fecha preferida.',
-                                    '¿En qué zonas funciona?' => 'Malacatos y el valle: ' . implode(', ', config('marketplace.zones')) . '. Puedes filtrar los servicios por zona.',
-                                    '¿Quién puede dejar reseñas?' => 'Solo los clientes cuya solicitud fue marcada como completada por el proveedor. Así las reseñas reflejan trabajos reales.',
-                                    '¿Cómo publico mis servicios?' => 'Crea una cuenta como "Proveedor de servicios", completa tu perfil (WhatsApp y zonas) y entra a "Mis servicios". El plan gratuito permite ' . config('marketplace.free_service_limit') . ' servicios.',
-                                    '¿Qué hago si tengo un problema con un proveedor?' => 'Escríbenos desde la página de contacto con los detalles de tu solicitud y lo revisamos.',
-                                ];
-                            @endphp
-                            @foreach ($faqs as $question => $answer)
-                                <h4 style="margin-top: 25px;"><i class="fa fa-question-circle text-primary"></i> {{ $question }}</h4>
-                                <p>{{ $answer }}</p>
-                            @endforeach
-                        </div>
-                    </div>
+    @php
+        $faqs = [
+            'Para clientes' => [
+                '¿Cuánto cuesta usar Malakplace?' => 'Para los clientes es gratis. Buscas, contactas y solicitas servicios sin pagar nada a la plataforma.',
+                '¿Cómo contacto a un proveedor?' => 'Entra al servicio que te interesa. Ahí tienes un botón verde de WhatsApp para escribirle de inmediato y un formulario para enviarle una solicitud con tu zona, dirección y fecha.',
+                '¿Cómo pago el servicio?' => 'Le pagas directamente al proveedor (efectivo o transferencia), según lo que acuerden. El precio publicado es de referencia; el final depende del trabajo.',
+                '¿Dónde veo mis solicitudes?' => 'Ingresa con tu cuenta y toca «Mis solicitudes» arriba a la derecha. Ahí ves si el proveedor ya aceptó, puedes cancelar y, al terminar, calificar.',
+                '¿Quién puede dejar reseñas?' => 'Solo los clientes cuya solicitud el proveedor marcó como terminada. Así las reseñas son de trabajos reales.',
+            ],
+            'Para proveedores' => [
+                '¿Cómo publico mis servicios?' => 'Crea una cuenta eligiendo «Ofrezco servicios». En tu panel verás los pasos: completar tu perfil (WhatsApp y zonas) y publicar tu primer servicio. El plan gratuito permite ' . config('marketplace.free_service_limit') . ' servicios.',
+                '¿Cómo me llegan los clientes?' => 'Te escriben a tu WhatsApp o te envían una solicitud. Las solicitudes aparecen en tu panel, en «Solicitudes», con un número que te avisa cuántas faltan por responder.',
+                '¿Qué es el plan Pro?' => 'Te permite publicar servicios sin límite. Se paga por transferencia o en efectivo desde «Mi plan», y lo activamos cuando confirmamos el pago.',
+            ],
+            'General' => [
+                '¿En qué zonas funciona?' => 'Malacatos, que es la zona principal, y sus parroquias vecinas: ' . implode(', ', array_slice(config('marketplace.zones'), 1)) . '.',
+                '¿Qué hago si tengo un problema?' => 'Escríbenos por WhatsApp o desde la página de contacto con los detalles y lo revisamos.',
+            ],
+        ];
+    @endphp
+    <x-ui.page title="Preguntas" accent="frecuentes" eyebrow="Ayuda" lede="Si no encuentras tu respuesta, escríbenos por WhatsApp y te ayudamos." />
+
+    <section class="mx-auto max-w-[84rem] px-5 py-12 sm:px-8 lg:py-16">
+        <div class="grid gap-12 lg:grid-cols-[220px_1fr]">
+            @foreach ($faqs as $group => $items)
+                <h2 class="lp-eyebrow uppercase tracking-[.14em] text-grafito-400 lg:pt-6">{{ $group }}</h2>
+                <div class="-mt-8 lg:mt-0">
+                    @foreach ($items as $question => $answer)
+                        <details class="group border-t border-humo-300 last:border-b">
+                            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-[18px] font-medium [&::-webkit-details-marker]:hidden">
+                                {{ $question }}
+                                <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-humo-300 transition group-open:rotate-45"><x-site.icon name="plus" class="h-4 w-4" /></span>
+                            </summary>
+                            <p class="max-w-2xl pb-6 text-[16px] leading-relaxed text-grafito-600">{{ $answer }}</p>
+                        </details>
+                    @endforeach
                 </div>
-            </div>
+            @endforeach
+        </div>
+        <div class="mt-16 flex flex-wrap gap-3">
+            <a href="{{ route('home.contact') }}" class="ui-btn ui-btn-primary">Escribirnos</a>
+            <a href="{{ route('search') }}" class="ui-btn ui-btn-secondary">Buscar servicios</a>
         </div>
     </section>
 </div>

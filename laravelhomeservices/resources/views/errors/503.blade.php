@@ -1,0 +1,5 @@
+@extends('errors.layout')
+@section('code', '503')
+@section('heading', 'Estamos haciendo')
+@section('accent', 'mejoras')
+@section('text', 'El sitio vuelve en unos minutos. Gracias por tu paciencia.')

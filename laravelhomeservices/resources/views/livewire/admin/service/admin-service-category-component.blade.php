@@ -1,89 +1,37 @@
 <div>
-    <style>
-        nav svg{
-            height: 20px;
-        }
-        nav .hidden{
-            display: block !important;
-        }
-    </style>
-    <div class="section-title-01 honmob">
-        <div class="bg_parallax image_01_parallax"></div>
-        <div class="opacy_bg_02">
-            <div class="container">
-                <h1>Categorías de servicios</h1>
-                <div class="crumbs">
-                    <ul>
-                    <li><a href="/"><button class="glass-button">Inicio</button></a></li>
-                        <li>/</li>
-                        <li>Categorías de servicios</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    <section class="content-central">
-        <div class="content_info">
-            <div class="paddings-mini">
-                <div class="container">
-                    <div class="row portfolioContainer">
-                        <div class="col-md-12 profile1">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            Todas las categorías
-                                        </div>
-                                        <div class="col-md-6">
-                                            <a href="{{ route('admin.add_service_category') }}" class="btn btn-info pull-right">Agregar</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel-body">
-                                    @if (Session::has('message'))
-                                        <div class="alert alert-success" role="alert">{{ Session::get('message') }}</div>
-                                    @endif
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Imagen</th>
-                                                <th>Nombre</th>
-                                                <th>Slug</th>
-                                                <th>Destacado</th>
-                                                <th>Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($scategories as $scategory)
-                                                <tr>
-                                                    <td>{{ $scategory->id }}</td>
-                                                    <td><img src="{{ asset('images/categories') }}/{{ $scategory->image }}" alt="{{ $scategory->name }}" width="60" /></td>
-                                                    <td>{{ $scategory->name }}</td>
-                                                    <td>{{ $scategory->slug }}</td>
-                                                    <td>
-                                                        @if ($scategory->featured)
-                                                            Yes
-                                                        @else
-                                                            No
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        <a href="{{ route('admin.services_by_category', ['category_slug' => $scategory->slug]) }}" style="margin-right: 10px"><i class="fa fa-list fa-2x text-info"></i></a>
-                                                        <a href="{{ route('admin.edit_service_category', ['category_id' => $scategory->id]) }}"><i class="fa fa-edit fa-2x text-info"></i></a>
-                                                        <a href="#" onclick="confirm('¿Seguro que quieres eliminar esta categoría?') || event.stopImmediatePropagation();" wire:click.prevent="deleteServiceCategory({{ $scategory->id }})" style="margin-left: 10px"><i class="fa fa-times fa-2x text-danger"></i></a>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                    {{ $scategories->links() }}
-                                </div>
-                            </div>
+    <x-ui.panel title="Categorías" help="Los oficios que aparecen en el sitio. Cada servicio pertenece a uno.">
+        <x-slot:actions>
+            <a href="{{ route('admin.add_service_category') }}" class="ui-btn ui-btn-primary"><x-site.icon name="plus" class="h-4 w-4" /> Agregar categoría</a>
+        </x-slot:actions>
+
+        @if ($scategories->isEmpty())
+            <x-ui.empty icon="tag" title="Todavía no hay categorías">
+                Crea la primera (por ejemplo «Gasfitería») para que los proveedores puedan publicar.
+                <x-slot:actions>
+                    <a href="{{ route('admin.add_service_category') }}" class="ui-btn ui-btn-primary">Agregar categoría</a>
+                </x-slot:actions>
+            </x-ui.empty>
+        @else
+            <ul class="space-y-3">
+                @foreach ($scategories as $scategory)
+                    <li wire:key="category-{{ $scategory->id }}" class="ui-card flex flex-col gap-4 p-4 sm:flex-row sm:items-center">
+                        <img src="{{ asset('images/categories/' . $scategory->image) }}" alt="" loading="lazy" class="h-14 w-14 shrink-0 rounded-xl bg-humo-100 object-contain p-1.5">
+                        <div class="min-w-0 flex-1">
+                            <h2 class="flex flex-wrap items-center gap-2 text-[17px] font-medium">
+                                {{ $scategory->name }}
+                                @if ($scategory->featured)<x-ui.status status="pending" label="Destacada" />@endif
+                            </h2>
+                            <p class="mt-0.5 text-[14px] text-grafito-500">{{ $scategory->services_count }} {{ $scategory->services_count === 1 ? 'servicio' : 'servicios' }}</p>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                        <div class="flex flex-wrap gap-2">
+                            <a href="{{ route('admin.services_by_category', ['category_slug' => $scategory->slug]) }}" class="ui-btn ui-btn-ghost ui-btn-sm"><x-site.icon name="list" class="h-4 w-4" /> Sus servicios</a>
+                            <a href="{{ route('admin.edit_service_category', ['category_id' => $scategory->id]) }}" class="ui-btn ui-btn-secondary ui-btn-sm"><x-site.icon name="edit" class="h-4 w-4" /> Editar</a>
+                            <button type="button" wire:click="deleteServiceCategory({{ $scategory->id }})" wire:confirm="¿Eliminar «{{ $scategory->name }}»?{{ $scategory->services_count > 0 ? ' También se borrarán sus ' . $scategory->services_count . ' servicio(s).' : '' }} No se puede deshacer." class="ui-btn ui-btn-danger ui-btn-sm"><x-site.icon name="trash" class="h-4 w-4" /> Eliminar</button>
+                        </div>
+                    </li>
+                @endforeach
+            </ul>
+            {{ $scategories->links() }}
+        @endif
+    </x-ui.panel>
 </div>

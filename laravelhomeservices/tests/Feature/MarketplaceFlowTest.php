@@ -301,7 +301,7 @@ class MarketplaceFlowTest extends TestCase
         }
         $this->actingAs($provider)->get(route('sprovider.edit_service', ['service_slug' => $service->slug]))->assertOk();
         $this->actingAs($admin)->get(route('admin.service_requests'))->assertOk();
-        $this->actingAs(User::factory()->create(['utype' => 'CST']))->get(route('sprovider.services'))->assertRedirect('/login');
+        $this->actingAs(User::factory()->create(['utype' => 'CST']))->get(route('sprovider.services'))->assertRedirect(route('customer.dashboard'));
     }
 
     public function test_whatsapp_numbers_are_normalised_for_ecuador(): void

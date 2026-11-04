@@ -20,8 +20,7 @@ class AuthSprovider
         if (Auth::user()->utype === 'SVP') {
             return $next($request);
         } else {
-            session()->flush();
-            return redirect()->route('login');
+            return redirect()->route(Auth::user()->dashboardRoute())->with('error', 'Esa página es solo para proveedores. Te trajimos a tu panel.');
         }
     }
 }

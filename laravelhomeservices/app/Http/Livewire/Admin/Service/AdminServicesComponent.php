@@ -32,7 +32,7 @@ class AdminServicesComponent extends Component
 
     public function render()
     {
-        $services = Service::query()->with(['category:id,name,slug', 'user:id,name'])->paginate(10);
-        return view('livewire.admin.service.admin-services-component', ['services' => $services])->layout('layouts.base');
+        $services = Service::query()->with(['category:id,name,slug', 'user:id,name,utype'])->latest()->paginate(10);
+        return view('livewire.admin.service.admin-services-component', ['services' => $services])->layout('layouts.base')->title('Servicios');
     }
 }

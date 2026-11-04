@@ -1,6 +1,6 @@
-# Proyetech · Servicios para el hogar en Malacatos
+# Malakplace · Servicios para el hogar en Malacatos
 
-Marketplace que conecta a clientes de **Malacatos y el valle** (Vilcabamba, Quinara, San Pedro de Vilcabamba, Yangana, Catamayo y Loja) con proveedores locales de servicios para el hogar y las quintas: gasfitería, electricidad, jardinería, piscinas, limpieza y más.
+**Malakplace** (Malacatos + *marketplace*; un proyecto de Proyetech) es el marketplace que conecta a clientes de **Malacatos** (zona principal) y sus parroquias vecinas **Vilcabamba, Yangana y Quinara** con proveedores locales de servicios para el hogar y las quintas: gasfitería, electricidad, jardinería, piscinas, limpieza y más.
 
 El proyecto nació del tutorial **"Laravel 8 Project Home Services"** de SurfsideMedia (enlaces en [`pasos .txt`](pasos%20.txt)). Sobre esa base se corrigieron errores, se convirtió el catálogo en un marketplace real, se añadió el cobro del plan Pro a proveedores y se actualizó todo a Laravel 13. La historia completa y el porqué de cada decisión está en [docs/01-historia-y-decisiones.md](docs/01-historia-y-decisiones.md).
 
@@ -17,7 +17,7 @@ El proyecto nació del tutorial **"Laravel 8 Project Home Services"** de Surfsid
 
 - **PHP 8.3+**, **Laravel 13**, **Livewire 3** (páginas completas como componentes), **Jetstream 5 / Fortify** (login, registro, 2FA, perfil), **Sanctum 4**.
 - **MySQL** para los datos y **Redis** para caché, sesiones, colas y el contador de visitas.
-- Interfaz: tema Bootstrap 3 heredado del tutorial (`public/assets/`) + Tailwind compilado con **Laravel Mix** (no Vite).
+- Interfaz: diseño propio «Valle de noche» con Tailwind compilado con **Laravel Mix** (no Vite), Alpine y GSAP en la portada.
 - Idioma: español (`lang/es`, `lang/es.json`).
 
 ## Puesta en marcha local

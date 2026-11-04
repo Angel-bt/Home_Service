@@ -102,7 +102,8 @@ Alternativa sin Redis para colas: `QUEUE_CONNECTION=database` (la tabla `jobs` y
 
 ## Caché
 
-- **Portada:** categorías, destacados y slider se cachean (`home:*`). Se invalidan solos al guardar o borrar desde la app. Si editas la base a mano: `php artisan cache:clear`.
+- **Portada:** sus datos se cachean en `home:landing` (máx. 10 min) y se invalidan al guardar servicios, categorías o reseñas. Si editas la base a mano: `php artisan cache:clear`.
+- **Assets:** en producción compila con `npm run prod` (CSS y JS minificados con versión en la URL). Con `APP_DEBUG=false` Livewire sirve su JS minificado.
 - **Rendimiento:** los listados cargan las relaciones por adelantado (`with(...)`) para evitar consultas repetidas.
 - `php artisan optimize` en cada despliegue cachea configuración, rutas y vistas.
 

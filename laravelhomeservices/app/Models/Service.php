@@ -103,15 +103,13 @@ class Service extends Model
             ? $this->user->whatsappNumber()
             : config('marketplace.contact_phone');
 
-        return WhatsApp::link($phone, 'Hola, vi su servicio "' . $this->name . '" en Proyetech y quisiera más información.');
+        return WhatsApp::link($phone, 'Hola, vi su servicio "' . $this->name . '" en Malakplace y quisiera más información.');
     }
 
     protected static function booted(): void
     {
         $forgetHomeServiceCaches = static function (): void {
-            Cache::forget('home:featured-services');
-            Cache::forget('home:appliance-services');
-            Cache::forget('home:category-modals');
+            Cache::forget(\App\Http\Livewire\HomeComponent::CACHE_KEY);
         };
 
         static::saved($forgetHomeServiceCaches);

@@ -12,6 +12,8 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
+    // Animaciones de la landing (GSAP + Lenis); solo lo carga layouts/landing.
+    .js('resources/js/landing.js', 'public/js')
     .postCss('resources/css/app.css', 'public/css', [
         require('postcss-import'),
         require('tailwindcss'),

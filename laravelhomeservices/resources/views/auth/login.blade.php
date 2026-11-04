@@ -1,115 +1,27 @@
 <x-base-layout>
-    <div class="section-title-01 honmob">
-        <div class="bg_parallax image_01_parallax"></div>
-        <div class="opacy_bg_02">
-            <div class="container">
-                <h1>Iniciar sesión</h1>
-                <div class="crumbs">
-                    <ul>
-                        <li><a href="/"><button class="glass-button">Inicio</button></a></li>
-                        <li>/</li>
-                        <li>Iniciar sesión</li>
-                    </ul>
+    <x-ui.auth-card title="Hola de" accent="nuevo" lede="Ingresa con el correo y la contraseña de tu cuenta.">
+        <form method="POST" action="{{ route('login') }}" class="space-y-5" x-data="{ visible: false, sending: false }" @submit="sending = true">
+            @csrf
+            <x-ui.field label="Correo electrónico" name="email">
+                <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="email" class="ui-input @error('email') ui-input-invalid @enderror">
+            </x-ui.field>
+            <x-ui.field label="Contraseña" name="password">
+                <div class="relative">
+                    <input id="password" :type="visible ? 'text' : 'password'" type="password" name="password" required autocomplete="current-password" class="ui-input pr-12 @error('password') ui-input-invalid @enderror">
+                    <button type="button" @click="visible = !visible" class="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-grafito-400 hover:text-grafito" :aria-label="visible ? 'Ocultar contraseña' : 'Mostrar contraseña'"><x-site.icon name="eye" class="h-5 w-5" /></button>
                 </div>
+            </x-ui.field>
+            <div class="flex flex-wrap items-center justify-between gap-3 text-[14px]">
+                <label class="flex cursor-pointer items-center gap-2 text-grafito-600"><input type="checkbox" name="remember" class="ui-check"> Recordarme</label>
+                <a href="{{ route('password.request') }}" class="ui-link">¿Olvidaste tu contraseña?</a>
             </div>
-        </div>
-    </div>
-    <section class="glass-card content-central">
-        <div class="neomorph-card">
-            <div class="paddings-mini">
-                <div class="neomorph-card">
-                    <div class="row portfolioContainer">
-                        <div class="col-xs-12 col-sm-3 col-md-3 profile1"></div>
-                        <div class="col-xs-12 col-sm-6 col-md-6 profile1" style="min-height: 300px;">
-                            <div class="thinborder-ontop">
-                                <h3>Datos de acceso</h3>
-                                <form id="userloginform" method="POST" action="{{ route('login') }}">
-                                    @csrf
-                                    <div class="form-group row">
-                                        <label for="email" class="col-sm-4 col-form-label text-md-right">Correo electrónico</label>
-                                        <div class="col-md-6">
-                                            <input id="email" type="email" class="form-control" name="email" :value="old('email')" required autofocus>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="password" class="col-md-4 col-form-label text-md-right">Contraseña</label>
-                                        <div class="col-md-6">
-                                            <input id="password" type="password" class="form-control" name="password" required autocomplete="current-password">
-                                            <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 px-2">👁️</button>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-6">
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" id="remember_me" name="remember"> Remember Me
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <button type="submit" class="glass-button pull-right" id="loginButton">Iniciar sesión</button>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row mb-0">
-                                        <div class="col-md-10">
-                                            <a class="" href="{{ route('password.request') }}">¿Olvidaste tu contraseña?</a>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-sm-3 col-md-3 profile1"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SweetAlert2 Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    @if (session('error'))
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: '{{ session('error') }}',
-        });
-    </script>
-    @endif
-
-    @if (session('success'))
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: '{{ session('success') }}',
-        });
-    </script>
-    @endif
-
-    <script>
-        // Manejar el envío del formulario
-        document.getElementById('userloginform').addEventListener('submit', function (e) {
-            e.preventDefault();
-            Swal.fire({
-                title: 'Logging in...',
-                text: 'Please wait while we process your request.',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
-            this.submit();
-        });
-
-        // Alternar visibilidad de la contraseña
-        const togglePassword = document.querySelector('#togglePassword');
-        const password = document.querySelector('#password');
-        togglePassword.addEventListener('click', () => {
-            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-            password.setAttribute('type', type);
-            togglePassword.textContent = type === 'password' ? '👁️' : '🙈';
-        });
-    </script>
+            <button type="submit" class="ui-btn ui-btn-primary ui-btn-lg w-full" :disabled="sending">
+                <span x-show="!sending">Ingresar</span>
+                <span x-show="sending" x-cloak>Entrando…</span>
+            </button>
+        </form>
+        <x-slot:footer>
+            ¿No tienes cuenta? <a href="{{ route('register') }}" class="ui-link">Créala gratis</a>
+        </x-slot:footer>
+    </x-ui.auth-card>
 </x-base-layout>

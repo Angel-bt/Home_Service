@@ -32,11 +32,18 @@ class SearchComponent extends Component
         $this->resetPage();
     }
 
+    public function clearFilters(): void
+    {
+        $this->q = '';
+        $this->zona = '';
+        $this->updatedZona();
+    }
+
     public function render()
     {
         $services = Service::query()
             ->active()
-            ->with('category:id,name,slug')
+            ->with(['category:id,name,slug', 'user:id,name,utype'])
             ->withAvg('reviews', 'rating')
             ->search($this->q)
             ->inZone($this->zona)
@@ -47,6 +54,6 @@ class SearchComponent extends Component
         return view('livewire.service.search-component', [
             'services' => $services,
             'zones' => config('marketplace.zones'),
-        ])->layout('layouts.base');
+        ])->layout('layouts.base')->title('Buscar servicios');
     }
 }

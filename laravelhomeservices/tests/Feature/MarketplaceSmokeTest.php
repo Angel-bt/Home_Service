@@ -127,7 +127,7 @@ class MarketplaceSmokeTest extends TestCase
     {
         $customer = User::factory()->create(['utype' => 'CST']);
 
-        $this->actingAs($customer)->get('/admin/dashboard')->assertRedirect('/login');
+        $this->actingAs($customer)->get('/admin/dashboard')->assertRedirect(route('customer.dashboard'))->assertSessionHas('error');
     }
 
     public function test_registration_without_role_creates_a_customer(): void

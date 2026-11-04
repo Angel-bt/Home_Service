@@ -84,9 +84,115 @@ Objetivo: que el proyecto reciba parches de seguridad.
 - **Seguridad:** cabeceras, guards de rol en cada petición Livewire, límites de envío, sesiones en JSON y más. Detalle en [05-seguridad.md](05-seguridad.md).
 - **Recuperación de contraseña:** se eliminó un controlador propio que duplicaba las rutas de Fortify; ese choque impedía `php artisan route:cache` en producción.
 
+## Fase 4 · Rediseño UX/UI de la landing: "Valle de noche"
+
+Objetivo: una primera impresión **profesional**, clara y propia de Malacatos, que invite a explorar sin ser pesada.
+
+### Cómo se llegó a este diseño (tres iteraciones)
+
+1. **"El valle a un toque"** (fondo crema, tarjetas redondeadas tipo *bento*, píldoras, chat con emojis). Correcta y liviana, pero **se veía genérica, "hecha con IA"**.
+2. **"Oficios del valle"** (grabado y risografía: papel con grano, sellos de linóleo, recortes con cinta, cartel con tiras). Tenía identidad, pero se sintió **infantil y amontonada**.
+3. **"Valle de noche"** (actual), tomando como referencia **[Halo Lab](https://www.halo-lab.com/)**: pocos elementos, mucho aire, una imagen protagonista por pantalla y tipografía sobria. Se tomó el *lenguaje* de la referencia, no su contenido ni sus recursos.
+
+### Qué se tomó de la referencia y cómo se adaptó
+
+| Halo Lab | Malakplace |
+|---|---|
+| Fondo azul noche con secciones claras intercaladas | Verde noche (`noche-*`), propio de los cerros al anochecer, alternado con secciones "humo" (`humo-*`) |
+| Una grotesk neutra en peso medio (Suisse) | **Inter Tight** 400/500 para todo |
+| Acentos en serif cursiva ("Design", "13 years") | **Instrument Serif** cursiva solo en la palabra clave de cada titular ("*en Malacatos.*", "*arreglar?*") y en las cifras |
+| Una imagen 3D protagonista en el hero | Foto real del valle (desde el Mandango, sobre Vilcabamba) a pantalla completa, con velo oscuro |
+| Filas con línea fina y flecha ↗ en lugar de tarjetas | Franja de zonas y lista de oficios como filas con ↗ |
+| Casos de estudio a pantalla completa | "Trabajos recomendados" como tarjetas a pantalla completa que se **apilan** al hacer scroll |
+| Cifras grandes en cursiva entre líneas | Proveedores, servicios y reseñas en Instrument Serif |
+| Un solo acento de color (amarillo) | Un solo acento **oro** (`oro-*`): botón principal y la tarjeta de proveedores |
+
+### Estructura (siete bloques, sin repetir mensajes)
+
+1. **Hero:** "Gente de oficio de confianza, *en Malacatos.*", buscador (qué + zona), una **cinta de servicios** que pasa sola (foto, nombre, oficio, proveedor, precio y calificación de hasta 12 servicios) y franja con las **4 zonas**, Malacatos marcada como *Principal*. La cinta existe para que quien entra vea servicios reales al instante, sin tener que buscar ni entrar a ningún lado; se pausa al pasar el cursor y cada tarjeta lleva al detalle.
+2. **Manifiesto:** una frase que explica qué es Malakplace (se ilumina palabra por palabra) y tres cifras reales. Se quitó el remate "Sin intermediarios ni comisiones" a pedido del dueño del proyecto.
+3. **Oficios:** lista de 8 oficios en dos columnas; en escritorio aparece una foto del servicio junto al cursor.
+4. **Trabajos recomendados:** hasta 4 servicios a pantalla completa, apilándose.
+5. **Cómo funciona:** tres pasos numerados.
+6. **Reseña destacada** (solo si hay reseñas).
+7. **Para proveedores:** tarjeta dorada con beneficios y foto de montaña.
+
+El pie incluye el contacto por WhatsApp, por eso no hay un cierre repetido.
+
+### Zonas: solo Malacatos y tres parroquias vecinas
+
+El mercado real es pequeño, así que la plataforma se limita a **Malacatos (zona principal), Vilcabamba, Yangana y Quinara** (`config/marketplace.php` → `zones` y `main_zone`). La migración `2026_10_30_000001_limit_zones_to_malacatos_parishes` borra las zonas de proveedores que ya no existen (Loja, Catamayo, San Pedro de Vilcabamba); las solicitudes antiguas conservan su zona como texto histórico.
+
+### Animaciones
+
+GSAP + ScrollTrigger + SplitText y Lenis (desplazamiento suave), en `resources/js/landing.js`, que solo carga la portada. Todas son lentas y con la misma curva (`expo.out`):
+
+- **Hero:** la foto entra con un zoom lento; el titular sube por líneas; al bajar, la foto hace parallax y el texto se desvanece.
+- **Manifiesto:** las palabras pasan de gris a negro a medida que se leen.
+- **Títulos** por líneas, **filas** y bloques que aparecen al entrar, **contadores**.
+- **Oficios:** foto de vista previa que sigue al cursor. Se decide en cada movimiento del puntero qué fila está debajo y se oculta al salir de la lista, al hacer scroll, al cambiar de pestaña o al perder el foco (antes podía quedarse "pegada" sobre otras secciones).
+- **Recomendados:** cada tarjeta, al llegar la siguiente, se reduce y oscurece (solo escritorio).
+- **Botones** con un leve efecto magnético.
+
+**Movimiento reducido:** si el sistema tiene "reducir movimiento" activado (Windows: *Mostrar animaciones en Windows* desactivado), la página usa un **modo suave** (solo fundidos y contadores). Con `?motion=full` en la URL se ve la versión completa. **Excepción:** la cinta de servicios del hero sigue moviéndose en modo suave (1,6 veces más lenta), porque es contenido que se pidió ver pasar, no un adorno; se pausa con el cursor o el foco. Sin JavaScript la página se ve completa.
+
+### Rendimiento
+
+| | Original (tutorial) | Ahora |
+|---|---|---|
+| Peticiones | 73 | ~14 (las fotos de servicios se cargan al acercarse) |
+| Peso inicial aprox. en producción (gzip) | ~3,4 MB | ~400 KB (foto del hero ~180–270 KB según pantalla, 2 tipografías ~66 KB, Livewire+Alpine ~57 KB, animaciones ~50 KB) |
+
+### Otras decisiones
+
+- **Nombre: Malakplace** (Malacatos + *marketplace*). Lo eligió el dueño del proyecto para que la plataforma tenga un nombre propio y local; **Proyetech queda como la empresa detrás** (pie: "Malakplace, un proyecto de Proyetech"). Se cambió en la portada, el layout heredado, términos, FAQ, contacto, nosotros, mensajes de WhatsApp, el aviso de registro, el concepto del cobro Payphone y `APP_NAME`. Los correos demo (`*@proyetech.test`) y las clases CSS heredadas `proyetech-*` se dejaron igual.
+- La portada usa su propio layout (`layouts/landing`), sin el tema Bootstrap; el **slider del admin no se muestra** en la portada.
+- Encabezado, pie, modal de acceso e íconos son componentes (`components/site/*`) para llevar el mismo estilo al resto del sitio.
+- **Encabezado a todo lo ancho** (reemplazó a la barra flotante en cápsula, que no convencía): marca tipográfica *Malak**place*** ("place" en la cursiva de acento), enlaces en mayúsculas pequeñas. Es transparente sobre el hero, se oculta al bajar y reaparece al subir con fondo translúcido. **Cambia de tono según la sección que tiene debajo**: cada sección declara `data-tone="dark|light"` y `landing.js` (`headerTone()`) lo copia al encabezado; los colores están en `.lp-header` (`app.css`). El logo PNG sigue en `public/images/logo.png`.
+- Se quitaron adornos que delataban una plantilla genérica: la cápsula con punto del antetítulo del hero y la píldora dorada de "Principal" (ahora es texto en mayúsculas).
+- Datos en un solo arreglo cacheado (`home:landing`, máx. 10 min); la caché no deserializa objetos (ver [05-seguridad.md](05-seguridad.md)).
+- Las fotos son de Unsplash (Vilcabamba y montañas del sur de Loja; no hay fotos libres de Malacatos). Conviene reemplazarlas por fotos propias de Malacatos cuando las haya.
+- Las categorías del seeder del tutorial están en inglés ("AC", "Car"…); conviene renombrarlas o borrarlas desde el admin.
+
+## Fase 5: todo el sitio con el mismo diseño y pensado para cada rol
+
+**Pedido:** aplicar el estilo de la portada a toda la página, que funcione bien y que sea muy simple: cualquier error debe explicarse y cada rol debe entender qué hacer.
+
+**Decisión de fondo:** se reescribió `layouts/base` y todas las vistas sin Bootstrap, jQuery, Font Awesome, SweetAlert ni Chart.js. Las piezas repetidas pasaron a clases `ui-*` (`resources/css/app.css`) y componentes `components/ui/*` para que el resto del sitio no vuelva a divergir.
+
+### Principios de usabilidad aplicados
+
+1. **Lo próximo que hay que hacer siempre está a la vista.** Cada panel empieza por lo pendiente, no por estadísticas.
+2. **Una frase bajo cada título** dice para qué sirve la página.
+3. **Los botones dicen qué pasa** («Aprobar y activar Pro», «Ya terminé»), no «Enviar» o íconos sin texto.
+4. **Ninguna pantalla vacía sin salida:** cada lista vacía explica por qué y ofrece el siguiente paso.
+5. **Los errores dicen cómo arreglarlo,** junto al campo y con un resumen; la página se desplaza hasta el primero.
+6. **Lo destructivo pide confirmación** explicando la consecuencia.
+
+### Qué ve cada rol
+
+| Rol | Al entrar | Ayuda concreta |
+|---|---|---|
+| **Proveedor** | Aviso grande si hay clientes esperando, y «Para empezar a recibir clientes»: WhatsApp y zonas → foto y presentación → primer servicio. Se marca solo y desaparece al completarse. | Solicitudes como tarjetas: datos del cliente, qué toca hacer ahora y solo los botones válidos. Mi plan numerado paso a paso. |
+| **Cliente** | Sus solicitudes con una barra de avance (Enviada → Aceptada → Terminada) y una frase que explica el estado. Sin solicitudes, cómo funciona en 3 pasos. | WhatsApp del proveedor, calificar con estrellas y, si lo rechazan, «Buscar otro proveedor». |
+| **Administración** | «Qué tienes pendiente»: pagos por revisar, solicitudes con más de un día sin respuesta, mensajes de la semana, proveedores con perfil incompleto. O «Todo al día». | Contadores en el menú y pagos con la pregunta clave: ¿recibiste el dinero? |
+
+### Cambios de comportamiento
+
+- **Rol equivocado:** antes cerraba la sesión y mandaba al login sin explicar nada. Ahora lleva al panel propio con un aviso («Esa página es solo para la administración»). El acceso sigue bloqueado; solo cambia la respuesta.
+- **Después de ingresar o registrarse:** proveedores y administración llegan a su panel (`RoleHomeResponse`), donde ven qué hacer; los clientes siguen a donde iban o a la portada.
+- **Enlace del servicio:** se crea solo y se numera si ya existe (`poda-de-arboles-2`). Queda en «Opciones avanzadas».
+- **Panel de administración:** se quitaron el gráfico con datos inventados y la tabla con cada visita. Las visitas se reinician con una acción de Livewire.
+- **Mensajes de validación** reescritos en lenguaje simple («Falta el nombre.», `lang/es/validation.php`).
+- **Páginas de error propias** (403, 404, 419, 429, 500, 503) en `resources/views/errors/`, sin base de datos ni sesión, para que se vean aunque el sitio falle.
+- **Fallos de Livewire** (sin internet, sesión vencida, error del servidor): aviso en español en lugar del de Livewire en inglés; una sesión vencida recarga la página sola (`components/ui/livewire-errors`). Con `APP_DEBUG=true` se ve el error técnico.
+- **Eliminar una categoría** también borra sus servicios (la base de datos lo hace en cascada), y la confirmación ahora lo advierte con el número exacto.
+
+**Pendiente de limpieza:** `public/assets`, `public/css/proyetech.css`, los estilos `proyetech-*` de `app.css` y las vistas `welcome`, `dashboard` y `navigation-menu` ya no se usan, y sin ese tema ya se puede agregar una Content-Security-Policy.
+
 ## Decisiones pendientes o deliberadamente postergadas
 
-- **Content-Security-Policy:** no se configuró porque el tema heredado usa scripts en línea y varios CDN. Requiere limpiar el tema primero.
+- **Content-Security-Policy:** no se configuró porque el sitio aún tiene scripts en línea (Livewire, contador de visitas, mapa). El tema heredado que usaba varios CDN ya no se carga.
 - **Notificaciones por correo** de solicitudes y pagos: hoy el aviso es por el panel y WhatsApp.
 - **Facturación electrónica (SRI)** de los pagos Pro: la app no la genera; se hace por fuera.
 - **Estructura moderna de Laravel 11+** (`bootstrap/app.php` sin `Kernel`): opcional, no aporta funcionalidad.
@@ -99,3 +205,4 @@ Objetivo: que el proyecto reciba parches de seguridad.
 | `225f05c` | Fases 0–2 sobre el tutorial base. |
 | `d2e701a` | Fase 3: Laravel 13, Livewire 3, Jetstream 5 y seguridad. |
 | `2214269` | Pagos solo por transferencia y efectivo; zona horaria de Ecuador; documentación completa. |
+| siguiente | Fase 4: nueva landing "Valle de noche" (inspirada en Halo Lab) y zonas limitadas a Malacatos, Vilcabamba, Yangana y Quinara. Fase 5: todo el sitio con ese diseño y paneles guiados por rol. |

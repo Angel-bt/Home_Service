@@ -39,7 +39,7 @@ Los límites de las acciones Livewire usan `Concerns\ThrottlesActions`, porque e
 | Medida | Por qué |
 |---|---|
 | Sesiones serializadas en **JSON** (`SESSION_SERIALIZATION=json`) | Si alguien manipulara los datos de sesión, no podría inyectar objetos PHP (ataques de deserialización). |
-| La caché solo reconstruye las clases permitidas (`cache.serializable_classes`) | Misma protección para Redis: solo los modelos que guarda la portada. Si cacheas otro tipo de objeto, agrégalo a esa lista. |
+| La caché **no deserializa ningún objeto** (`cache.serializable_classes = false`) | Misma protección para Redis. La app solo cachea arreglos y valores simples. Si algún día necesitas cachear objetos, lista sus clases ahí. |
 | Cookie de sesión `secure` en producción (`SESSION_SECURE_COOKIE=true`) | Solo viaja por https. |
 
 ## Cabeceras HTTP
@@ -52,7 +52,9 @@ Los límites de las acciones Livewire usan `Concerns\ThrottlesActions`, porque e
 - `Permissions-Policy` — desactiva cámara, micrófono y pagos del navegador; geolocalización solo para el propio sitio.
 - `Strict-Transport-Security` — solo cuando la petición llega por https.
 
-**No hay Content-Security-Policy** todavía: el tema heredado usa scripts en línea y varios CDN. Es la siguiente mejora de seguridad recomendada.
+**No hay Content-Security-Policy** todavía: quedan scripts en línea (Livewire, contador de visitas, mapa). El tema heredado con varios CDN ya no se carga, así que es la siguiente mejora de seguridad recomendada.
+
+**Rol equivocado:** `AuthAdmin` y `AuthSprovider` bloquean el acceso y redirigen al panel propio del usuario con un aviso, sin cerrar su sesión. También corren en `/livewire/update` (middleware persistente).
 
 ## Dependencias
 

@@ -17,14 +17,44 @@ class SproviderDashboardComponent extends Component
         $profile = $user->serviceProvider()->withCount('zones')->first();
         $requests = ServiceRequest::where('provider_id', $user->id);
 
+        $servicesCount = $user->services()->count();
+
         return view('livewire.sprovider.sprovider-dashboard-component', [
-            'servicesCount' => $user->services()->count(),
+            'servicesCount' => $servicesCount,
             'pendingCount' => (clone $requests)->where('status', ServiceRequest::PENDING)->count(),
+            'acceptedCount' => (clone $requests)->where('status', ServiceRequest::ACCEPTED)->count(),
             'completedCount' => (clone $requests)->where('status', ServiceRequest::COMPLETED)->count(),
             'rating' => Review::whereIn('service_id', $user->services()->select('id'))->avg('rating'),
             'profileIncomplete' => $profile === null || $profile->zones_count === 0 || ! $profile->whatsapp,
+            // "Primeros pasos": se marcan solos según lo que el proveedor ya hizo.
+            'steps' => [
+                [
+                    'done' => $profile !== null && $profile->zones_count > 0 && (bool) $profile->whatsapp,
+                    'title' => 'Pon tu WhatsApp y las zonas donde trabajas',
+                    'text' => 'Sin esto los clientes no pueden escribirte ni encontrarte cuando filtran por zona.',
+                    'action' => 'Completar perfil',
+                    'href' => route('sprovider.edit_profile'),
+                ],
+                [
+                    'done' => $profile !== null && (bool) $profile->image && (bool) $profile->about,
+                    'title' => 'Sube tu foto y cuenta quién eres',
+                    'text' => 'Una foto tuya y dos líneas sobre tu experiencia dan confianza: la gente contrata a personas.',
+                    'action' => 'Agregar foto',
+                    'href' => route('sprovider.edit_profile'),
+                ],
+                [
+                    'done' => $servicesCount > 0,
+                    'title' => 'Publica tu primer servicio',
+                    'text' => 'Ponle un nombre claro (ej.: «Instalación de calefones»), un precio de referencia y una buena foto.',
+                    'action' => 'Publicar servicio',
+                    'href' => route('sprovider.add_service'),
+                ],
+            ],
             'limit' => $user->servicePublicationLimit(),
-            'latestRequests' => (clone $requests)->with('service:id,name,slug')->latest()->take(5)->get(),
-        ])->layout('layouts.base');
+            'isPro' => $user->isPro(),
+            'latestRequests' => (clone $requests)->with('service:id,name,slug')
+                ->orderByRaw("case when status = 'pending' then 0 when status = 'accepted' then 1 else 2 end")
+                ->latest()->take(5)->get(),
+        ])->layout('layouts.base')->title('Mi panel');
     }
 }

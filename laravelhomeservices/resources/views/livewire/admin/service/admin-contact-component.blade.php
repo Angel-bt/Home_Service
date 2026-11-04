@@ -1,76 +1,29 @@
 <div>
-    <style>
-        nav svg{
-            height: 20px;
-        }
-        nav .hidden{
-            display: block !important;
-        }
-    </style>
-    <div class="section-title-01 honmob">
-        <div class="bg_parallax image_02_parallax"></div>
-        <div class="opacy_bg_02">
-            <div class="container">
-                <h1>Mensajes de contacto</h1>
-                <div class="crumbs">
-                    <ul>
-                        <li><a href="/">Inicio</a></li>
-                        <li>/</li>
-                        <li>Mensajes de contacto</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    <section class="content-central">
-        <div class="content_info">
-            <div class="paddings-mini">
-                <div class="container">
-                    <div class="row portfolioContainer">
-                        <div class="col-md-12 profile1">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            All Contacts
-                                        </div>
-                                        <div class="col-md-6">
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel-body">
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Nombre</th>
-                                                <th>Correo</th>
-                                                <th>Teléfono</th>
-                                                <th>Mensaje</th>
-                                                <th>Creado el</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($contacts as $contact)
-                                                <tr>
-                                                    <td>{{ $contact->id }}</td>
-                                                    <td>{{ $contact->name }}</td>
-                                                    <td>{{ $contact->email }}</td>
-                                                    <td>{{ $contact->phone }}</td>
-                                                    <td>{{ $contact->message }}</td>
-                                                    <td>{{ $contact->created_at }}</td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                    {{ $contacts->links() }}
-                                </div>
+    <x-ui.panel title="Mensajes" help="Lo que la gente escribe desde la página de contacto, del más nuevo al más antiguo. Respóndeles por correo o por WhatsApp.">
+        @if ($contacts->isEmpty())
+            <x-ui.empty icon="mail" title="Todavía no hay mensajes">Cuando alguien escriba desde la página de contacto, lo verás aquí.</x-ui.empty>
+        @else
+            <div class="space-y-3">
+                @foreach ($contacts as $contact)
+                    @php $wa = \App\Support\WhatsApp::link((string) $contact->phone, 'Hola ' . $contact->name . ', te escribimos de Malakplace por tu mensaje.'); @endphp
+                    <article wire:key="contact-{{ $contact->id }}" class="ui-card p-6">
+                        <div class="flex flex-wrap items-start justify-between gap-3">
+                            <div class="min-w-0">
+                                <h2 class="text-[17px] font-medium">{{ $contact->name }}</h2>
+                                <p class="mt-0.5 break-words text-[13px] text-grafito-500">{{ $contact->created_at?->format('d/m/Y H:i') }} · {{ $contact->phone }} · {{ $contact->email }}</p>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                @if ($wa)
+                                    <a href="{{ $wa }}" target="_blank" rel="noopener" class="ui-btn ui-btn-whatsapp ui-btn-sm"><x-site.icon name="whatsapp" class="h-4 w-4" /> Responder</a>
+                                @endif
+                                <a href="mailto:{{ $contact->email }}" class="ui-btn ui-btn-secondary ui-btn-sm"><x-site.icon name="mail" class="h-4 w-4" /> Correo</a>
                             </div>
                         </div>
-                    </div>
-                </div>
+                        <p class="mt-4 whitespace-pre-line rounded-2xl bg-humo-100 px-4 py-3 text-[15px] leading-relaxed text-grafito-600">{{ $contact->message }}</p>
+                    </article>
+                @endforeach
             </div>
-        </div>
-    </section>
+            {{ $contacts->links() }}
+        @endif
+    </x-ui.panel>
 </div>

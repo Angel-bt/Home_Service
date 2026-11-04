@@ -34,7 +34,12 @@ class SproviderRequestsComponent extends Component
 
         try {
             $request->transitionTo($status, Auth::user());
-            session()->flash('message', 'Solicitud marcada como ' . mb_strtolower($request->statusLabel()) . '.');
+            session()->flash('message', match ($status) {
+                ServiceRequest::ACCEPTED => 'Aceptaste la solicitud. Escríbele al cliente para acordar el día y el precio.',
+                ServiceRequest::REJECTED => 'Rechazaste la solicitud. El cliente lo verá en su cuenta.',
+                ServiceRequest::COMPLETED => '¡Trabajo terminado! Ahora el cliente puede dejarte una reseña.',
+                default => 'Solicitud actualizada.',
+            });
         } catch (DomainException $exception) {
             session()->flash('error', $exception->getMessage());
         }
@@ -54,7 +59,7 @@ class SproviderRequestsComponent extends Component
     public function render()
     {
         $requests = $this->visibleRequests()
-            ->with(['service:id,name,slug', 'customer:id,name', 'provider:id,name'])
+            ->with(['service:id,name,slug', 'customer:id,name', 'provider:id,name', 'review:id,service_request_id,rating'])
             ->when($this->status !== '', fn (Builder $query) => $query->where('status', $this->status))
             ->latest()
             ->paginate(15);
@@ -62,6 +67,8 @@ class SproviderRequestsComponent extends Component
         return view('livewire.sprovider.sprovider-requests-component', [
             'requests' => $requests,
             'isAdmin' => Auth::user()->utype === 'ADM',
-        ])->layout('layouts.base');
+            // Cuántas hay en cada estado, para las pestañas del filtro.
+            'statusCounts' => $this->visibleRequests()->selectRaw('status, count(*) as total')->groupBy('status')->pluck('total', 'status'),
+        ])->layout('layouts.base')->title('Solicitudes');
     }
 }

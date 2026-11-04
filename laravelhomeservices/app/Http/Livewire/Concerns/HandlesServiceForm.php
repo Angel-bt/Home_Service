@@ -36,7 +36,15 @@ trait HandlesServiceForm
 
     public function generateSlug(): void
     {
-        $this->slug = Str::slug((string) $this->name, '-');
+        // Dos proveedores pueden llamar igual a su servicio: el enlace se numera solo para no mostrarles un error.
+        $base = Str::slug((string) $this->name, '-');
+        $slug = $base;
+
+        for ($n = 2; $base !== '' && Service::where('slug', $slug)->when($this->service_id, fn ($query) => $query->whereKeyNot($this->service_id))->exists(); $n++) {
+            $slug = $base . '-' . $n;
+        }
+
+        $this->slug = $slug;
     }
 
     public function updated($field): void
@@ -49,12 +57,17 @@ trait HandlesServiceForm
      */
     protected function serviceRules(): array
     {
+        // El enlace sale del nombre: se crea solo y no se le pide a nadie.
+        if (blank($this->slug)) {
+            $this->generateSlug();
+        }
+
         $creating = $this->service_id === null;
         $image = ['image', 'mimes:png,jpg,jpeg,webp', 'max:4096'];
 
         $rules = [
             'name' => ['required', 'string', 'max:120'],
-            'slug' => ['required', 'alpha_dash', 'max:150', Rule::unique('services', 'slug')->ignore($this->service_id)],
+            'slug' => [blank($this->name) ? 'nullable' : 'required', 'alpha_dash', 'max:150', Rule::unique('services', 'slug')->ignore($this->service_id)],
             'tagline' => ['required', 'string', 'max:255'],
             'service_category_id' => ['required', 'exists:service_categories,id'],
             'price' => ['required', 'numeric', 'min:0', 'max:100000'],

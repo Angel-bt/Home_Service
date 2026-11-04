@@ -1,0 +1,5 @@
+@extends('errors.layout')
+@section('code', '403')
+@section('heading', 'No puedes entrar')
+@section('accent', 'aquí')
+@section('text', 'Esta página es solo para otro tipo de cuenta. Si crees que deberías poder verla, ingresa con la cuenta correcta o escríbenos.')

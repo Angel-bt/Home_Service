@@ -48,9 +48,9 @@ class DemoMarketplaceSeeder extends Seeder
             $categories[$slug] = $category;
         }
 
-        $admin = $this->user('admin@proyetech.test', 'Administración Proyetech', 'ADM', '0995528556');
+        $admin = $this->user('admin@proyetech.test', 'Administración Malakplace', 'ADM', '0995528556');
         $pedro = $this->provider('proveedor@proyetech.test', 'Pedro Jaramillo', '0991112233', ['malacatos', 'vilcabamba', 'quinara'], 'Gasfitero y electricista con 10 años de experiencia en quintas del valle.');
-        $rosa = $this->provider('proveedora@proyetech.test', 'Rosa Cueva', '0984445566', ['malacatos', 'loja'], 'Jardinería, mantenimiento de piscinas y limpieza de quintas.');
+        $rosa = $this->provider('proveedora@proyetech.test', 'Rosa Cueva', '0984445566', ['malacatos', 'yangana'], 'Jardinería, mantenimiento de piscinas y limpieza de quintas.');
         $cliente = $this->user('cliente@proyetech.test', 'Carlos Ordóñez', 'CST', '0987654321');
 
         $services = [
