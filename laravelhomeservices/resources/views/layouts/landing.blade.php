@@ -13,7 +13,7 @@
     <meta property="og:url" content="{{ url('/') }}">
     <meta property="og:image" content="https://images.unsplash.com/photo-1616547142063-6d0d6f8668ca?auto=format&fit=crop&w=1200&h=630&q=70">
     <link rel="canonical" href="{{ url('/') }}">
-    <link rel="icon" href="{{ asset('assets/img/favicon.png') }}">
+    <link rel="icon" href="{{ asset('images/favicon.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

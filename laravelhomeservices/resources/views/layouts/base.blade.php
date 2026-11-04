@@ -10,7 +10,7 @@
     <title>{{ isset($title) && $title ? $title . ' · Malakplace' : 'Malakplace · Servicios para tu hogar en Malacatos' }}</title>
     <meta name="description" content="Gasfiteros, electricistas, jardineros y más en Malacatos, Vilcabamba, Yangana y Quinara.">
     <meta name="theme-color" content="#f3f2ee">
-    <link rel="icon" href="{{ asset('assets/img/favicon.png') }}">
+    <link rel="icon" href="{{ asset('images/favicon.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
