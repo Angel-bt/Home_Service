@@ -68,19 +68,19 @@ trait HandlesServiceForm
         $rules = [
             'name' => ['required', 'string', 'max:120'],
             'slug' => [blank($this->name) ? 'nullable' : 'required', 'alpha_dash', 'max:150', Rule::unique('services', 'slug')->ignore($this->service_id)],
-            'tagline' => ['required', 'string', 'max:255'],
+            'tagline' => ['nullable', 'string', 'max:255'],
             'service_category_id' => ['required', 'exists:service_categories,id'],
             'price' => ['required', 'numeric', 'min:0', 'max:100000'],
             'discount' => ['nullable', 'numeric', 'min:0'],
             'discount_type' => ['nullable', 'required_with:discount', 'in:fixed,percent'],
             'description' => ['required', 'string'],
-            'inclusion' => ['required', 'string'],
-            'exclusion' => ['required', 'string'],
+            'inclusion' => ['nullable', 'string'],
+            'exclusion' => ['nullable', 'string'],
         ];
 
         if ($creating) {
             $rules['image'] = array_merge(['required'], $image);
-            $rules['thumbnail'] = array_merge(['required'], $image);
+            $rules['thumbnail'] = array_merge(['nullable'], $image);
         } else {
             $rules['newimage'] = array_merge(['nullable'], $image);
             $rules['newthumbnail'] = array_merge(['nullable'], $image);
@@ -113,7 +113,7 @@ trait HandlesServiceForm
     {
         $service->name = $this->name;
         $service->slug = $this->slug;
-        $service->tagline = $this->tagline;
+        $service->tagline = (string) $this->tagline;
         $service->service_category_id = $this->service_category_id;
         $service->price = $this->price;
         $service->discount = $this->discount === '' ? null : $this->discount;
@@ -125,6 +125,9 @@ trait HandlesServiceForm
         $cleaner = app(ServiceAssetCleaner::class);
         $thumbnail = $service->exists ? $this->newthumbnail : $this->thumbnail;
         $image = $service->exists ? $this->newimage : $this->image;
+
+        // El navegador manda una versión pequeña de la foto; si no llegó, la misma foto sirve de miniatura.
+        $thumbnail = $thumbnail instanceof UploadedFile ? $thumbnail : $image;
 
         if ($thumbnail instanceof UploadedFile) {
             $cleaner->deleteFile('images/services/thumbnails', $service->thumbnail);

@@ -130,6 +130,9 @@ html.lenis, html.lenis body { height: auto; }
     .ui-prose a { @apply ui-link; }
 }
 
+/* Mientras se sube una foto, el botón de guardar espera (lo activa photo-script). */
+.ui-uploading .ui-submit { opacity: .5; pointer-events: none; }
+
 /* Barras del panel (gráfico simple sin librerías). */
 .ui-bar { transform-origin: left; animation: ui-grow .8s cubic-bezier(.2, .8, .2, 1) both; }
 @keyframes ui-grow { from { transform: scaleX(0); } }

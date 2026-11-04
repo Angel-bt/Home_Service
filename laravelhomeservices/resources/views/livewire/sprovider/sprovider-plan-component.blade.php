@@ -111,11 +111,10 @@
                                     <x-ui.field label="Número de comprobante" name="reference" for="reference" hint="Aparece en el recibo de tu banco.">
                                         <input type="text" id="reference" class="ui-input @error('reference') ui-input-invalid @enderror" wire:model="reference">
                                     </x-ui.field>
-                                    <x-ui.field label="Foto o PDF del comprobante" name="receipt" for="receipt" hint="JPG, PNG, WebP o PDF de hasta 5 MB. Una captura de pantalla sirve.">
-                                        <input type="file" id="receipt" accept="image/*,application/pdf" class="ui-file" wire:model="receipt">
-                                        <p wire:loading wire:target="receipt" class="ui-hint">Subiendo archivo…</p>
+                                    <x-ui.field label="Foto o PDF del comprobante" name="receipt" for="receipt" hint="Una captura de pantalla sirve. Si es PDF, de hasta 5 MB.">
+                                        <x-ui.photo-input id="receipt" model="receipt" pdf :max-side="2000" empty="Toca para elegir el comprobante" />
                                     </x-ui.field>
-                                    <button type="submit" class="ui-btn ui-btn-primary ui-btn-lg" wire:loading.attr="disabled" wire:target="submitReceipt, receipt">Enviar comprobante</button>
+                                    <button type="submit" class="ui-btn ui-btn-primary ui-btn-lg ui-submit" wire:loading.attr="disabled" wire:target="submitReceipt">Enviar comprobante</button>
                                 </form>
                             @endif
                         </div>

@@ -20,6 +20,6 @@ final class NewLeadNotificationMail extends Mailable
 
     public function build(): self
     {
-        return $this->subject('New Home Services lead')->view('emails.new-lead');
+        return $this->subject('Nuevo mensaje desde Malakplace')->view('emails.new-lead');
     }
 }

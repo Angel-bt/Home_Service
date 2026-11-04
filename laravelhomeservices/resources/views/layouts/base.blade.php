@@ -49,6 +49,7 @@
     @endif
 
     <x-ui.livewire-errors />
+    <x-ui.photo-script />
 
     @stack('modals')
     @livewireScripts

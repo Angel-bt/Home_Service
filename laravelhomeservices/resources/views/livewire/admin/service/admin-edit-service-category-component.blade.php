@@ -8,9 +8,7 @@
                 <input type="text" id="slug" class="ui-input @error('slug') ui-input-invalid @enderror" wire:model.blur="slug">
             </x-ui.field>
             <x-ui.field label="Imagen" name="newimage" for="category-image" optional>
-                <input type="file" id="category-image" accept="image/*" class="ui-file" wire:model="newimage">
-                <p wire:loading wire:target="newimage" class="ui-hint">Subiendo imagen…</p>
-                <img src="{{ $newimage ? $newimage->temporaryUrl() : \App\Support\Media::url('categories', $image) }}" alt="Imagen de la categoría" class="mt-3 h-20 w-20 rounded-xl object-contain">
+                <x-ui.photo-input id="category-image" model="newimage" :current="\App\Support\Media::url('categories', $image)" :max-side="800" shape="round" />
             </x-ui.field>
             <x-ui.field label="¿Destacarla?" name="featured" for="featured">
                 <select id="featured" class="ui-input" wire:model="featured">
@@ -19,7 +17,7 @@
                 </select>
             </x-ui.field>
             <div class="flex flex-wrap gap-3 pt-2">
-                <button type="submit" class="ui-btn ui-btn-primary" wire:loading.attr="disabled" wire:target="updateServiceCategory, newimage">Guardar cambios</button>
+                <button type="submit" class="ui-btn ui-btn-primary ui-submit" wire:loading.attr="disabled" wire:target="updateServiceCategory">Guardar cambios</button>
                 <a href="{{ route('admin.service_categories') }}" class="ui-btn ui-btn-ghost">Volver</a>
             </div>
         </form>

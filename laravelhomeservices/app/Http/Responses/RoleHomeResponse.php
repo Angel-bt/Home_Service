@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace App\Http\Responses;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Laravel\Fortify\Contracts\LoginResponse;
 use Laravel\Fortify\Contracts\RegisterResponse;
 use Laravel\Fortify\Contracts\TwoFactorLoginResponse;
 use Laravel\Fortify\Fortify;
 
 /**
- * After signing in or registering, providers and admins land on their panel, where
- * they see what to do next. Customers keep going where they were (or to the home page).
+ * After signing in or registering, providers and admins land on their panel, where they see
+ * what to do next. Customers go back to the page they were on, to finish what they started.
  */
 class RoleHomeResponse implements LoginResponse, RegisterResponse, TwoFactorLoginResponse
 {
@@ -26,6 +27,14 @@ class RoleHomeResponse implements LoginResponse, RegisterResponse, TwoFactorLogi
 
         return redirect()->intended(in_array($user?->utype, ['ADM', 'SVP'], true)
             ? route($user->dashboardRoute())
-            : Fortify::redirects('login'));
+            : $this->pageTheyCameFrom($request));
+    }
+
+    private function pageTheyCameFrom(Request $request): string
+    {
+        $path = (string) $request->input('volver');
+
+        // Only paths of this site: "//otro.com" or an absolute URL would be an open redirect.
+        return preg_match('~^/(?![/\\\\])~', $path) === 1 ? $path : Fortify::redirects('login');
     }
 }

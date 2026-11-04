@@ -157,13 +157,10 @@
                             <p class="mt-3 text-[15px] leading-relaxed text-grafito-500">Este servicio es tuyo, así que no puedes solicitarlo. Así lo ven tus clientes.</p>
                             <a href="{{ route($authUser->utype === 'ADM' ? 'admin.edit_service' : 'sprovider.edit_service', ['service_slug' => $service->slug]) }}" class="ui-btn ui-btn-secondary mt-5"><x-site.icon name="edit" class="h-4 w-4" /> Editar este servicio</a>
                         @else
-                            <p class="mt-2 text-[14px] text-grafito-500">Llena estos datos y el proveedor te contactará.</p>
-                            <form wire:submit="submitRequest" class="mt-6 space-y-5">
-                                <x-ui.field label="Tu nombre" name="name" for="req-name">
-                                    <input type="text" id="req-name" class="ui-input @error('name') ui-input-invalid @enderror" wire:model="name" autocomplete="name">
-                                </x-ui.field>
-                                <x-ui.field label="Tu celular (WhatsApp)" name="phone" for="req-phone" hint="El proveedor te escribirá a este número.">
-                                    <input type="tel" id="req-phone" class="ui-input @error('phone') ui-input-invalid @enderror" wire:model="phone" placeholder="0991234567" inputmode="tel" autocomplete="tel">
+                            <p class="mt-2 text-[14px] text-grafito-500">Cuéntale qué necesitas y el proveedor te contactará.</p>
+                            <form wire:submit="submitRequest" class="mt-6 space-y-5" x-data="{ editing: @js(blank($name) || blank($phone) || $errors->hasAny(['name', 'phone'])) }">
+                                <x-ui.field label="¿Qué necesitas?" name="message" for="req-message" hint="Ej.: se rompió la llave del lavamanos y gotea.">
+                                    <textarea id="req-message" rows="3" class="ui-input @error('message') ui-input-invalid @enderror" wire:model="message"></textarea>
                                 </x-ui.field>
                                 <x-ui.field label="¿En qué zona?" name="zone" for="req-zone">
                                     <select id="req-zone" class="ui-input @error('zone') ui-input-invalid @enderror" wire:model="zone">
@@ -179,9 +176,18 @@
                                 <x-ui.field label="¿Para qué día?" name="preferred_date" for="req-date" optional>
                                     <input type="date" id="req-date" class="ui-input @error('preferred_date') ui-input-invalid @enderror" wire:model="preferred_date" min="{{ now()->toDateString() }}">
                                 </x-ui.field>
-                                <x-ui.field label="¿Qué necesitas?" name="message" for="req-message" optional hint="Ej.: se rompió la llave del lavamanos y gotea.">
-                                    <textarea id="req-message" rows="3" class="ui-input @error('message') ui-input-invalid @enderror" wire:model="message"></textarea>
-                                </x-ui.field>
+                                <div x-show="!editing" class="flex items-center justify-between gap-3 rounded-2xl bg-humo-100 px-4 py-3 text-[14px]">
+                                    <span class="min-w-0">Te escribirá a: <span class="font-medium">{{ $name }} · {{ $phone }}</span></span>
+                                    <button type="button" class="ui-link shrink-0" @click="editing = true">Cambiar</button>
+                                </div>
+                                <div x-show="editing" x-cloak class="space-y-5">
+                                    <x-ui.field label="Tu nombre" name="name" for="req-name">
+                                        <input type="text" id="req-name" class="ui-input @error('name') ui-input-invalid @enderror" wire:model="name" autocomplete="name">
+                                    </x-ui.field>
+                                    <x-ui.field label="Tu celular (WhatsApp)" name="phone" for="req-phone" hint="El proveedor te escribirá a este número.">
+                                        <input type="tel" id="req-phone" class="ui-input @error('phone') ui-input-invalid @enderror" wire:model="phone" placeholder="0991234567" inputmode="tel" autocomplete="tel">
+                                    </x-ui.field>
+                                </div>
                                 <button type="submit" class="ui-btn ui-btn-primary ui-btn-lg w-full" wire:loading.attr="disabled" wire:target="submitRequest">
                                     <span wire:loading.remove wire:target="submitRequest">Enviar solicitud</span>
                                     <span wire:loading wire:target="submitRequest">Enviando…</span>

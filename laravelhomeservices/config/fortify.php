@@ -18,6 +18,9 @@ return [
 
     'guard' => 'web',
 
+    // Postgres distingue mayúsculas: Juan@correo.com y juan@correo.com deben ser la misma cuenta.
+    'lowercase_usernames' => true,
+
     /*
     |--------------------------------------------------------------------------
     | Fortify Password Broker

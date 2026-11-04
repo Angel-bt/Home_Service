@@ -5,6 +5,9 @@
         <x-slot:actions>
             {!! $emptyActions ?? '' !!}
             <a href="{{ route('home.service_categories') }}" class="ui-btn ui-btn-secondary">Ver todos los oficios</a>
+            @if ($help = \App\Support\WhatsApp::link(config('marketplace.contact_phone'), 'Hola, estoy buscando un servicio en Malakplace y no lo encuentro.'))
+                <a href="{{ $help }}" target="_blank" rel="noopener" class="ui-btn ui-btn-whatsapp"><x-site.icon name="whatsapp" class="h-5 w-5" /> Pedir ayuda</a>
+            @endif
         </x-slot:actions>
     </x-ui.empty>
 @else

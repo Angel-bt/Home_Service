@@ -69,6 +69,71 @@ class RoleGuidanceTest extends TestCase
             ->assertRedirect(route('sprovider.dashboard'));
     }
 
+    public function test_customers_return_to_the_page_they_were_on_after_signing_up(): void
+    {
+        $this->post('/register', [
+            'name' => 'Ana', 'email' => 'Ana@Example.test', 'phone' => '0991234567', 'registeras' => 'CST',
+            'password' => 'una-clave-larga', 'volver' => '/service/poda',
+        ])->assertRedirect('/service/poda');
+
+        $this->assertDatabaseHas('users', ['email' => 'ana@example.test']);
+    }
+
+    public function test_return_path_cannot_send_people_to_another_site(): void
+    {
+        $this->post('/register', [
+            'name' => 'Ana', 'email' => 'ana2@example.test', 'phone' => '0991234567', 'registeras' => 'CST',
+            'password' => 'una-clave-larga', 'volver' => '//malicioso.example',
+        ])->assertRedirect(\App\Providers\RouteServiceProvider::HOME);
+    }
+
+    public function test_email_capitals_do_not_lock_anyone_out(): void
+    {
+        $user = User::factory()->create(['email' => 'juan@example.test']);
+
+        $this->post('/login', ['email' => 'Juan@Example.TEST', 'password' => 'password']);
+
+        $this->assertAuthenticatedAs($user);
+    }
+
+    public function test_registration_needs_a_phone_that_works_on_whatsapp(): void
+    {
+        $this->from('/register')->post('/register', [
+            'name' => 'Ana', 'email' => 'ana3@example.test', 'phone' => '12', 'registeras' => 'SVP',
+            'password' => 'una-clave-larga',
+        ])->assertSessionHasErrors('phone');
+
+        $this->assertGuest();
+    }
+
+    public function test_a_service_only_needs_the_essentials_and_one_photo(): void
+    {
+        \Illuminate\Support\Facades\Storage::fake('local');
+        $category = new ServiceCategory();
+        $category->forceFill(['name' => 'Jardinería', 'slug' => 'jardineria', 'image' => 'j.png'])->save();
+        $provider = $this->provider();
+
+        Livewire::actingAs($provider)
+            ->test(SproviderAddServiceComponent::class)
+            ->set('name', 'Corte de césped')
+            ->set('service_category_id', $category->id)
+            ->set('price', 15)
+            ->set('description', 'Voy a domicilio.')
+            ->set('image', \Illuminate\Http\UploadedFile::fake()->image('foto.jpg'))
+            ->call('createService', app(\App\Services\ServicePublicationGate::class))
+            ->assertHasNoErrors()
+            ->assertRedirect(route('sprovider.services'));
+
+        $service = Service::where('name', 'Corte de césped')->firstOrFail();
+        $this->assertNotEmpty($service->thumbnail);
+        $this->assertSame('corte-de-cesped', $service->slug);
+    }
+
+    public function test_home_invites_instead_of_showing_zeros_when_there_are_no_services(): void
+    {
+        $this->get('/')->assertOk()->assertSee('Estamos sumando a la gente de oficio')->assertDontSee('Proveedores en el valle');
+    }
+
     public function test_new_providers_see_their_first_steps_until_they_are_done(): void
     {
         $provider = $this->provider();

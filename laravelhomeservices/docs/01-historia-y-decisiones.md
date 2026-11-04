@@ -213,6 +213,21 @@ Se recorrió en el navegador, con tres roles y archivos reales: registro, perfil
 
 **Publicación:** se eligió Supabase desde el Marketplace de Vercel porque da base de datos y almacenamiento en un solo servicio, sin cuentas aparte. Implica Postgres en vez de MySQL. La app ya era casi compatible; lo que cambió es la búsqueda: Postgres distingue mayúsculas y tildes, y buscar «tuberias» no encontraba «tuberías». Se detectó probando el sitio ya publicado y se corrigió en `Service::scopeSearch()`.
 
+## Fase 7: formularios para gente real
+
+**Pedido:** mejorar el formulario y dejar el sitio listo para que entre gente.
+
+Se recorrieron los tres roles en vista de celular, desde una base vacía, con Postgres y la configuración de producción. Lo que cambió:
+
+- **Publicar un servicio:** solo pide nombre, oficio, precio, una foto y dos líneas. Lo demás quedó en «Más detalles». Antes exigía dos fotos y cuatro textos.
+- **Fotos del celular:** ahora se achican en el navegador antes de subir (`components/ui/photo-input`). Una de 10,6 MB queda en unos 660 KB; antes el límite de 4 MB la rechazaba y el proveedor no podía publicar. No requiere GD en el servidor, que Vercel no tiene.
+- **Registro:** sin repetir la contraseña (se puede ver con el ojo), con el celular validado para WhatsApp, y un freno a registros automáticos.
+- **Cliente:** vuelve a la página donde estaba tras registrarse, y al solicitar ve primero «¿Qué necesitas?» con sus datos resumidos.
+- **Correos sin distinción de mayúsculas:** Postgres sí las distingue y alguien podría no entrar a su cuenta (`fortify.lowercase_usernames`).
+- **Sitio sin servicios:** invita a sumarse en lugar de mostrar tres ceros.
+- **Oficios:** `MarketplaceCategoriesSeeder` trae 14 reales, con «Otros oficios» para quien no encaje.
+- **Sin SMTP:** «olvidé mi contraseña» manda a WhatsApp en lugar de prometer un correo que no saldría.
+
 ## Decisiones pendientes o deliberadamente postergadas
 
 - **Content-Security-Policy:** no se configuró porque el sitio aún tiene scripts en línea (Livewire, contador de visitas, mapa). El tema heredado que usaba varios CDN ya se eliminó.

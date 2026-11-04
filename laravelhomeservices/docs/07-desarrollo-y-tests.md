@@ -87,6 +87,8 @@ Usan el mismo diseño. Antes de escribir HTML nuevo, reutiliza estas piezas:
 
 **Motores de base de datos:** en local es MySQL, en los tests SQLite y en la nube Postgres. Evita SQL propio de un motor y recuerda que Postgres distingue mayúsculas y tildes. Para correr los tests sobre Postgres, usa un esquema temporal con `DB_SCHEMA` (nunca `public`: `RefreshDatabase` borra las tablas).
 
+**Subir fotos:** usa `<x-ui.photo-input id model thumb current pdf>` y marca el botón de guardar con `ui-submit`, que espera a que termine la subida. Achica la imagen en el navegador; no uses `<input type="file">` directo: las fotos de celular superan los límites.
+
 **Imágenes públicas:** siempre con `App\Support\Media` (`url`, `store`, `delete`), nunca con `asset('images/...')` ni `storeAs` directo: en Vercel viven en un bucket.
 
 **Tailwind:** se compila con Laravel Mix a `public/css/app.css`. Tras usar clases nuevas: `npm run dev` (o `npm run prod`) y sube el CSS compilado. `preflight` sigue desactivado (el reset propio es `:where(.lp …)`) y `darkMode: 'class'` evita que el sitio cambie a oscuro según el sistema.

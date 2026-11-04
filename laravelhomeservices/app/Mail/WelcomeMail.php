@@ -20,6 +20,6 @@ final class WelcomeMail extends Mailable
 
     public function build(): self
     {
-        return $this->subject('Welcome to Home Services')->view('emails.welcome');
+        return $this->subject('Te damos la bienvenida a Malakplace')->view('emails.welcome');
     }
 }

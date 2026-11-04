@@ -27,14 +27,8 @@
             <section class="ui-card ui-card-pad">
                 <h2 class="lp-title text-2xl">Quién eres</h2>
                 <div class="mt-6 grid gap-5 sm:grid-cols-2">
-                    <x-ui.field label="Tu foto" name="newimage" for="photo" class="sm:col-span-2" hint="Una foto clara de tu cara o trabajando. JPG, PNG o WebP de hasta 4 MB." optional>
-                        <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
-                            <img src="{{ $newimage ? $newimage->temporaryUrl() : \App\Support\Media::url('sproviders', ($image ?: 'default.jpg')) }}" alt="Tu foto" class="h-24 w-24 shrink-0 rounded-full object-cover">
-                            <div class="flex-1">
-                                <input type="file" id="photo" accept="image/*" class="ui-file" wire:model="newimage">
-                                <p wire:loading wire:target="newimage" class="ui-hint">Subiendo foto…</p>
-                            </div>
-                        </div>
+                    <x-ui.field label="Tu foto" name="newimage" for="photo" class="sm:col-span-2" hint="Una foto clara de tu cara o trabajando." optional>
+                        <x-ui.photo-input id="photo" model="newimage" :current="$image ? \App\Support\Media::url('sproviders', $image) : null" :max-side="900" shape="round" empty="Toca para elegir tu foto" />
                     </x-ui.field>
                     <x-ui.field label="Cuéntanos sobre ti" name="about" for="about" class="sm:col-span-2" hint="Experiencia, especialidades y horarios, en dos líneas." optional>
                         <textarea id="about" maxlength="255" class="ui-input @error('about') ui-input-invalid @enderror" wire:model.blur="about" placeholder="Soy gasfitero con 10 años de experiencia. Atiendo de lunes a sábado."></textarea>
@@ -57,7 +51,7 @@
             </section>
 
             <div class="flex flex-wrap items-center gap-3">
-                <button type="submit" class="ui-btn ui-btn-primary ui-btn-lg" wire:loading.attr="disabled" wire:target="updateProfile, newimage">
+                <button type="submit" class="ui-btn ui-btn-primary ui-btn-lg ui-submit" wire:loading.attr="disabled" wire:target="updateProfile">
                     <span wire:loading.remove wire:target="updateProfile">Guardar perfil</span>
                     <span wire:loading wire:target="updateProfile">Guardando…</span>
                 </button>

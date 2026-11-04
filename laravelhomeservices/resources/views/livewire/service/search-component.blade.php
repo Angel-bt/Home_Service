@@ -26,7 +26,7 @@
 
         @include('livewire.partials.service-grid', [
             'services' => $services,
-            'emptyTitle' => 'No hay resultados',
+            'emptyTitle' => \App\Models\Service::active()->exists() ? 'No hay resultados' : 'Estamos sumando proveedores',
             'emptyMessage' => $zona !== ''
                 ? 'No encontramos ese servicio en ' . $zones[$zona] . '. Prueba en todas las zonas o con otra palabra (por ejemplo «luz» en vez de «electricista»).'
                 : 'Prueba con otra palabra más corta, por ejemplo «luz» en vez de «electricista».',

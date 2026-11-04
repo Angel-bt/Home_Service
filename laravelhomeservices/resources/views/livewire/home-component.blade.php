@@ -153,6 +153,8 @@
                 Reunimos a la gente de oficio de Malacatos y sus parroquias vecinas. Encuentras a quien te queda cerca, lees lo que dicen otros vecinos y le escribes <span class="lp-accent">directo.</span>
             </p>
         </div>
+        {{-- Cifras solo cuando dicen algo: al arrancar, tres ceros no invitan a nadie. --}}
+        @if ($stats['services'] > 0)
         <dl class="mx-auto mt-24 grid max-w-[84rem] border-y border-humo-300 sm:grid-cols-3">
             @foreach ([
                 ['providers', 'Proveedores en el valle', null],
@@ -166,6 +168,12 @@
                 </div>
             @endforeach
         </dl>
+        @else
+            <div data-anim class="mx-auto mt-16 flex max-w-[84rem] flex-col gap-4 rounded-3xl bg-noche-900 p-8 text-white sm:flex-row sm:items-center sm:justify-between">
+                <p class="lp-title text-2xl sm:text-3xl">Estamos sumando a la gente de oficio <span class="lp-accent text-oro-300">del valle.</span></p>
+                <a href="#proveedores" class="inline-flex shrink-0 items-center gap-2 self-start rounded-full bg-oro-400 px-6 py-3.5 text-[13px] font-medium uppercase tracking-[.08em] text-noche-900 transition hover:bg-oro-300 sm:self-auto">Quiero ofrecer mis servicios <x-site.icon name="arrow-right" class="h-4 w-4" /></a>
+            </div>
+        @endif
     </section>
 
     {{-- ============================== OFICIOS ============================== --}}
