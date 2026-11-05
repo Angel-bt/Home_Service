@@ -375,7 +375,9 @@ class TrustAndActivityTest extends TestCase
     public function test_a_failure_recording_activity_does_not_break_the_page(): void
     {
         $service = $this->service($this->provider());
-        \Illuminate\Support\Facades\Schema::drop('activity_events');
+        ActivityEvent::creating(function (): void {
+            throw new \RuntimeException('La base no acepta el registro');
+        });
 
         $this->get(route('home.service_details', ['service_slug' => $service->slug]))->assertOk();
     }
