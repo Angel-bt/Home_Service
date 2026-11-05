@@ -12,6 +12,7 @@
             ['Zonas donde trabajas', $sprovider && $sprovider->zones->isNotEmpty() ? $sprovider->zones->map->label()->implode(', ') : 'Sin configurar'],
             ['Ciudad o parroquia', $sprovider?->city ?: '—'],
             ['Oficio principal', $sprovider?->category?->name ?? '—'],
+            ['Años de experiencia', $sprovider?->experience_years ?? '—'],
             ['Referencia de ubicación', $sprovider?->service_location ?: '—'],
         ];
     @endphp
@@ -45,6 +46,14 @@
                         </div>
                     @endforeach
                 </dl>
+                <div class="mt-6 border-t border-humo-200 pt-6">
+                    @if ($sprovider?->trustBadges())
+                        <x-ui.trust-badges :provider="$sprovider" :note="false" />
+                    @else
+                        <p class="text-[15px] text-grafito-500">Aún no tienes sellos. Son voluntarios y dan confianza a los clientes.</p>
+                    @endif
+                    <a href="{{ route('sprovider.verification') }}" class="ui-link mt-3 inline-block text-[15px]">Ver mi verificación</a>
+                </div>
             </div>
         </div>
     </x-ui.panel>

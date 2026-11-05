@@ -26,6 +26,7 @@ class CronController extends Controller
 
         return response()->json([
             'billing:expire-plans' => Artisan::call('billing:expire-plans'),
+            'activity:prune' => Artisan::call('activity:prune'),
             'services:sync-visit-counters' => config('marketplace.visit_counter') === 'redis' ? Artisan::call('services:sync-visit-counters') : 'not needed',
             'storage:check' => $storage,
             'mail:check' => $mail,

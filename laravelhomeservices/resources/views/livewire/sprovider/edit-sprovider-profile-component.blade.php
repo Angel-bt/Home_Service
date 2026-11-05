@@ -33,6 +33,9 @@
                     <x-ui.field label="Cuéntanos sobre ti" name="about" for="about" class="sm:col-span-2" hint="Experiencia, especialidades y horarios, en dos líneas." optional>
                         <textarea id="about" maxlength="255" class="ui-input @error('about') ui-input-invalid @enderror" wire:model.blur="about" placeholder="Soy gasfitero con 10 años de experiencia. Atiendo de lunes a sábado."></textarea>
                     </x-ui.field>
+                    <x-ui.field label="Años de experiencia" name="experience_years" for="experience_years" hint="Se muestra en tu perfil." optional>
+                        <input type="number" id="experience_years" min="0" max="70" inputmode="numeric" class="ui-input @error('experience_years') ui-input-invalid @enderror" wire:model.blur="experience_years" placeholder="Ej.: 8">
+                    </x-ui.field>
                     <x-ui.field label="Oficio principal" name="service_category_id" optional>
                         <select id="service_category_id" class="ui-input @error('service_category_id') ui-input-invalid @enderror" wire:model="service_category_id">
                             <option value="">Elige un oficio</option>

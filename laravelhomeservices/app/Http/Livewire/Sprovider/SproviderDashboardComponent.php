@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Sprovider;
 
+use App\Models\ActivityEvent;
 use App\Models\Review;
 use App\Models\ServiceRequest;
 use Illuminate\Support\Facades\Auth;
@@ -19,8 +20,19 @@ class SproviderDashboardComponent extends Component
 
         $servicesCount = $user->services()->count();
 
+        // Lo que Malakplace le trajo este mes: es la razón para volver y para seguir publicando.
+        $interest = ActivityEvent::query()
+            ->where('provider_id', $user->id)
+            ->where('created_at', '>=', now()->subDays(30))
+            ->selectRaw('event, count(*) as total')
+            ->groupBy('event')
+            ->pluck('total', 'event');
+
         return view('livewire.sprovider.sprovider-dashboard-component', [
             'servicesCount' => $servicesCount,
+            'monthViews' => (int) ($interest[ActivityEvent::SERVICE_VIEW] ?? 0),
+            'monthContacts' => (int) ($interest[ActivityEvent::WHATSAPP_CLICK] ?? 0),
+            'verified' => $profile?->isVerified() ?? false,
             'pendingCount' => (clone $requests)->where('status', ServiceRequest::PENDING)->count(),
             'acceptedCount' => (clone $requests)->where('status', ServiceRequest::ACCEPTED)->count(),
             'completedCount' => (clone $requests)->where('status', ServiceRequest::COMPLETED)->count(),

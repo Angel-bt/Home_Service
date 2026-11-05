@@ -106,17 +106,21 @@
                             <span class="text-[15px] text-grafito-400 line-through">${{ number_format((float) $service->price, 2) }}</span>
                         @endif
                     </p>
-                    <p class="mt-3 text-[14px] leading-snug text-grafito-500">Es un precio de referencia. El precio final lo acuerdas con el proveedor según el trabajo, y le pagas directo a él.</p>
+                    <p class="mt-3 text-[14px] leading-snug text-grafito-500">Es un precio de referencia. El precio final lo acuerdas con el proveedor según el trabajo, y le pagas directamente.</p>
 
                     <div class="mt-6 grid gap-3">
                         @if ($whatsapp)
-                            <a href="{{ $whatsapp }}" target="_blank" rel="noopener" class="ui-btn ui-btn-whatsapp ui-btn-lg">
+                            <a href="{{ route('home.service_whatsapp', ['service_slug' => $service->slug]) }}" target="_blank" rel="nofollow noopener" class="ui-btn ui-btn-whatsapp ui-btn-lg">
                                 <x-site.icon name="whatsapp" class="h-5 w-5" /> Escribir por WhatsApp
                             </a>
                         @endif
                         <a href="#solicitar" class="ui-btn ui-btn-secondary ui-btn-lg">Solicitar este servicio</a>
                     </div>
                     <p class="mt-4 text-[13px] leading-snug text-grafito-500">WhatsApp es lo más rápido. La solicitud deja todo por escrito y te permite calificar al final.</p>
+                    <div class="mt-5 flex items-start gap-2.5 border-t border-humo-200 pt-5 text-[13px] leading-snug text-grafito-500">
+                        <x-site.icon name="info" class="mt-px h-4 w-4 shrink-0 text-grafito-400" />
+                        <p>Malakplace solo te conecta con quien hace el trabajo. El trato y el pago son entre ustedes y no respondemos por ellos. <a href="{{ route('home.terms') }}" class="ui-link">Términos</a></p>
+                    </div>
                 </div>
 
                 @if ($isProvider)
@@ -127,11 +131,13 @@
                             <div>
                                 <p class="text-[17px] font-medium">{{ $service->user->name }}</p>
                                 @if ($provider?->city)<p class="text-[14px] text-grafito-500">{{ $provider->city }}</p>@endif
+                                @if ($provider?->experience_years)<p class="text-[14px] text-grafito-500">{{ $provider->experience_years }} {{ $provider->experience_years === 1 ? 'año' : 'años' }} de experiencia</p>@endif
                             </div>
                         </div>
                         @if ($provider?->about)
                             <p class="mt-4 text-[15px] leading-relaxed text-grafito-600">{{ $provider->about }}</p>
                         @endif
+                        <x-ui.trust-badges :provider="$provider" class="mt-5 border-t border-humo-200 pt-5" />
                     </div>
                 @endif
 

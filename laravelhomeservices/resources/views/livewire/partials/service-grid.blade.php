@@ -32,6 +32,9 @@
                     Desde <span class="text-[16px] font-medium text-grafito">${{ number_format($service->finalPrice(), 2) }}</span>
                     @if ($service->user?->utype === 'SVP') · {{ \Illuminate\Support\Str::before($service->user->name, ' ') ?: $service->user->name }}@endif
                 </p>
+                @if ($service->user?->utype === 'SVP' && $service->user->serviceProvider?->isVerified())
+                    <p class="mt-1.5 flex items-center gap-1.5 text-[13px] text-emerald-800"><x-site.icon name="shield" class="h-4 w-4" /> Verificado</p>
+                @endif
             </a>
         @endforeach
     </div>

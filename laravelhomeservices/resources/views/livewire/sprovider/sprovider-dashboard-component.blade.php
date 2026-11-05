@@ -18,12 +18,32 @@
 
             <x-ui.checklist :items="$steps" title="Para empezar a recibir clientes" />
 
+            @unless ($verified)
+                <section class="ui-card ui-card-pad flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="flex items-start gap-3">
+                        <x-site.icon name="shield" class="mt-1 h-5 w-5 shrink-0 text-grafito-400" />
+                        <div>
+                            <h2 class="lp-title text-xl">Gana tu sello de verificado</h2>
+                            <p class="mt-1 text-[15px] leading-relaxed text-grafito-500">Es voluntario y gratis. Con tu cédula y tu certificado de antecedentes, los clientes confían más en ti.</p>
+                        </div>
+                    </div>
+                    <a href="{{ route('sprovider.verification') }}" class="ui-btn ui-btn-secondary shrink-0 self-start sm:self-auto">Verificarme</a>
+                </section>
+            @endunless
+
             <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
                 <x-ui.stat label="Servicios publicados" :value="$servicesCount . ($limit !== null ? ' de ' . $limit : '')" :hint="$limit !== null ? 'Plan gratuito' : 'Plan Pro: sin límite'" :href="route('sprovider.services')" />
                 <x-ui.stat label="Por responder" :value="$pendingCount" hint="Ver solicitudes" :href="route('sprovider.requests')" />
                 <x-ui.stat label="Trabajos en curso" :value="$acceptedCount" hint="Aceptados, sin terminar" />
                 <x-ui.stat label="Calificación" :value="$rating ? number_format((float) $rating, 1) . ' ★' : '—'" :hint="$completedCount . ' ' . ($completedCount === 1 ? 'trabajo terminado' : 'trabajos terminados')" />
             </div>
+
+            @if ($monthViews > 0 || $monthContacts > 0)
+                <p class="flex items-start gap-3 rounded-2xl bg-humo-100 px-5 py-4 text-[15px] leading-relaxed text-grafito-600">
+                    <x-site.icon name="chart" class="mt-0.5 h-5 w-5 shrink-0 text-grafito-400" />
+                    <span>En los últimos 30 días tus servicios tuvieron <span class="font-medium text-grafito">{{ $monthViews }} {{ $monthViews === 1 ? 'visita' : 'visitas' }}</span> y <span class="font-medium text-grafito">{{ $monthContacts }} {{ $monthContacts === 1 ? 'toque' : 'toques' }}</span> en el botón de WhatsApp.</span>
+                </p>
+            @endif
 
             <section>
                 <div class="mb-4 flex items-end justify-between gap-4">

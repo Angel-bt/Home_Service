@@ -45,7 +45,7 @@ class RegistrationTest extends TestCase
             'phone' => '0991234567',
             'password' => 'password',
             'password_confirmation' => 'password',
-            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
+            'terms' => true,
         ]);
 
         $this->assertAuthenticated();

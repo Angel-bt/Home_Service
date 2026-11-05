@@ -63,6 +63,8 @@ class CustomerDashboardComponent extends Component
             'comment' => $this->comment === '' ? null : $this->comment,
         ]);
 
+        \App\Support\Activity::record(\App\Models\ActivityEvent::REVIEW_CREATED, ['service_id' => $request->service_id, 'provider_id' => $request->provider_id]);
+
         $this->reviewingId = null;
         session()->flash('message', '¡Gracias por tu reseña!');
     }

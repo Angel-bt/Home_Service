@@ -14,6 +14,11 @@ class DeleteUser implements DeletesUsers
      */
     public function delete($user)
     {
+        // La base borra las filas en cascada, pero los archivos del disco privado hay que borrarlos aquí.
+        if ($user->serviceProvider) {
+            app(\App\Services\ProviderVerification::class)->forget($user->serviceProvider);
+        }
+
         $user->deleteProfilePhoto();
         $user->tokens->each->delete();
         $user->delete();

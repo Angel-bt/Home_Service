@@ -25,4 +25,16 @@ return [
 
     // redis: contadores en memoria que sync-visit-counters vuelca a la base. database: escritura directa (sin Redis).
     'visit_counter' => env('VISIT_COUNTER', 'redis'),
+
+    // Súbela cuando cambien los términos o el permiso de publicación: todas las cuentas vuelven a aceptar.
+    'terms_version' => '2026-11-04',
+
+    'verification' => [
+        // El certificado oficial vale 3 meses; el sello dura más para no obligar a renovarlo cada trimestre, y muestra su fecha.
+        'background_valid_days' => (int) env('VERIFICATION_BACKGROUND_DAYS', 180),
+        'background_portal' => 'https://certificados.ministeriodelinterior.gob.ec/gestorcertificados/antecedentes/',
+    ],
+
+    // Plazo que se promete en la política de privacidad.
+    'activity_retention_days' => (int) env('ACTIVITY_RETENTION_DAYS', 365),
 ];

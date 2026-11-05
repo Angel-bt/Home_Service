@@ -6,11 +6,14 @@
                 '¿Cómo contacto a un proveedor?' => 'Entra al servicio que te interesa. Ahí tienes un botón verde de WhatsApp para escribirle de inmediato y un formulario para enviarle una solicitud con tu zona, dirección y fecha.',
                 '¿Cómo pago el servicio?' => 'Le pagas directamente al proveedor (efectivo o transferencia), según lo que acuerden. El precio publicado es de referencia; el final depende del trabajo.',
                 '¿Dónde veo mis solicitudes?' => 'Ingresa con tu cuenta y toca «Mis solicitudes» arriba a la derecha. Ahí ves si el proveedor ya aceptó, puedes cancelar y, al terminar, calificar.',
+                '¿Malakplace responde si algo sale mal?' => 'Malakplace solo conecta a las personas: no hace los trabajos, no contrata a los proveedores y no recibe el pago, así que no responde por robos, daños, trabajos mal hechos ni si alguien no llega. Si pasa algo grave, avísanos para revisar esa cuenta y acude a las autoridades.',
+                '¿Qué significan los sellos?' => 'Son voluntarios. «Identidad verificada» y «Sin antecedentes penales» dicen que revisamos ese documento en la fecha que aparece. Ayudan a decidir, pero no son una garantía. Que alguien no tenga un sello no significa nada malo.',
                 '¿Quién puede dejar reseñas?' => 'Solo los clientes cuya solicitud el proveedor marcó como terminada. Así las reseñas son de trabajos reales.',
             ],
             'Para proveedores' => [
                 '¿Cómo publico mis servicios?' => 'Crea una cuenta eligiendo «Ofrezco servicios». En tu panel verás los pasos: completar tu perfil (WhatsApp y zonas) y publicar tu primer servicio. El plan gratuito permite ' . config('marketplace.free_service_limit') . ' servicios.',
                 '¿Cómo me llegan los clientes?' => 'Te escriben a tu WhatsApp o te envían una solicitud. Las solicitudes aparecen en tu panel, en «Solicitudes», con un número que te avisa cuántas faltan por responder.',
+                '¿Tengo que entregar mis documentos?' => 'No. Es voluntario: puedes publicar y trabajar sin sellos. Si los entregas, solo los ve la administración, se borran apenas los revisamos y en tu perfil solo aparece el sello con su fecha. Puedes retirarlo cuando quieras desde «Verificarme».',
                 '¿Qué es el plan Pro?' => 'Te permite publicar servicios sin límite. Se paga por transferencia o en efectivo desde «Mi plan», y lo activamos cuando confirmamos el pago.',
             ],
             'General' => [

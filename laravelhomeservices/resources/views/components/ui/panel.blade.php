@@ -16,7 +16,9 @@
             ['Solicitudes', 'admin.service_requests', 'inbox', ['admin.service_requests'], $pendingRequests],
             ['Servicios', 'admin.all_services', 'list', ['admin.all_services', 'admin.add_service', 'admin.edit_service', 'admin.services_by_category'], 0],
             ['Categorías', 'admin.service_categories', 'tag', ['admin.service_categories', 'admin.add_service_category', 'admin.edit_service_category'], 0],
+            ['Verificaciones', 'admin.verifications', 'shield', ['admin.verifications'], \App\Models\ProviderDocument::where('status', \App\Models\ProviderDocument::PENDING)->count()],
             ['Proveedores', 'admin.service_providers', 'users', ['admin.service_providers'], 0],
+            ['Actividad', 'admin.activity', 'chart', ['admin.activity'], 0],
             ['Mensajes', 'admin.contacts', 'mail', ['admin.contacts'], 0],
         ];
     } elseif ($role === 'SVP') {
@@ -26,6 +28,7 @@
             ['Solicitudes', 'sprovider.requests', 'inbox', ['sprovider.requests'], \App\Models\ServiceRequest::where('provider_id', $user->id)->where('status', \App\Models\ServiceRequest::PENDING)->count()],
             ['Mis servicios', 'sprovider.services', 'list', ['sprovider.services', 'sprovider.add_service', 'sprovider.edit_service'], 0],
             ['Mi perfil', 'sprovider.profile', 'user', ['sprovider.profile', 'sprovider.edit_profile'], 0],
+            ['Verificarme', 'sprovider.verification', 'shield', ['sprovider.verification'], 0],
             ['Mi plan', 'sprovider.plan', 'card', ['sprovider.plan'], 0],
         ];
     } else {

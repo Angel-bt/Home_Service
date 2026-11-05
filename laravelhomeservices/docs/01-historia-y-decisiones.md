@@ -229,6 +229,28 @@ Se recorrieron los tres roles en vista de celular, desde una base vacía, con Po
 - **Sin SMTP:** «olvidé mi contraseña» manda a WhatsApp en lugar de prometer un correo que no saldría.
 - **Lanzamiento (04/11/2026):** con autorización del dueño se borraron los datos de demostración, porque tenían teléfonos inventados que podrían ser de personas reales. Su cuenta pasó a administrador y el sitio quedó abierto a los buscadores.
 
+## Fase 8: confianza, verificación y actividad
+
+El objetivo: saber quién está en la plataforma, dejar claro que Malakplace solo conecta a las personas, darle a la gente razones para volver y tener datos para decidir.
+
+**Términos antes de registrarse.** El formulario tiene dos pasos: primero el tipo de cuenta, un resumen en palabras simples y las casillas; recién entonces los datos. El servidor vuelve a exigirlo. Un proveedor sin permiso de publicación no puede registrarse. Se guarda qué versión se aceptó y cuándo. Las cuentas anteriores aceptan al entrar (`EnsureTermsAccepted`), y todas vuelven a hacerlo si sube `marketplace.terms_version`.
+
+**La verificación es voluntaria, y eso es una decisión legal, no de producto.** Se pidió exigir antecedentes y publicar «sin antecedentes penales». Se mantuvo el sello, pero el documento no es obligatorio, porque en Ecuador:
+
+- La LOPDP (art. 4) define el pasado judicial como dato sensible, y su art. 26 prohíbe tratarlo salvo, entre otros casos, con consentimiento explícito y fines claros. Su art. 8 exige que el consentimiento sea libre y se pueda revocar en cualquier momento.
+- La Constitución (art. 11.2) prohíbe discriminar por pasado judicial.
+- Hay fuentes secundarias que dicen que el Decreto 1166 impide exigir el certificado como requisito. No se pudo confirmar con el texto oficial, y es un motivo más para no hacerlo obligatorio.
+
+Por eso: quien no tiene sello no aparece marcado de ninguna forma; si el certificado registra algo, simplemente no se da el sello y la persona sigue trabajando; los documentos se borran apenas se revisan; el proveedor puede retirarlos cuando quiera. El sello dura 180 días (el certificado oficial vale 3 meses) y muestra su fecha, porque solo afirma lo que se revisó ese día. **Debe revisarlo un abogado.**
+
+**Intermediario.** Términos, registro, ficha de servicio y preguntas frecuentes dicen que Malakplace solo conecta y no responde por robos, daños ni incumplimientos. Se escribió «en todo lo que la ley permita» porque el art. 43 de la Ley de Defensa del Consumidor anula las cláusulas que eximen de responsabilidad o hacen renunciar a derechos: una exención total sería más débil, no más fuerte. Estos textos reducen el riesgo, pero no lo eliminan. Tampoco conviene prometer lo contrario en la publicidad: el titular de la portada todavía dice «de confianza».
+
+**Actividad.** Tabla `activity_events` y panel `/admin/activity`: lo más buscado, lo buscado sin resultados (qué oficios faltan), servicios más vistos y contactos por WhatsApp. No guarda IP ni mensajes, no cuenta robots ni a la administración, y se borra a los 365 días. Se hizo con tabla propia y no con Google Analytics para no pedir permiso de cookies a terceros y para poder mostrarle a cada proveedor sus números.
+
+**Retención.** No había avisos: si un proveedor no entraba a su panel, nunca se enteraba de que tenía una solicitud. Ahora hay correos en cada paso de la solicitud, una invitación a dejar reseña al terminar el trabajo y, en el panel del proveedor, sus visitas y contactos de los últimos 30 días.
+
+**Cómo ganar dinero: plan, no comisión.** El cliente le paga directo al proveedor, fuera de la plataforma, así que una comisión no se puede cobrar ni comprobar: basta con cerrar el trato por WhatsApp. Además, cobrar sobre cada trabajo acercaría a Malakplace a ser parte del negocio, justo lo contrario de ser solo intermediario. La recomendación es mantener la suscripción, no cobrar hasta tener demanda real, y cambiar lo que vende: casi ningún oficial necesita más de 3 servicios, de modo que el límite actual no es una razón para pagar. Pro debería vender visibilidad (salir primero) y estadísticas. Los sellos no deben cobrarse nunca: un sello pagado deja de ser creíble.
+
 ## Decisiones pendientes o deliberadamente postergadas
 
 - **Content-Security-Policy:** no se configuró porque el sitio aún tiene scripts en línea (Livewire, contador de visitas, mapa). El tema heredado que usaba varios CDN ya se eliminó.

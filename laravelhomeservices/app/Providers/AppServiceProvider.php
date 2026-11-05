@@ -30,6 +30,10 @@ class AppServiceProvider extends ServiceProvider
         // Fechas relativas ("hace 3 días") en el idioma de la app.
         Carbon::setLocale(config('app.locale'));
 
+        \Illuminate\Support\Facades\Event::listen(\Illuminate\Auth\Events\Login::class, function ($event): void {
+            \App\Support\Activity::record(\App\Models\ActivityEvent::LOGIN, ['user' => $event->user]);
+        });
+
         // Re-aplica los guards de rol en cada petición Livewire (acciones, subidas), no solo al cargar la página.
         Livewire::addPersistentMiddleware([
             AuthAdmin::class,

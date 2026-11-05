@@ -10,7 +10,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
-use Laravel\Jetstream\Jetstream;
 use Illuminate\Support\Facades\Session;
 
 class CreateNewUser implements CreatesNewUsers
@@ -42,7 +41,8 @@ class CreateNewUser implements CreatesNewUsers
                 }
             }],
             'registeras' => ['nullable', 'in:CST,SVP'],
-            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
+            'terms' => ['accepted'],
+            'publication_consent' => ['accepted_if:registeras,SVP'],
         ])->validate();
 
         $registeras = ($input['registeras'] ?? 'CST') === 'SVP' ? 'SVP' : 'CST';
@@ -56,11 +56,15 @@ class CreateNewUser implements CreatesNewUsers
             'subscription_plan' => 'free',
         ]);
 
+        $user->acceptTerms($registeras === 'SVP');
+
         if ($registeras === 'SVP') {
             ServiceProvider::create([
                 'user_id' => $user->id
             ]);
         }
+
+        \App\Support\Activity::record(\App\Models\ActivityEvent::SIGNUP, ['user' => $user]);
 
         // Sin cola (QUEUE_CONNECTION=sync) el correo sale ahora: si falla, la cuenta ya está creada.
         try {

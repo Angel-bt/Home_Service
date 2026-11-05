@@ -18,6 +18,7 @@ class EditSproviderProfileComponent extends Component
     public $service_provider_id;
     public $image;
     public $about;
+    public $experience_years;
     public $city;
     public $whatsapp;
     public $service_category_id;
@@ -34,6 +35,7 @@ class EditSproviderProfileComponent extends Component
         $this->service_provider_id = $sprovider->id;
         $this->image = $sprovider->image;
         $this->about = $sprovider->about;
+        $this->experience_years = $sprovider->experience_years;
         $this->city = $sprovider->city;
         $this->whatsapp = $sprovider->whatsapp ?: Auth::user()->phone;
         $this->service_category_id = $sprovider->service_category_id;
@@ -46,6 +48,7 @@ class EditSproviderProfileComponent extends Component
         return [
             'newimage' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:4096'],
             'about' => ['nullable', 'string', 'max:255'],
+            'experience_years' => ['nullable', 'integer', 'between:0,70'],
             'city' => ['nullable', 'string', 'max:100'],
             'whatsapp' => ['required', 'string', 'max:20', function ($attribute, $value, $fail) {
                 if (WhatsApp::normalize($value) === null) {
@@ -80,6 +83,7 @@ class EditSproviderProfileComponent extends Component
         }
 
         $sprovider->about = $this->about;
+        $sprovider->experience_years = $this->experience_years === '' ? null : $this->experience_years;
         $sprovider->city = $this->city;
         $sprovider->whatsapp = $this->whatsapp;
         $sprovider->service_category_id = $this->service_category_id ?: null;

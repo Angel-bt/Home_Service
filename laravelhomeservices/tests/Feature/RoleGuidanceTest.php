@@ -72,7 +72,7 @@ class RoleGuidanceTest extends TestCase
     public function test_customers_return_to_the_page_they_were_on_after_signing_up(): void
     {
         $this->post('/register', [
-            'name' => 'Ana', 'email' => 'Ana@Example.test', 'phone' => '0991234567', 'registeras' => 'CST',
+            'name' => 'Ana', 'email' => 'Ana@Example.test', 'phone' => '0991234567', 'terms' => '1', 'publication_consent' => '1', 'registeras' => 'CST',
             'password' => 'una-clave-larga', 'volver' => '/service/poda',
         ])->assertRedirect('/service/poda');
 
@@ -82,7 +82,7 @@ class RoleGuidanceTest extends TestCase
     public function test_return_path_cannot_send_people_to_another_site(): void
     {
         $this->post('/register', [
-            'name' => 'Ana', 'email' => 'ana2@example.test', 'phone' => '0991234567', 'registeras' => 'CST',
+            'name' => 'Ana', 'email' => 'ana2@example.test', 'phone' => '0991234567', 'terms' => '1', 'publication_consent' => '1', 'registeras' => 'CST',
             'password' => 'una-clave-larga', 'volver' => '//malicioso.example',
         ])->assertRedirect(\App\Providers\RouteServiceProvider::HOME);
     }
@@ -99,7 +99,7 @@ class RoleGuidanceTest extends TestCase
     public function test_registration_needs_a_phone_that_works_on_whatsapp(): void
     {
         $this->from('/register')->post('/register', [
-            'name' => 'Ana', 'email' => 'ana3@example.test', 'phone' => '12', 'registeras' => 'SVP',
+            'name' => 'Ana', 'email' => 'ana3@example.test', 'phone' => '12', 'terms' => '1', 'publication_consent' => '1', 'registeras' => 'SVP',
             'password' => 'una-clave-larga',
         ])->assertSessionHasErrors('phone');
 

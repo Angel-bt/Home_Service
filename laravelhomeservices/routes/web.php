@@ -78,6 +78,7 @@ Route::get('/privacy', PrivacyComponent::class)->name('home.privacy');
 // Public catalogue and search routes must remain accessible to visitors.
 Route::get('/{category_slug}/services', ServicesByCategoryComponent::class)->name('home.services_by_category');
 Route::get('/service/{service_slug}', ServiceDetailsComponent::class)->name('home.service_details');
+Route::get('/service/{service_slug}/whatsapp', [\App\Http\Controllers\ServiceContactController::class, 'whatsapp'])->middleware('throttle:60,1')->name('home.service_whatsapp');
 Route::get('/buscar', SearchComponent::class)->name('search');
 
 // Retorno de Payphone: sin auth (la sesión puede haber expirado); el pago se valida contra Payphone.
@@ -117,6 +118,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('/admin/payments/{payment}/receipt', [BillingController::class, 'receipt'])->name('admin.payment_receipt');
 
     Route::get('/admin/service-providers', AdminServiceProvidersComponent::class)->name('admin.service_providers');
+    Route::get('/admin/verifications', \App\Http\Livewire\Admin\AdminVerificationsComponent::class)->name('admin.verifications');
+    Route::get('/admin/verifications/{document}/file', [\App\Http\Controllers\AdminTrustController::class, 'document'])->name('admin.provider_document');
+    Route::get('/admin/activity', \App\Http\Livewire\Admin\AdminActivityComponent::class)->name('admin.activity');
+    Route::get('/admin/activity/export', [\App\Http\Controllers\AdminTrustController::class, 'exportActivity'])->name('admin.activity_export');
     Route::get('/admin/about', AdminAboutComponent::class)->name('admin.about');
     Route::get('/admin/faq', AdminFaqComponent::class)->name('admin.faq');
     Route::get('/admin/terms', AdminTermsComponent::class)->name('admin.terms');
@@ -137,10 +142,12 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('/sprovider/service/edit/{service_slug}', SproviderEditServiceComponent::class)->name('sprovider.edit_service');
     Route::get('/sprovider/requests', SproviderRequestsComponent::class)->name('sprovider.requests');
     Route::get('/sprovider/plan', SproviderPlanComponent::class)->name('sprovider.plan');
+    Route::get('/sprovider/verification', \App\Http\Livewire\Sprovider\SproviderVerificationComponent::class)->name('sprovider.verification');
     Route::post('/sprovider/plan/payphone', [BillingController::class, 'startPayphone'])->middleware('throttle:10,1')->name('billing.payphone.start');
 });
 
 // For Customer
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     Route::get('/customer/dashboard', CustomerDashboardComponent::class)->name('customer.dashboard');
+    Route::get('/aceptar-terminos', \App\Http\Livewire\AcceptTermsComponent::class)->name('terms.accept');
 });

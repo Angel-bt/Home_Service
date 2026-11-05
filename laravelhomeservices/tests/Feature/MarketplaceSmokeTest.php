@@ -91,6 +91,8 @@ class MarketplaceSmokeTest extends TestCase
             '/admin/slide/add',
             '/admin/contacts',
             '/admin/service-providers',
+            '/admin/verifications',
+            '/admin/activity',
         ] as $url) {
             $this->actingAs($admin)->get($url)->assertOk();
         }
@@ -115,12 +117,13 @@ class MarketplaceSmokeTest extends TestCase
         $provider = User::factory()->create(['utype' => 'SVP']);
         ServiceProvider::create(['user_id' => $provider->id]);
 
-        foreach (['/sprovider/dashboard', '/sprovider/profile', '/sprovider/profile/edit'] as $url) {
+        foreach (['/sprovider/dashboard', '/sprovider/profile', '/sprovider/profile/edit', '/sprovider/verification'] as $url) {
             $this->actingAs($provider)->get($url)->assertOk();
         }
 
         $customer = User::factory()->create(['utype' => 'CST']);
         $this->actingAs($customer)->get('/customer/dashboard')->assertOk();
+        $this->actingAs($customer)->get('/aceptar-terminos')->assertOk();
     }
 
     public function test_non_admins_are_kicked_out_of_admin_pages(): void
@@ -178,6 +181,7 @@ class MarketplaceSmokeTest extends TestCase
             'password' => 'password',
             'password_confirmation' => 'password',
             'terms' => 'on',
+            'publication_consent' => 'on',
         ];
     }
 }

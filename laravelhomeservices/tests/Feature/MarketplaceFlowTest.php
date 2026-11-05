@@ -217,7 +217,10 @@ class MarketplaceFlowTest extends TestCase
         $this->get(route('home.service_details', ['service_slug' => $service->slug]))
             ->assertOk()
             ->assertSee('Muy puntual')
-            ->assertSee('wa.me/593991112233', false);
+            ->assertSee(route('home.service_whatsapp', ['service_slug' => $service->slug]), false);
+
+        $this->get(route('home.service_whatsapp', ['service_slug' => $service->slug]))
+            ->assertRedirectContains('wa.me/593991112233');
     }
 
     public function test_guests_are_sent_to_login_and_owners_cannot_request_their_service(): void

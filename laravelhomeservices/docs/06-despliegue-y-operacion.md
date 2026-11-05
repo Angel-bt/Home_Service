@@ -69,6 +69,10 @@ Plantilla completa: `.env.production.example`. Las más importantes:
 
 Después de cambiar el `.env` en producción: `php artisan config:cache`.
 
+Opcionales: `VERIFICATION_BACKGROUND_DAYS` (duración del sello de antecedentes, 180 por defecto) y `ACTIVITY_RETENTION_DAYS` (365). Los avisos de documentos por revisar van a `LEAD_NOTIFICATION_ADDRESS`.
+
+**Orden al desplegar la migración `2026_11_04_000001`:** primero migra y después sube el código. Solo agrega columnas opcionales y tablas nuevas, así que el sitio actual sigue funcionando. Al revés, el código nuevo fallaría por las columnas que faltan. Al desplegar, todas las cuentas que no sean de administración deberán aceptar los términos la próxima vez que entren.
+
 ## Tareas programadas (cron)
 
 Una sola línea de cron en el servidor:
@@ -144,6 +148,8 @@ Archivos: `vercel.json`, `.vercelignore` y `api/index.php` (lleva a `/tmp` lo qu
 - **Despliegue automático:** cada push a `main` en GitHub publica el sitio (*Root Directory* = `laravelhomeservices`, porque la app no está en la raíz del repositorio). Para desplegar a mano, usa `vercel deploy --prod` desde la **raíz del repositorio**, no desde `laravelhomeservices/`.
 
 **Subidas activadas:** las claves S3 de Supabase están en `AWS_ACCESS_KEY_ID` y `AWS_SECRET_ACCESS_KEY` (se crean en *Project Settings → Storage → S3 Connection*), con `FILESYSTEM_DISK=s3` y `LIVEWIRE_TEMP_DISK=receipts`.
+
+**Limpieza de actividad:** el cron diario también corre `php artisan activity:prune`, que borra lo que tenga más de `ACTIVITY_RETENTION_DAYS` días (365 por defecto; es lo que promete la política de privacidad).
 
 **Autocomprobación del correo:** el cron diario también corre `php artisan mail:check`, que inicia sesión en el servidor SMTP sin enviar nada. Si falla (por ejemplo, si revocan la contraseña), `/cron/diario` responde 500.
 

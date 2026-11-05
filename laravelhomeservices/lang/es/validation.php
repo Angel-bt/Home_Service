@@ -53,6 +53,8 @@ return [
     'custom' => [
         'email' => ['unique' => 'Ya hay una cuenta con ese correo. Si es tuya, entra con «Ingresar» o recupera tu contraseña.'],
         'preferred_date' => ['after_or_equal' => 'Elige hoy o un día futuro.'],
+        'terms' => ['accepted' => 'Para crear tu cuenta debes leer y aceptar los términos y la privacidad.'],
+        'publication_consent' => ['accepted_if' => 'Para ofrecer servicios debes aceptar que estos datos se publiquen en tu perfil. Así los clientes saben con quién tratan.'],
     ],
 
     'attributes' => [

@@ -11,6 +11,8 @@ Cómo funciona cada proceso de punta a punta, con las clases que intervienen.
 
 Los administradores no se registran desde la web: se cambia `users.utype` a `ADM` en la base de datos.
 
+**Términos.** El registro empieza por el tipo de cuenta y un resumen de los términos. Hay que marcar «Leí y acepto» y, si se ofrecen servicios, el permiso para publicar el perfil; sin eso no aparecen los datos y el servidor rechaza el registro. Quien ya tenía cuenta acepta en `/aceptar-terminos` al entrar; ahí también puede leer los textos o eliminar su cuenta.
+
 ## Proveedor: perfil y publicación
 
 1. **Perfil** (`/sprovider/profile/edit`, `EditSproviderProfileComponent`): WhatsApp (obligatorio y validado), zonas donde trabaja (al menos una), foto, presentación, ciudad y categoría principal. Mientras falten el WhatsApp o las zonas, el panel muestra un aviso: sin zonas, sus servicios no aparecen al filtrar por zona.
@@ -19,6 +21,15 @@ Los administradores no se registran desde la web: se cambia `users.utype` a `ADM
 4. **Editar y borrar:** solo sus propios servicios. Si intenta abrir uno ajeno, recibe 404; si intenta borrarlo, no pasa nada.
 
 El administrador publica con el mismo formulario y además puede marcar servicios como destacados.
+
+## Verificación de proveedores
+
+Es voluntaria: sin sellos se publica y se trabaja igual.
+
+1. En «Verificarme» (`/sprovider/verification`) el proveedor elige un documento, lo sube y marca el permiso de ese documento: cédula (sello «Identidad verificada»), certificado de antecedentes (sello «Sin antecedentes penales», vence a los 180 días) u hoja de vida o certificados de cursos (sello «Experiencia revisada»).
+2. La administración recibe un correo y lo ve en «Verificaciones» (`/admin/verifications`), con lo que debe revisar en cada caso.
+3. Si da el sello, aparece en la ficha del servicio con su fecha, y «Verificado» en las tarjetas (solo con cédula o certificado). Si no lo da, escribe el motivo, sin detalles del certificado. Nada de esto se ve en público. En ambos casos el archivo se borra y el proveedor recibe un correo.
+4. El proveedor puede retirar un documento o un sello cuando quiera; la administración también puede quitar un sello.
 
 ## Búsqueda y zonas
 
@@ -72,6 +83,23 @@ El proveedor ve sus solicitudes en `/sprovider/requests` con un enlace de WhatsA
 2. Elige de 1 a 5 estrellas y un comentario opcional.
 3. `ServiceRequest::canBeReviewedBy()` exige que la solicitud esté completada, que sea del cliente y que no tenga reseña. Hay una sola reseña por solicitud (índice único en la base).
 4. La reseña aparece en el detalle del servicio y cuenta para el promedio de estrellas.
+
+## Avisos por correo
+
+| Cuándo | A quién |
+|---|---|
+| Llega una solicitud | Proveedor |
+| Aceptan o rechazan una solicitud | Cliente |
+| Terminan el trabajo (con invitación a dejar reseña) | Cliente |
+| Cancelan una solicitud | Proveedor |
+| Suben un documento | Administración (`LEAD_NOTIFICATION_ADDRESS`) |
+| Revisan un documento | Proveedor |
+
+Si el correo falla, la acción ya quedó hecha (`App\Support\Notice`).
+
+## Actividad
+
+`App\Support\Activity` registra búsquedas, categorías y servicios visitados, toques en WhatsApp, solicitudes, trabajos terminados, reseñas, registros e ingresos. La administración lo ve en «Actividad» (`/admin/activity`) y puede descargarlo para Excel, sin datos de las cuentas. Una búsqueda que se escribe de a poco cuenta una sola vez. El botón de WhatsApp pasa por `/service/{slug}/whatsapp` para contar el toque y sigue directo a WhatsApp.
 
 ## Contacto con la plataforma
 

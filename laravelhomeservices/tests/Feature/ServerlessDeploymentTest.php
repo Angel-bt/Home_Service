@@ -117,7 +117,7 @@ class ServerlessDeploymentTest extends TestCase
         config(['queue.default' => 'sync', 'mail.default' => 'failover', 'mail.mailers.failover' => ['transport' => 'smtp', 'host' => '127.0.0.1', 'port' => 1, 'timeout' => 1]]);
 
         $this->post('/register', [
-            'name' => 'Ana', 'email' => 'ana@example.test', 'phone' => '0991234567', 'registeras' => 'SVP',
+            'name' => 'Ana', 'email' => 'ana@example.test', 'phone' => '0991234567', 'registeras' => 'SVP', 'terms' => '1', 'publication_consent' => '1',
             'password' => 'una-clave-larga', 'password_confirmation' => 'una-clave-larga',
         ])->assertRedirect(route('sprovider.dashboard'));
 

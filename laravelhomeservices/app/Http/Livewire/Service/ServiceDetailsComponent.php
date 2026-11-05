@@ -33,10 +33,12 @@ class ServiceDetailsComponent extends Component
     public function mount(string $service_slug, ServiceVisitCounter $visitCounter): void
     {
         $this->service_slug = $service_slug;
-        $service = Service::query()->select(['id', 'views'])->where('slug', $service_slug)->first();
+        $service = Service::query()->select(['id', 'views', 'user_id'])->where('slug', $service_slug)->first();
 
         if ($service !== null) {
             $this->views = (int) $service->views;
+
+            \App\Support\Activity::forService(\App\Models\ActivityEvent::SERVICE_VIEW, $service);
 
             // Las visitas no deben tumbar la página si Redis no está disponible.
             try {
@@ -94,13 +96,16 @@ class ServiceDetailsComponent extends Component
             return null;
         }
 
-        ServiceRequest::create($data + [
+        $request = ServiceRequest::create($data + [
             'service_id' => $service->id,
             'provider_id' => $service->user_id,
             'customer_id' => $user->id,
             'preferred_date' => $this->preferred_date ?: null,
             'status' => ServiceRequest::PENDING,
         ]);
+
+        \App\Support\Activity::forService(\App\Models\ActivityEvent::REQUEST_CREATED, $service);
+        $request->notifyProviderOfNewRequest();
 
         session(['zone' => $this->zone]);
         $this->reset(['address', 'preferred_date', 'message']);

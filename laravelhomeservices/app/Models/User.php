@@ -34,6 +34,9 @@ class User extends Authenticatable
         'phone',
         'utype',
         'subscription_plan',
+        'terms_version',
+        'terms_accepted_at',
+        'publication_consent_at',
     ];
 
     /**
@@ -57,6 +60,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'trial_ends_at' => 'datetime',
         'plan_expires_at' => 'datetime',
+        'terms_accepted_at' => 'datetime',
+        'publication_consent_at' => 'datetime',
     ];
 
     /**
@@ -100,6 +105,23 @@ class User extends Authenticatable
     /**
      * Route name of this user's own panel.
      */
+    public function hasAcceptedCurrentTerms(): bool
+    {
+        return $this->terms_version === config('marketplace.terms_version');
+    }
+
+    /**
+     * Deja constancia de qué versión aceptó y cuándo. Los proveedores aceptan además publicar su perfil.
+     */
+    public function acceptTerms(bool $publication): void
+    {
+        $this->forceFill([
+            'terms_version' => config('marketplace.terms_version'),
+            'terms_accepted_at' => now(),
+            'publication_consent_at' => $publication ? now() : $this->publication_consent_at,
+        ])->save();
+    }
+
     public function dashboardRoute(): string
     {
         return match ($this->utype) {

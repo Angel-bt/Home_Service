@@ -20,6 +20,19 @@ Medidas aplicadas, qué protegen y dónde están. Están cubiertas por `tests/Fe
 | Nombres de archivo aleatorios | `HandlesServiceForm`, perfil, comprobantes | Evita choques y adivinar nombres. |
 | Borrado de archivos con rutas absolutas | `ServiceAssetCleaner` | Antes se usaban rutas relativas que dependían del directorio actual. |
 
+### Documentos de verificación
+
+El certificado de antecedentes es un dato sensible (LOPDP art. 4 y 26). Por eso:
+
+- Se guarda en el disco privado `receipts`, y solo lo sirve una ruta bajo `authadmin`, con `Cache-Control: private, no-store`.
+- Cada documento pide su propio permiso, con la fecha guardada en `consent_at`, aparte de la aceptación de los términos.
+- El archivo se borra al revisarlo, y la copia temporal de Livewire al subirlo. Solo queda el resultado, la fecha y quién revisó. Eliminar la cuenta borra los archivos pendientes (`DeleteUser`).
+- Se publica el sello y su fecha, nunca el documento. Todo cambio pasa por `App\Services\ProviderVerification`.
+
+### Registro de actividad
+
+`activity_events` no guarda IP, navegador ni mensajes. Lo que escribe la gente va como dato y se neutraliza al exportarlo a Excel (fórmulas). Se borra a los 365 días (`activity:prune`), como promete la política de privacidad. Al eliminar una cuenta, sus filas quedan sin dueño.
+
 ## Formularios y abuso
 
 | Medida | Límite | Dónde |

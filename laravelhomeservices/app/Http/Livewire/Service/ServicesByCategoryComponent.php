@@ -21,6 +21,10 @@ class ServicesByCategoryComponent extends Component
     {
         $this->category_slug = $category_slug;
         $this->initialiseZone();
+
+        if (ServiceCategory::where('slug', $category_slug)->exists()) {
+            \App\Support\Activity::record(\App\Models\ActivityEvent::CATEGORY_VIEW, ['term' => $category_slug]);
+        }
     }
 
     public function render()
@@ -29,7 +33,7 @@ class ServicesByCategoryComponent extends Component
         $services = Service::query()
             ->active()
             ->where('service_category_id', $scategory->id)
-            ->with(['category:id,name,slug', 'user:id,name,utype'])
+            ->with(['category:id,name,slug', 'user:id,name,utype', 'user.serviceProvider'])
             ->withAvg('reviews', 'rating')
             ->inZone($this->zona)
             ->orderByDesc('featured')
