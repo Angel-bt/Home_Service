@@ -26,6 +26,6 @@ class AdminSliderComponent extends Component
     public function render()
     {
         $slides = Slider::paginate(10);
-        return view('livewire.admin.service.admin-slider-component', ['slides' => $slides])->layout('layouts.base');
+        return view('livewire.admin.service.admin-slider-component', ['slides' => $slides])->layout('layouts.base')->title('Imágenes de portada');
     }
 }

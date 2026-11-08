@@ -80,6 +80,6 @@ class AdminEditServiceCategoryComponent extends Component
 
     public function render()
     {
-        return view('livewire.admin.service.admin-edit-service-category-component')->layout('layouts.base');
+        return view('livewire.admin.service.admin-edit-service-category-component')->layout('layouts.base')->title('Editar categoría');
     }
 }

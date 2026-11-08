@@ -117,6 +117,8 @@ Usan el mismo diseño. Antes de escribir HTML nuevo, reutiliza estas piezas:
 php artisan test
 ```
 
+`SiteCrawlTest` carga los datos de demostración y recorre todos los enlaces internos que ve cada rol (visitante, cliente, proveedor y administración). Falla si una página no existe o da error, si una imagen local no existe o no tiene dirección, o si una página usa el título genérico en la pestaña. Cada página nueva debe tener su título: `->title('…')` en el componente Livewire, o `<x-base-layout title="…">` en las vistas Blade.
+
 Usan SQLite en memoria, caché y sesión en arreglo y cola síncrona (`phpunit.xml`): no necesitan MySQL ni Redis. Se usa PHPUnit 12, así que los *data providers* se declaran con el atributo `#[DataProvider('metodo')]` y deben ser estáticos.
 
 | Archivo | Qué cubre |

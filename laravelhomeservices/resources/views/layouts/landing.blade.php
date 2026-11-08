@@ -4,11 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Malakplace · Gente de oficio de confianza en Malacatos</title>
+    <title>Malakplace · Gente de oficio en Malacatos</title>
     <meta name="description" content="Gasfiteros, electricistas, jardineros y más en Malacatos, Vilcabamba, Yangana y Quinara. Mira sus reseñas y escríbeles directo por WhatsApp.">
     <meta name="theme-color" content="#06110d">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Malakplace · Gente de oficio de confianza en Malacatos">
+    <meta property="og:title" content="Malakplace · Gente de oficio en Malacatos">
     <meta property="og:description" content="Proveedores de Malacatos, Vilcabamba, Yangana y Quinara, a un mensaje de WhatsApp.">
     <meta property="og:url" content="{{ url('/') }}">
     <meta property="og:image" content="https://images.unsplash.com/photo-1616547142063-6d0d6f8668ca?auto=format&fit=crop&w=1200&h=630&q=70">

@@ -1,4 +1,4 @@
-<x-base-layout>
+<x-base-layout title="Ingresar">
     <x-ui.auth-card title="Hola de" accent="nuevo" lede="Ingresa con el correo y la contraseña de tu cuenta.">
         <x-site.login-form />
         <x-slot:footer>

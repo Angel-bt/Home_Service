@@ -8,6 +8,6 @@ class AdminAboutComponent extends Component
 {
     public function render()
     {
-        return view('livewire.admin.admin-about-component')->layout('layouts.base');
+        return view('livewire.admin.admin-about-component')->layout('layouts.base')->title('Editar «Quiénes somos»');
     }
 }

@@ -8,6 +8,6 @@ class FaqComponent extends Component
 {
     public function render()
     {
-        return view('livewire.faq-component')->layout('layouts.base');
+        return view('livewire.faq-component')->layout('layouts.base')->title('Preguntas frecuentes');
     }
 }

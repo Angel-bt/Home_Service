@@ -1,4 +1,4 @@
-<x-base-layout>
+<x-base-layout title="Recuperar contraseña">
     <x-ui.auth-card title="¿Olvidaste tu" accent="contraseña?" lede="No pasa nada. Escribe tu correo y te enviaremos un enlace para crear una nueva.">
         @if (config('mail.default') === 'log')
             @php $help = \App\Support\WhatsApp::link(config('marketplace.contact_phone'), 'Hola, olvidé mi contraseña de Malakplace.'); @endphp

@@ -1,4 +1,4 @@
-<x-base-layout>
+<x-base-layout title="Nueva contraseña">
     <x-ui.auth-card title="Crea una contraseña" accent="nueva" lede="Elige una que recuerdes. Después podrás ingresar con ella.">
         <form method="POST" action="{{ route('password.update') }}" class="space-y-5">
             @csrf

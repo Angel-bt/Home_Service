@@ -105,6 +105,6 @@ class AdminPaymentsComponent extends Component
             'periodOptions' => SproviderPlanComponent::PERIOD_OPTIONS,
             'price' => $billing->price(),
             'providers' => User::where('utype', 'SVP')->orderBy('name')->get(['id', 'name', 'email']),
-        ])->layout('layouts.base');
+        ])->layout('layouts.base')->title('Pagos Pro');
     }
 }

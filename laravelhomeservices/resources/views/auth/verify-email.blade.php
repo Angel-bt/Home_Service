@@ -1,4 +1,4 @@
-<x-base-layout>
+<x-base-layout title="Verifica tu correo">
     <x-ui.auth-card title="Revisa tu" accent="correo" lede="Te enviamos un enlace para confirmar tu cuenta. Ábrelo y listo. Si no lo ves, mira en el correo no deseado.">
         @if (session('status') == 'verification-link-sent')
             <div class="mb-6 flex items-start gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-[15px] text-emerald-900" role="status">

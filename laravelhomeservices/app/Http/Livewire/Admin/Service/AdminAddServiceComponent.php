@@ -44,6 +44,6 @@ class AdminAddServiceComponent extends Component
     public function render()
     {
         $categories = ServiceCategory::orderBy('name')->get();
-        return view('livewire.admin.service.admin-add-service-component', ['categories' => $categories])->layout('layouts.base');
+        return view('livewire.admin.service.admin-add-service-component', ['categories' => $categories])->layout('layouts.base')->title('Nuevo servicio');
     }
 }

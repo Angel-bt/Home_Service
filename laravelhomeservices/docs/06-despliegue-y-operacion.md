@@ -73,6 +73,8 @@ Opcionales: `VERIFICATION_BACKGROUND_DAYS` (duración del sello de antecedentes,
 
 **Orden al desplegar la migración `2026_11_04_000001`:** primero migra y después sube el código. Solo agrega columnas opcionales y tablas nuevas, así que el sitio actual sigue funcionando. Al revés, el código nuevo fallaría por las columnas que faltan. Al desplegar, todas las cuentas que no sean de administración deberán aceptar los términos la próxima vez que entren.
 
+**Buscadores:** `/sitemap.xml` lista las páginas públicas, los oficios y los servicios activos. `public/robots.txt` lo anuncia con la dirección completa del sitio, así que hay que cambiarla si se usa un dominio propio, y cierra el paso a los paneles. `public/favicon.ico` lleva dentro el mismo PNG de `public/images/favicon.png`.
+
 ## Tareas programadas (cron)
 
 Una sola línea de cron en el servidor:

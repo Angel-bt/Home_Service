@@ -45,6 +45,6 @@ class AdminAddSlideComponent extends Component
 
     public function render()
     {
-        return view('livewire.admin.service.admin-add-slide-component')->layout('layouts.base');
+        return view('livewire.admin.service.admin-add-slide-component')->layout('layouts.base')->title('Nueva imagen de portada');
     }
 }

@@ -43,7 +43,7 @@ class LandingPageTest extends TestCase
     {
         $this->get('/')
             ->assertOk()
-            ->assertSee('Gente de oficio de confianza', false)
+            ->assertSee('Gente de oficio cerca de ti', false)
             ->assertSee('Destape de tuberías')
             ->assertSee('Malacatos · Vilcabamba')
             ->assertSee('Gasfitería')

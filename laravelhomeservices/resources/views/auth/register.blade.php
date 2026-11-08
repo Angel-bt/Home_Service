@@ -1,4 +1,4 @@
-<x-base-layout>
+<x-base-layout title="Crear cuenta">
     <x-ui.auth-card title="Crea tu" accent="cuenta" lede="Es gratis y toma un minuto.">
         <x-site.register-form :as="request('como') === 'SVP' ? 'SVP' : 'CST'" />
         <x-slot:footer>

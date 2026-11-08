@@ -1,4 +1,4 @@
-<x-base-layout>
+<x-base-layout title="Confirma tu contraseña">
     <x-ui.auth-card title="Confirma tu" accent="contraseña" lede="Por seguridad, escríbela de nuevo antes de continuar.">
         <form method="POST" action="{{ route('password.confirm') }}" class="space-y-5">
             @csrf

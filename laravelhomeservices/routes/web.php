@@ -73,6 +73,7 @@ Route::get('/about-us', AboutComponent::class)->name('home.about');
 Route::get('/faq', FaqComponent::class)->name('home.faq');
 
 Route::get('/terms', TermsComponent::class)->name('home.terms');
+Route::get('/sitemap.xml', \App\Http\Controllers\SitemapController::class)->name('sitemap');
 Route::get('/privacy', PrivacyComponent::class)->name('home.privacy');
 
 // Public catalogue and search routes must remain accessible to visitors.

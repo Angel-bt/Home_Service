@@ -46,6 +46,6 @@ class SproviderEditServiceComponent extends Component
     {
         return view('livewire.sprovider.sprovider-edit-service-component', [
             'categories' => ServiceCategory::orderBy('name')->get(),
-        ])->layout('layouts.base');
+        ])->layout('layouts.base')->title('Editar servicio');
     }
 }

@@ -8,6 +8,6 @@ class AdminTermsComponent extends Component
 {
     public function render()
     {
-        return view('livewire.admin.admin-terms-component')->layout('layouts.base');
+        return view('livewire.admin.admin-terms-component')->layout('layouts.base')->title('Editar términos');
     }
 }

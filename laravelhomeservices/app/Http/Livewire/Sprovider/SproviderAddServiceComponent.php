@@ -49,6 +49,6 @@ class SproviderAddServiceComponent extends Component
             'categories' => ServiceCategory::orderBy('name')->get(),
             'limit' => $user->servicePublicationLimit(),
             'used' => $user->services()->count(),
-        ])->layout('layouts.base');
+        ])->layout('layouts.base')->title('Publicar servicio');
     }
 }

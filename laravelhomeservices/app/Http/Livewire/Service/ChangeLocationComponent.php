@@ -27,6 +27,6 @@ class ChangeLocationComponent extends Component
 
     public function render()
     {
-        return view('livewire.service.change-location-component')->layout('layouts.base');
+        return view('livewire.service.change-location-component')->layout('layouts.base')->title('Cambiar ubicación');
     }
 }

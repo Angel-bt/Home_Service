@@ -1,4 +1,4 @@
-<x-base-layout>
+<x-base-layout title="Verificación en dos pasos">
     <div x-data="{ recovery: false }">
         <x-ui.auth-card title="Un paso" accent="más" lede="Tu cuenta tiene verificación en dos pasos.">
             <p class="mb-5 text-[15px] text-grafito-600" x-show="! recovery">Escribe el código de 6 números que aparece en tu app de autenticación.</p>

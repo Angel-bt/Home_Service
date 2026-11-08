@@ -97,6 +97,6 @@ class EditSproviderProfileComponent extends Component
     public function render()
     {
         $scategories = ServiceCategory::orderBy('name')->get();
-        return view('livewire.sprovider.edit-sprovider-profile-component', ['scategories' => $scategories])->layout('layouts.base');
+        return view('livewire.sprovider.edit-sprovider-profile-component', ['scategories' => $scategories])->layout('layouts.base')->title('Editar mi perfil');
     }
 }

@@ -115,6 +115,6 @@ class SproviderPlanComponent extends Component
             'contactWhatsapp' => WhatsApp::link(config('marketplace.contact_phone'), 'Hola, quiero pagar el plan Pro en efectivo. Soy ' . $user->name . '.'),
             'hasPending' => $user->subscriptionPayments()->where('status', SubscriptionPayment::PENDING)->exists(),
             'payments' => $user->subscriptionPayments()->latest()->take(10)->get(),
-        ])->layout('layouts.base');
+        ])->layout('layouts.base')->title('Mi plan');
     }
 }

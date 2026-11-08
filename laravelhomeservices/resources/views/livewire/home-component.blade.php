@@ -26,7 +26,7 @@
         <div class="mx-auto flex w-full max-w-[84rem] flex-1 flex-col justify-center px-5 pb-10 pt-28 text-center sm:px-8">
             <p data-hero-eyebrow class="lp-eyebrow uppercase tracking-[.22em] text-white/60">Malacatos — Loja, Ecuador</p>
             <h1 data-hero-title class="lp-title mx-auto mt-7 max-w-5xl text-[2.75rem] sm:text-7xl lg:text-[5.5rem]">
-                Gente de oficio de confianza, <span class="lp-accent text-oro-300">en Malacatos.</span>
+                Gente de oficio cerca de ti, <span class="lp-accent text-oro-300">en Malacatos.</span>
             </h1>
             <p data-hero-lede class="mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-white/70">
                 Gasfiteros, electricistas, jardineros y más de Malacatos, Vilcabamba, Yangana y Quinara. Les escribes directo y les pagas a ellos.
@@ -203,7 +203,7 @@
         </div>
         {{-- Vista previa que sigue al cursor (la mueve landing.js) --}}
         <div data-preview-box class="pointer-events-none fixed left-0 top-0 z-40 hidden h-48 w-64 overflow-hidden rounded-2xl opacity-0 shadow-2xl lg:block" aria-hidden="true">
-            <img src="" alt="" class="h-full w-full object-cover">
+            <img alt="" class="h-full w-full object-cover">
         </div>
     </section>
 

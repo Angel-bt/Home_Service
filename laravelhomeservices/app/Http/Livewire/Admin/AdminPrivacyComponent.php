@@ -8,6 +8,6 @@ class AdminPrivacyComponent extends Component
 {
     public function render()
     {
-        return view('livewire.admin.admin-privacy-component')->layout('layouts.base');
+        return view('livewire.admin.admin-privacy-component')->layout('layouts.base')->title('Editar privacidad');
     }
 }

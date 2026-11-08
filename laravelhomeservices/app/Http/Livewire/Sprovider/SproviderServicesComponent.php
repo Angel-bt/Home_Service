@@ -35,6 +35,6 @@ class SproviderServicesComponent extends Component
             'services' => $user->services()->with('category:id,name')->withCount('requests')->withAvg('reviews', 'rating')->latest()->paginate(10),
             'canPublish' => $user->canPublishService(),
             'limit' => $user->servicePublicationLimit(),
-        ])->layout('layouts.base');
+        ])->layout('layouts.base')->title('Mis servicios');
     }
 }

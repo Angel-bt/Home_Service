@@ -11,6 +11,6 @@ class SproviderProfileComponent extends Component
     public function render()
     {
         $sprovider = ServiceProvider::with(['category', 'zones'])->where('user_id', Auth::user()->id)->first();
-        return view('livewire.sprovider.sprovider-profile-component', ['sprovider' => $sprovider])->layout('layouts.base');
+        return view('livewire.sprovider.sprovider-profile-component', ['sprovider' => $sprovider])->layout('layouts.base')->title('Mi perfil');
     }
 }
