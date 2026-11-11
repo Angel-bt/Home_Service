@@ -23,6 +23,7 @@ class Service extends Model
         'views' => 'integer',
         'status' => 'boolean',
         'featured' => 'boolean',
+        'paused_at' => 'datetime',
     ];
 
     public function category(): BelongsTo
@@ -37,7 +38,8 @@ class Service extends Model
 
     public function reviews(): HasMany
     {
-        return $this->hasMany(Review::class);
+        // Las reseñas que ocultó la administración no se ven ni cuentan en el promedio.
+        return $this->hasMany(Review::class)->whereNull('hidden_at');
     }
 
     public function requests(): HasMany
@@ -86,9 +88,32 @@ class Service extends Model
         });
     }
 
+    /**
+     * Lo que ve el público: no oculto por la administración, no pausado por el proveedor y de una cuenta no suspendida.
+     */
     public function scopeActive(Builder $query): Builder
     {
-        return $query->where('status', true);
+        return $query->where('status', true)
+            ->whereNull('paused_at')
+            ->whereDoesntHave('user', fn (Builder $users) => $users->whereNotNull('suspended_at'));
+    }
+
+    public function isPublic(): bool
+    {
+        return $this->status && $this->paused_at === null && $this->user?->suspended_at === null;
+    }
+
+    /**
+     * Por qué no se ve en el sitio, para mostrárselo a su dueño o a la administración.
+     */
+    public function hiddenReason(): ?string
+    {
+        return match (true) {
+            $this->user?->suspended_at !== null => 'La cuenta de quien lo publicó está suspendida.',
+            ! $this->status => 'La administración lo ocultó.',
+            $this->paused_at !== null => 'Está pausado por quien lo publicó.',
+            default => null,
+        };
     }
 
     public function finalPrice(): float

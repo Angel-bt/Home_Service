@@ -27,6 +27,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Ajustes que la administración cambia en /admin/settings (reemplazan config/*.php).
+        \App\Support\SiteSettings::apply();
+
         // Fechas relativas ("hace 3 días") en el idioma de la app.
         Carbon::setLocale(config('app.locale'));
 

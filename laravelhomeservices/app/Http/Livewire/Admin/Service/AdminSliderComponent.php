@@ -13,6 +13,9 @@ class AdminSliderComponent extends Component
 
     public function deleteSlide($slide_id)
     {
+        // Segunda barrera: la ruta ya exige ADM, pero la acción también lo comprueba.
+        abort_unless(\Illuminate\Support\Facades\Auth::user()?->utype === 'ADM', 403);
+
         $slide = Slider::find($slide_id);
 
         if ($slide === null) {

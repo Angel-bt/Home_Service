@@ -84,6 +84,12 @@ class ServiceDetailsComponent extends Component
 
         $service = Service::where('slug', $this->service_slug)->firstOrFail();
 
+        if (! $service->isPublic()) {
+            $this->addError('message', 'Este servicio ya no está disponible. Busca otro parecido.');
+
+            return null;
+        }
+
         if ($service->user_id === $user->id) {
             $this->addError('message', 'No puedes solicitar tu propio servicio.');
 
@@ -123,7 +129,14 @@ class ServiceDetailsComponent extends Component
             ->where('slug', $this->service_slug)
             ->first();
 
+        // Oculto, pausado o de una cuenta suspendida: solo lo ven su dueño y la administración.
+        $viewer = Auth::user();
+        if ($service !== null && ! $service->isPublic() && $viewer?->id !== $service->user_id && $viewer?->utype !== 'ADM') {
+            $service = null;
+        }
+
         $rService = $service === null ? null : Service::query()
+            ->active()
             ->with('category:id,name,slug')
             ->where('service_category_id', $service->service_category_id)
             ->where('slug', '!=', $this->service_slug)

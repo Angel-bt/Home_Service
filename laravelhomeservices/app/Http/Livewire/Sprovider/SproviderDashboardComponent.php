@@ -36,7 +36,7 @@ class SproviderDashboardComponent extends Component
             'pendingCount' => (clone $requests)->where('status', ServiceRequest::PENDING)->count(),
             'acceptedCount' => (clone $requests)->where('status', ServiceRequest::ACCEPTED)->count(),
             'completedCount' => (clone $requests)->where('status', ServiceRequest::COMPLETED)->count(),
-            'rating' => Review::whereIn('service_id', $user->services()->select('id'))->avg('rating'),
+            'rating' => Review::whereNull('hidden_at')->whereIn('service_id', $user->services()->select('id'))->avg('rating'),
             'profileIncomplete' => $profile === null || $profile->zones_count === 0 || ! $profile->whatsapp,
             // "Primeros pasos": se marcan solos según lo que el proveedor ya hizo.
             'steps' => [

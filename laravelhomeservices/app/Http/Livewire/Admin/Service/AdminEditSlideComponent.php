@@ -41,6 +41,9 @@ class AdminEditSlideComponent extends Component
 
     public function updateSlide()
     {
+        // Segunda barrera: la ruta ya exige ADM, pero la acción también lo comprueba.
+        abort_unless(\Illuminate\Support\Facades\Auth::user()?->utype === 'ADM', 403);
+
         $this->validate([
             'title' => 'required'
         ]);

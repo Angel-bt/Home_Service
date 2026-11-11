@@ -71,6 +71,8 @@ Después de cambiar el `.env` en producción: `php artisan config:cache`.
 
 Opcionales: `VERIFICATION_BACKGROUND_DAYS` (duración del sello de antecedentes, 180 por defecto) y `ACTIVITY_RETENTION_DAYS` (365). Los avisos de documentos por revisar van a `LEAD_NOTIFICATION_ADDRESS`.
 
+**Ajustes desde el panel:** lo que la administración guarda en `/admin/settings` (contacto, correo de avisos, límite gratuito, precio y duración del Pro, datos bancarios, duración del sello, zonas) tiene prioridad sobre las variables de entorno. Las variables siguen sirviendo como valor inicial. Para volver al valor de la variable, hay que borrar esa fila de la tabla `settings`.
+
 **Orden al desplegar la migración `2026_11_04_000001`:** primero migra y después sube el código. Solo agrega columnas opcionales y tablas nuevas, así que el sitio actual sigue funcionando. Al revés, el código nuevo fallaría por las columnas que faltan. Al desplegar, todas las cuentas que no sean de administración deberán aceptar los términos la próxima vez que entren.
 
 **Buscadores:** `/sitemap.xml` lista las páginas públicas, los oficios y los servicios activos. `public/robots.txt` lo anuncia con la dirección completa del sitio, así que hay que cambiarla si se usa un dominio propio, y cierra el paso a los paneles. `public/favicon.ico` lleva dentro el mismo PNG de `public/images/favicon.png`.

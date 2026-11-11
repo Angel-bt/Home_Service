@@ -26,7 +26,14 @@
                     <li wire:key="service-{{ $service->id }}" class="ui-card flex flex-col gap-4 p-4 sm:flex-row sm:items-center">
                         <img src="{{ \App\Support\Media::url('services/thumbnails', $service->thumbnail) }}" alt="" loading="lazy" class="h-20 w-full shrink-0 rounded-2xl object-cover sm:w-28">
                         <div class="min-w-0 flex-1">
-                            <h2 class="truncate text-[17px] font-medium">{{ $service->name }}</h2>
+                            <h2 class="flex flex-wrap items-center gap-2 text-[17px] font-medium">
+                                <span class="min-w-0 truncate">{{ $service->name }}</span>
+                                @if (! $service->status)
+                                    <x-ui.status status="rejected" label="Oculto por la administración" />
+                                @elseif ($service->paused_at)
+                                    <x-ui.status status="cancelled" label="En pausa" />
+                                @endif
+                            </h2>
                             <p class="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-[14px] text-grafito-500">
                                 <span>{{ $service->category?->name }}</span>
                                 <span>Desde ${{ number_format((float) $service->price, 2) }}</span>
@@ -36,6 +43,9 @@
                         </div>
                         <div class="flex flex-wrap gap-2">
                             <a href="{{ route('home.service_details', ['service_slug' => $service->slug]) }}" class="ui-btn ui-btn-ghost ui-btn-sm"><x-site.icon name="eye" class="h-4 w-4" /> Ver</a>
+                            @if ($service->status)
+                                <button type="button" wire:click="togglePause({{ $service->id }})" class="ui-btn ui-btn-ghost ui-btn-sm" title="{{ $service->paused_at ? 'Que los clientes lo vuelvan a ver' : 'Por ejemplo, si sales de vacaciones' }}">{{ $service->paused_at ? 'Reanudar' : 'Pausar' }}</button>
+                            @endif
                             <a href="{{ route('sprovider.edit_service', ['service_slug' => $service->slug]) }}" class="ui-btn ui-btn-secondary ui-btn-sm"><x-site.icon name="edit" class="h-4 w-4" /> Editar</a>
                             <button type="button" wire:click="deleteService({{ $service->id }})" wire:confirm="¿Eliminar «{{ $service->name }}»? Desaparecerá de la página y no se puede deshacer." class="ui-btn ui-btn-danger ui-btn-sm"><x-site.icon name="trash" class="h-4 w-4" /> Eliminar</button>
                         </div>

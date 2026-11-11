@@ -27,6 +27,17 @@ class SproviderServicesComponent extends Component
         session()->flash('message', 'El servicio se eliminó.');
     }
 
+    public function togglePause(int $serviceId): void
+    {
+        $service = Service::where('id', $serviceId)->where('user_id', Auth::id())->firstOrFail();
+        $service->paused_at = $service->paused_at ? null : now();
+        $service->save();
+
+        session()->flash('message', $service->paused_at
+            ? '«' . $service->name . '» quedó en pausa: los clientes no lo ven hasta que lo reanudes.'
+            : '«' . $service->name . '» se ve otra vez en el sitio.');
+    }
+
     public function render()
     {
         $user = Auth::user();

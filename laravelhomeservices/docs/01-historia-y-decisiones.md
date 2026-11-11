@@ -251,6 +251,23 @@ Por eso: quien no tiene sello no aparece marcado de ninguna forma; si el certifi
 
 **Cómo ganar dinero: plan, no comisión.** El cliente le paga directo al proveedor, fuera de la plataforma, así que una comisión no se puede cobrar ni comprobar: basta con cerrar el trato por WhatsApp. Además, cobrar sobre cada trabajo acercaría a Malakplace a ser parte del negocio, justo lo contrario de ser solo intermediario. La recomendación es mantener la suscripción, no cobrar hasta tener demanda real, y cambiar lo que vende: casi ningún oficial necesita más de 3 servicios, de modo que el límite actual no es una razón para pagar. Pro debería vender visibilidad (salir primero) y estadísticas. Los sellos no deben cobrarse nunca: un sello pagado deja de ser creíble.
 
+## Fase 9: la administración maneja el sitio sin tocar código
+
+Antes, cambiar el teléfono de contacto, el precio Pro o una pregunta frecuente exigía editar el código o las variables de Vercel. Ahora el panel tiene:
+
+- **Ajustes** (`/admin/settings`): contacto, correo de avisos, límite gratuito, precio y duración del Pro, datos bancarios, duración del sello de antecedentes y zonas. Se guardan en la tabla `settings` y reemplazan a `config/*.php` en cada petición (`App\Support\SiteSettings`); el resto del código sigue leyendo `config()`. Las zonas se pueden renombrar y agregar, pero no quitar mientras las usen proveedores o solicitudes (los slugs quedan guardados).
+- **Usuarios** (`/admin/users`): buscar, escribir, cambiar el tipo de cuenta, suspender con motivo, reactivar y eliminar. Nadie puede hacerse esto a sí mismo, y no se puede dejar el sitio sin administración. Un proveedor con servicios no pasa a cliente: sus servicios quedarían sin dueño. Un cliente que pasa a proveedor vuelve a aceptar los términos, porque su perfil se vuelve público.
+- **Suspensión:** la cuenta no puede entrar, su sesión abierta se cierra y sus servicios dejan de verse. Es lo que prometían los términos y no existía.
+- **Servicios:** buscar, ocultar o mostrar, y destacar desde la lista. El proveedor puede **pausar** los suyos (`paused_at`), aparte de lo que oculta la administración (`status`), para que no pueda volver a mostrar algo que se ocultó por un problema.
+- **Reseñas** (`/admin/reviews`): ocultar con motivo (se puede deshacer). Una reseña oculta no se ve ni cuenta en el promedio. La regla del panel: una mala calificación honesta se queda.
+- **Mensajes:** marcar como respondido y eliminar. El inicio y el menú cuentan los que faltan.
+- **Preguntas frecuentes** (`/admin/faq`): agregar, editar, ordenar y quitar. Las respuestas aceptan datos que se actualizan solos (`{limite_gratis}`, `{precio_pro}`, `{zonas}`…).
+- El menú del admin se agrupa en Día a día, Personas, Catálogo y Sitio.
+
+Se encontró y corrigió un error de antes: al eliminar una cuenta de proveedor, sus servicios quedaban publicados sin dueño y el sitio los mostraba como de la administración, con el WhatsApp de Malakplace. Ahora `DeleteUser` los borra con sus fotos.
+
+Siguen en el código, a propósito: los términos y la privacidad (tienen versión y obligan a aceptar de nuevo; conviene que pasen por un abogado) y los textos de la portada.
+
 ## Decisiones pendientes o deliberadamente postergadas
 
 - **Content-Security-Policy:** no se configuró porque el sitio aún tiene scripts en línea (Livewire, contador de visitas, mapa). El tema heredado que usaba varios CDN ya se eliminó.

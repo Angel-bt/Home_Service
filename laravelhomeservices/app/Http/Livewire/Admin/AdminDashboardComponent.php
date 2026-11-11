@@ -32,7 +32,9 @@ class AdminDashboardComponent extends Component
         $pendingPayments = SubscriptionPayment::where('status', SubscriptionPayment::PENDING)->count();
         // Más de un día sin respuesta: el cliente puede estar quedándose sin atención.
         $staleRequests = ServiceRequest::where('status', ServiceRequest::PENDING)->where('created_at', '<', now()->subDay())->count();
-        $recentContacts = Contact::where('created_at', '>=', now()->subWeek())->count();
+        $unansweredContacts = Contact::whereNull('answered_at')->count();
+        $pendingDocuments = \App\Models\ProviderDocument::where('status', \App\Models\ProviderDocument::PENDING)->count();
+        $lowReviews = \App\Models\Review::where('rating', '<=', 2)->whereNull('hidden_at')->where('created_at', '>=', now()->subDays(7))->count();
         $incompleteProviders = ServiceProvider::query()
             ->where(fn ($query) => $query->whereNull('whatsapp')->orWhere('whatsapp', '')->orWhereDoesntHave('zones'))
             ->count();
@@ -53,12 +55,26 @@ class AdminDashboardComponent extends Component
                     'action' => 'Ver solicitudes',
                     'href' => route('admin.service_requests', ['status' => ServiceRequest::PENDING]),
                 ] : null,
-                $recentContacts > 0 ? [
+                $pendingDocuments > 0 ? [
+                    'icon' => 'shield',
+                    'title' => $pendingDocuments === 1 ? '1 documento de verificación por revisar' : $pendingDocuments . ' documentos de verificación por revisar',
+                    'text' => 'Un proveedor espera su sello. Revísalo pronto: el archivo se borra apenas decides.',
+                    'action' => 'Revisar documentos',
+                    'href' => route('admin.verifications'),
+                ] : null,
+                $unansweredContacts > 0 ? [
                     'icon' => 'mail',
-                    'title' => $recentContacts === 1 ? '1 mensaje de contacto esta semana' : $recentContacts . ' mensajes de contacto esta semana',
-                    'text' => 'Personas que escribieron desde la página de contacto. Respóndeles por correo o teléfono.',
+                    'title' => $unansweredContacts === 1 ? '1 mensaje sin responder' : $unansweredContacts . ' mensajes sin responder',
+                    'text' => 'Personas que escribieron desde la página de contacto. Respóndeles y márcalos como respondidos.',
                     'action' => 'Leer mensajes',
                     'href' => route('admin.contacts'),
+                ] : null,
+                $lowReviews > 0 ? [
+                    'icon' => 'star',
+                    'title' => $lowReviews === 1 ? '1 reseña de 1 o 2 estrellas esta semana' : $lowReviews . ' reseñas de 1 o 2 estrellas esta semana',
+                    'text' => 'Puede ser una queja real: vale la pena hablar con el proveedor. Ocúltala solo si es ofensiva o falsa.',
+                    'action' => 'Ver reseñas',
+                    'href' => route('admin.reviews', ['filter' => 'low']),
                 ] : null,
                 $incompleteProviders > 0 ? [
                     'icon' => 'users',

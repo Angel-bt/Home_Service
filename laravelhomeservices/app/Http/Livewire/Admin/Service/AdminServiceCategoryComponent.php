@@ -13,6 +13,9 @@ class AdminServiceCategoryComponent extends Component
 
     public function deleteServiceCategory($id)
     {
+        // Segunda barrera: la ruta ya exige ADM, pero la acción también lo comprueba.
+        abort_unless(\Illuminate\Support\Facades\Auth::user()?->utype === 'ADM', 403);
+
         $scategory = ServiceCategory::find($id);
 
         if ($scategory === null) {

@@ -15,6 +15,7 @@ class Review extends Model
 
     protected $casts = [
         'rating' => 'integer',
+        'hidden_at' => 'datetime',
     ];
 
     public function service(): BelongsTo

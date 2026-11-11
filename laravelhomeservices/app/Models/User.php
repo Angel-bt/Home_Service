@@ -60,6 +60,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'trial_ends_at' => 'datetime',
         'plan_expires_at' => 'datetime',
+        'suspended_at' => 'datetime',
         'terms_accepted_at' => 'datetime',
         'publication_consent_at' => 'datetime',
     ];
@@ -105,6 +106,16 @@ class User extends Authenticatable
     /**
      * Route name of this user's own panel.
      */
+    public function isSuspended(): bool
+    {
+        return $this->suspended_at !== null;
+    }
+
+    public function suspensionMessage(): string
+    {
+        return 'Tu cuenta está suspendida' . ($this->suspension_reason ? ': ' . rtrim($this->suspension_reason, '.') : '') . '. Si crees que es un error, escríbenos a ' . config('marketplace.contact_email') . '.';
+    }
+
     public function hasAcceptedCurrentTerms(): bool
     {
         return $this->terms_version === config('marketplace.terms_version');

@@ -10,6 +10,12 @@
         @endphp
 
         <section class="mx-auto max-w-[84rem] px-5 pt-8 sm:px-8 lg:pt-12">
+            @if ($reason = $service->hiddenReason())
+                <div class="mb-6 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-[15px] text-amber-950" role="status">
+                    <x-site.icon name="eye" class="mt-0.5 h-5 w-5 shrink-0 text-amber-700" />
+                    <p><span class="font-medium">Los clientes no ven este servicio.</span> {{ $reason }} Tú lo ves porque es tuyo o porque administras el sitio.</p>
+                </div>
+            @endif
             @if ($service->category)
                 <a href="{{ route('home.services_by_category', ['category_slug' => $service->category->slug]) }}" class="inline-flex items-center gap-2 text-[14px] text-grafito-500 hover:text-grafito">
                     <x-site.icon name="arrow-left" class="h-4 w-4" /> Más de {{ $service->category->name }}

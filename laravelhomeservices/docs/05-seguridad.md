@@ -33,6 +33,10 @@ El certificado de antecedentes es un dato sensible (LOPDP art. 4 y 26). Por eso:
 
 `activity_events` no guarda IP, navegador ni mensajes. Lo que escribe la gente va como dato y se neutraliza al exportarlo a Excel (fórmulas). Se borra a los 365 días (`activity:prune`), como promete la política de privacidad. Al eliminar una cuenta, sus filas quedan sin dueño.
 
+### Cuentas suspendidas
+
+`FortifyServiceProvider` rechaza el ingreso con el motivo, `EnsureNotSuspended` (grupo web) cierra la sesión abierta en la siguiente petición y `Service::scopeActive()` esconde sus servicios. Todas las acciones del panel de usuarios vuelven a comprobar que quien las hace es administración, y ninguna se puede aplicar a la propia cuenta.
+
 ## Formularios y abuso
 
 | Medida | Límite | Dónde |

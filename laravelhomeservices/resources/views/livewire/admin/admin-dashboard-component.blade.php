@@ -9,7 +9,7 @@
                         <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-emerald-100 text-emerald-800"><x-site.icon name="check" class="h-6 w-6" /></span>
                         <div>
                             <p class="text-[16px] font-medium">Todo al día</p>
-                            <p class="text-[14px] text-grafito-500">No hay pagos por revisar ni solicitudes atrasadas.</p>
+                            <p class="text-[14px] text-grafito-500">Pagos, documentos, mensajes y solicitudes están al día.</p>
                         </div>
                     </div>
                 @else

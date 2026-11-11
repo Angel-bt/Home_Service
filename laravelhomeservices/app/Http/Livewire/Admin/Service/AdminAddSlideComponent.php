@@ -25,6 +25,9 @@ class AdminAddSlideComponent extends Component
 
     public function addNewSlide()
     {
+        // Segunda barrera: la ruta ya exige ADM, pero la acción también lo comprueba.
+        abort_unless(\Illuminate\Support\Facades\Auth::user()?->utype === 'ADM', 403);
+
         $this->validate([
             'title' => 'required',
             'image' => 'required|image|mimes:png,jpg,jpeg,webp|max:4096'

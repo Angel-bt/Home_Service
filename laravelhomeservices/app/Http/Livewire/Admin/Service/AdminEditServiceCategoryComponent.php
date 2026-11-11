@@ -51,6 +51,9 @@ class AdminEditServiceCategoryComponent extends Component
 
     public function updateServiceCategory()
     {
+        // Segunda barrera: la ruta ya exige ADM, pero la acción también lo comprueba.
+        abort_unless(\Illuminate\Support\Facades\Auth::user()?->utype === 'ADM', 403);
+
         $this->validate([
             'name' => 'required',
             'slug' => 'required'

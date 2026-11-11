@@ -88,6 +88,9 @@
                                 @elseif ($request->status === 'rejected' && $request->service)
                                     <a href="{{ route('search', ['q' => $request->service->name]) }}" class="ui-btn ui-btn-secondary ui-btn-sm">Buscar otro proveedor</a>
                                 @endif
+                                @if (in_array($request->status, ['completed', 'cancelled'], true) && $request->service?->isPublic())
+                                    <a href="{{ route('home.service_details', ['service_slug' => $request->service->slug]) }}#solicitar" class="ui-btn ui-btn-secondary ui-btn-sm">Volver a pedir</a>
+                                @endif
                             </div>
                         </div>
 

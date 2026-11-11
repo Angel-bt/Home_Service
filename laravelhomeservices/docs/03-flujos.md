@@ -84,6 +84,20 @@ El proveedor ve sus solicitudes en `/sprovider/requests` con un enlace de WhatsA
 3. `ServiceRequest::canBeReviewedBy()` exige que la solicitud esté completada, que sea del cliente y que no tenga reseña. Hay una sola reseña por solicitud (índice único en la base).
 4. La reseña aparece en el detalle del servicio y cuenta para el promedio de estrellas.
 
+## Lo que maneja la administración
+
+| Pantalla | Qué se hace |
+|---|---|
+| Inicio | Lo pendiente: pagos, documentos, mensajes sin responder, solicitudes atrasadas y reseñas de 1 o 2 estrellas. |
+| Usuarios | Buscar, escribir, cambiar el tipo de cuenta, suspender, reactivar, eliminar. |
+| Servicios | Buscar, ocultar o mostrar, destacar, editar, eliminar. |
+| Reseñas | Ocultar o volver a mostrar. |
+| Mensajes | Responder, marcar como respondido, eliminar. |
+| Preguntas frecuentes | Agregar, editar, ordenar y quitar. |
+| Ajustes | Contacto, planes, banco, sello y zonas. |
+
+**Quién ve un servicio:** el público solo ve los que no están ocultos por la administración, ni pausados por su proveedor, ni son de una cuenta suspendida (`Service::scopeActive()` / `isPublic()`). Su dueño y la administración lo siguen viendo, con un aviso del motivo.
+
 ## Avisos por correo
 
 | Cuándo | A quién |

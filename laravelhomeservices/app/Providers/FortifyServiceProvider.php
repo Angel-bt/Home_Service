@@ -55,6 +55,10 @@ class FortifyServiceProvider extends ServiceProvider
             $user = \App\Models\User::where('email', $request->email)->first();
 
             if ($user && \Hash::check($request->password, $user->password)) {
+                if ($user->isSuspended()) {
+                    throw \Illuminate\Validation\ValidationException::withMessages([\Laravel\Fortify\Fortify::username() => $user->suspensionMessage()]);
+                }
+
                 // Establece un mensaje de sesión de éxito
                 session()->flash('success', '¡Bienvenido de nuevo!');
                 return $user;

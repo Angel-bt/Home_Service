@@ -117,6 +117,18 @@ Usan el mismo diseño. Antes de escribir HTML nuevo, reutiliza estas piezas:
 php artisan test
 ```
 
+**Qué cubre cada grupo:**
+
+| Grupo | Archivos | Qué asegura |
+|---|---|---|
+| Unitarias (`tests/Unit`) | `WhatsAppTest`, `ServiceRequestTransitionsTest`, `UserRulesTest`, `ServiceRulesTest`, `TrustBadgesTest`, `TextHelpersTest`, `SiteSettingsTest` | La lógica sin pantallas: números de WhatsApp, quién mueve una solicitud y hacia dónde (todas las combinaciones), plan Pro y límite gratuito, precio con descuento, quién ve un servicio, sellos y su vencimiento, textos que se arman solos y ajustes del panel. |
+| Permisos | `AdminCatalogAndPermissionsTest` | Cada acción del panel de administración se llama como proveedor y como cliente y debe fallar (matriz de 22 acciones). Además, una petición real a `/livewire/update` prueba que la barrera de la ruta también corre en las acciones, con un control que confirma que la misma petición sí funciona para la administración. |
+| Flujos | `MarketplaceFlowTest`, `ProPlanBillingTest`, `TrustAndActivityTest`, `AdminToolsTest`, `RoleGuidanceTest` | Publicar, pedir, aceptar, terminar y calificar; pagos Pro; términos, sellos, actividad y avisos; herramientas del admin; lo que ve cada rol. |
+| Todo el sitio | `SiteCrawlTest`, `MarketplaceSmokeTest` | Que cada página y cada enlace funcionen para cada rol. |
+| Producción | `ServerlessDeploymentTest`, `SecurityHardeningTest` | Lo que necesita Vercel (sin disco, sin Redis) y la seguridad básica. |
+
+Antes de publicar algo que toque consultas, corre la suite también sobre Postgres en un esquema temporal (ver «Motores de base de datos»).
+
 `SiteCrawlTest` carga los datos de demostración y recorre todos los enlaces internos que ve cada rol (visitante, cliente, proveedor y administración). Falla si una página no existe o da error, si una imagen local no existe o no tiene dirección, o si una página usa el título genérico en la pestaña. Cada página nueva debe tener su título: `->title('…')` en el componente Livewire, o `<x-base-layout title="…">` en las vistas Blade.
 
 Usan SQLite en memoria, caché y sesión en arreglo y cola síncrona (`phpunit.xml`): no necesitan MySQL ni Redis. Se usa PHPUnit 12, así que los *data providers* se declaran con el atributo `#[DataProvider('metodo')]` y deben ser estáticos.

@@ -13,6 +13,7 @@ use Livewire\WithPagination;
 
 class AdminServicesByCategoryComponent extends Component
 {
+    use \App\Http\Livewire\Concerns\ManagesServicesAsAdmin;
     use WithPagination;
     public $category_slug;
 
@@ -21,27 +22,12 @@ class AdminServicesByCategoryComponent extends Component
         $this->category_slug = $category_slug;
     }
 
-    public function deleteService($service_id)
-    {
-        abort_unless(Auth::check() && Auth::user()->utype === 'ADM', 403);
-
-        $service = Service::find($service_id);
-
-        if ($service === null) {
-            return;
-        }
-
-        app(ServiceAssetCleaner::class)->deleteFiles($service);
-
-        $service->delete();
-        session()->flash('message', 'El servicio se eliminó.');
-    }
 
 
     public function render()
     {
         $category = ServiceCategory::where('slug', $this->category_slug)->firstOrFail();
-        $services = Service::query()->with(['category:id,name,slug', 'user:id,name,utype'])->where('service_category_id', $category->id)->latest()->paginate(10);
+        $services = Service::query()->with(['category:id,name,slug', 'user:id,name,utype,suspended_at'])->where('service_category_id', $category->id)->latest()->paginate(10);
         return view('livewire.admin.service.admin-services-by-category-component', ['category_name' => $category->name, 'services' => $services])->layout('layouts.base')->title($category->name);
     }
 }

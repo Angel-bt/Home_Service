@@ -24,6 +24,9 @@ class AdminEditServiceComponent extends Component
 
     public function updateService()
     {
+        // Segunda barrera: la ruta ya exige ADM, pero la acción también lo comprueba.
+        abort_unless(\Illuminate\Support\Facades\Auth::user()?->utype === 'ADM', 403);
+
         $this->validate($this->serviceRules());
 
         $service = Service::findOrFail($this->service_id);

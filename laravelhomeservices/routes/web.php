@@ -122,6 +122,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('/admin/verifications', \App\Http\Livewire\Admin\AdminVerificationsComponent::class)->name('admin.verifications');
     Route::get('/admin/verifications/{document}/file', [\App\Http\Controllers\AdminTrustController::class, 'document'])->name('admin.provider_document');
     Route::get('/admin/activity', \App\Http\Livewire\Admin\AdminActivityComponent::class)->name('admin.activity');
+    Route::get('/admin/users', \App\Http\Livewire\Admin\AdminUsersComponent::class)->name('admin.users');
+    Route::get('/admin/reviews', \App\Http\Livewire\Admin\AdminReviewsComponent::class)->name('admin.reviews');
+    Route::get('/admin/settings', \App\Http\Livewire\Admin\AdminSettingsComponent::class)->name('admin.settings');
     Route::get('/admin/activity/export', [\App\Http\Controllers\AdminTrustController::class, 'exportActivity'])->name('admin.activity_export');
     Route::get('/admin/about', AdminAboutComponent::class)->name('admin.about');
     Route::get('/admin/faq', AdminFaqComponent::class)->name('admin.faq');
