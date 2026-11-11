@@ -37,6 +37,23 @@ El certificado de antecedentes es un dato sensible (LOPDP art. 4 y 26). Por eso:
 
 `FortifyServiceProvider` rechaza el ingreso con el motivo, `EnsureNotSuspended` (grupo web) cierra la sesión abierta en la siguiente petición y `Service::scopeActive()` esconde sus servicios. Todas las acciones del panel de usuarios vuelven a comprobar que quien las hace es administración, y ninguna se puede aplicar a la propia cuenta.
 
+### Auditoría del 11/11/2026
+
+| Riesgo | Qué se hizo |
+|---|---|
+| Dependencias con fallas publicadas (6 paquetes de Symfony; `sweetalert2`) | Symfony actualizado a 8.1.11; `sweetalert2` quitado (no se usaba). `composer audit` y `npm audit --omit=dev` quedan en cero. |
+| Sin política de contenido (CSP) | `SecurityHeaders` agrega CSP: solo scripts, estilos, fuentes e imágenes propios o de hosts conocidos (Google Fonts, Unsplash, el bucket de fotos, Google Maps si hay clave), `object-src 'none'`, `base-uri` y `form-action` propios, `frame-ancestors 'self'`. Permite `unsafe-inline`/`unsafe-eval` porque Alpine y Livewire los necesitan. También `Cross-Origin-Opener-Policy` y se quita `X-Powered-By`. |
+| Archivos privados abiertos en el navegador | `App\Support\PrivateFile`: sin caché, sin indexar y las imágenes aisladas con `sandbox`. Los PDF van sin `sandbox` porque Chrome no los muestra con esa cabecera. |
+| Vercel respondía 200 en direcciones de archivos del proyecto (dejaba saber cuáles existen) | `vercel.json` responde 404 a `.env*`, `composer.*`, `vendor/`, `app/`, `routes/`, `docs/`, etc., antes de llegar a PHP. |
+| Supabase publica las tablas en una API web (anon/authenticated) | `App\Support\SupabaseLockdown` activa RLS en las tablas de la app (solo las que son del usuario de la app, para no cortarle el acceso) y quita los permisos a esos roles. Lo corren la migración `2026_11_11_000001` y, cada día, `security:check`. |
+| Contraseñas filtradas | En producción se rechazan las que aparecen en filtraciones (Have I Been Pwned; solo viajan 5 caracteres del hash). |
+| Cuenta de administración | Cada ingreso se avisa por correo (hora, IP y navegador), y el inicio del panel pide activar la verificación en dos pasos. |
+| Configuración insegura sin aviso | `php artisan security:check` (en el cron diario, 500 si falla): `APP_DEBUG` apagado, `APP_KEY`, cookie de sesión segura y que ninguna tabla quede expuesta. |
+
+Ya estaban bien: HSTS, cookies `secure`/`httponly`/`samesite=lax`, CSRF, límites de intentos (ingreso 5/min, registro, contacto, solicitudes), recuperación de contraseña que no revela correos, permisos por rol en rutas y en cada acción del admin, consultas parametrizadas y validación del tipo real de los archivos subidos.
+
+Pendiente: revisar en el panel de Supabase (*Advisors → Security*) que no queden avisos, activar la verificación en dos pasos en la cuenta de administración y respaldos periódicos de la base (el plan gratuito de Supabase no guarda respaldos descargables).
+
 ## Formularios y abuso
 
 | Medida | Límite | Dónde |

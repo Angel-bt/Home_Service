@@ -23,7 +23,7 @@ class AdminTrustController extends Controller
 
         abort_unless($document->path !== null && $disk->exists($document->path), 404);
 
-        return $disk->response($document->path, null, ['Cache-Control' => 'private, no-store']);
+        return \App\Support\PrivateFile::response($disk, $document->path);
     }
 
     /**

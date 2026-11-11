@@ -1,6 +1,18 @@
 <div>
     <x-ui.panel title="Hola, {{ \Illuminate\Support\Str::before(auth()->user()->name . ' ', ' ') }}" help="Empieza por lo pendiente. Si aquí no hay nada, todo está al día.">
         <div class="space-y-8">
+            @unless (auth()->user()->two_factor_confirmed_at)
+                <section class="flex flex-col gap-4 rounded-3xl border border-amber-300 bg-amber-50 p-6 text-amber-950 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="flex items-start gap-3">
+                        <x-site.icon name="shield" class="mt-0.5 h-6 w-6 shrink-0 text-amber-700" />
+                        <div>
+                            <h2 class="text-[17px] font-medium">Protege tu cuenta con la verificación en dos pasos</h2>
+                            <p class="mt-1 text-[15px] leading-relaxed">Esta cuenta puede cambiar todo el sitio. Con la verificación en dos pasos, además de la contraseña te pedirá un código de una app en tu celular (Google Authenticator, por ejemplo). Aunque alguien robe tu contraseña, no podrá entrar.</p>
+                        </div>
+                    </div>
+                    <a href="{{ route('profile.show') }}#dos-pasos" class="ui-btn ui-btn-primary shrink-0 self-start sm:self-auto">Activarla ahora</a>
+                </section>
+            @endunless
             {{-- Lo que requiere atención --}}
             <section>
                 <h2 class="lp-title mb-4 text-2xl">Qué tienes pendiente</h2>

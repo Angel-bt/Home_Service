@@ -21,6 +21,10 @@
       "dest": "/$1"
     },
     {
+      "src": "/(\\.env.*|\\.git.*|composer\\.(json|lock)|package(-lock)?\\.json|artisan|phpunit\\.xml|webpack\\.mix\\.js|tailwind\\.config\\.js|vercel\\.json|README\\.md|pasos .*|(app|bootstrap|config|database|docs|lang|resources|routes|storage|tests|vendor|api|node_modules)(/.*)?)",
+      "status": 404
+    },
+    {
       "src": "/(.*)",
       "dest": "/api/index.php"
     }

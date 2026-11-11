@@ -124,6 +124,6 @@ class BillingController extends Controller
     {
         abort_unless($payment->receipt_path !== null && Storage::disk('receipts')->exists($payment->receipt_path), 404);
 
-        return Storage::disk('receipts')->response($payment->receipt_path);
+        return \App\Support\PrivateFile::response(Storage::disk('receipts'), $payment->receipt_path);
     }
 }

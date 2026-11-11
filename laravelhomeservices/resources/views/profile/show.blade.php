@@ -11,7 +11,7 @@
         @endif
 
         @if (Laravel\Fortify\Features::canManageTwoFactorAuthentication())
-            @livewire('profile.two-factor-authentication-form')
+            <div id="dos-pasos" class="scroll-mt-28">@livewire('profile.two-factor-authentication-form')</div>
             <x-section-border />
         @endif
 

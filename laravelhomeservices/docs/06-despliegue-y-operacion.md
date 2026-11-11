@@ -153,6 +153,10 @@ Archivos: `vercel.json`, `.vercelignore` y `api/index.php` (lleva a `/tmp` lo qu
 
 **Subidas activadas:** las claves S3 de Supabase están en `AWS_ACCESS_KEY_ID` y `AWS_SECRET_ACCESS_KEY` (se crean en *Project Settings → Storage → S3 Connection*), con `FILESYSTEM_DISK=s3` y `LIVEWIRE_TEMP_DISK=receipts`.
 
+**Autocomprobación de seguridad:** el cron diario corre `php artisan security:check`: cierra a la API pública de Supabase cualquier tabla nueva y falla si `APP_DEBUG` está activo, falta `APP_KEY`, la cookie de sesión no es segura o queda alguna tabla expuesta.
+
+**Rutas bloqueadas en Vercel:** `vercel.json` responde 404 a las direcciones de archivos del proyecto (`.env*`, `composer.*`, `vendor/`, `app/`, `routes/`, `docs/`…). Si algún día una ruta pública empieza con uno de esos nombres, hay que sacarla de esa regla.
+
 **Limpieza de actividad:** el cron diario también corre `php artisan activity:prune`, que borra lo que tenga más de `ACTIVITY_RETENTION_DAYS` días (365 por defecto; es lo que promete la política de privacidad).
 
 **Autocomprobación del correo:** el cron diario también corre `php artisan mail:check`, que inicia sesión en el servidor SMTP sin enviar nada. Si falla (por ejemplo, si revocan la contraseña), `/cron/diario` responde 500.

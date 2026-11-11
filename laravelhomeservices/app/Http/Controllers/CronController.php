@@ -23,6 +23,7 @@ class CronController extends Controller
 
         $storage = Artisan::call('storage:check');
         $mail = Artisan::call('mail:check');
+        $security = Artisan::call('security:check');
 
         return response()->json([
             'billing:expire-plans' => Artisan::call('billing:expire-plans'),
@@ -30,6 +31,7 @@ class CronController extends Controller
             'services:sync-visit-counters' => config('marketplace.visit_counter') === 'redis' ? Artisan::call('services:sync-visit-counters') : 'not needed',
             'storage:check' => $storage,
             'mail:check' => $mail,
-        ], $storage === 0 && $mail === 0 ? 200 : 500);
+            'security:check' => $security,
+        ], $storage === 0 && $mail === 0 && $security === 0 ? 200 : 500);
     }
 }
