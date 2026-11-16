@@ -41,6 +41,7 @@ class AdminContactComponent extends Component
         $this->authorizeAdmin();
 
         Contact::whereKey($contactId)->delete();
+        \App\Support\AdminLog::record('Eliminó un mensaje', 'mensaje #' . $contactId);
         session()->flash('message', 'Mensaje eliminado.');
     }
 

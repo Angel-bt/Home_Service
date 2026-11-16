@@ -22,9 +22,14 @@
             ['Servicios', 'admin.all_services', 'list', ['admin.all_services', 'admin.add_service', 'admin.edit_service', 'admin.services_by_category'], 0, 'Catálogo'],
             ['Categorías', 'admin.service_categories', 'tag', ['admin.service_categories', 'admin.add_service_category', 'admin.edit_service_category'], 0, 'Catálogo'],
             ['Reseñas', 'admin.reviews', 'star', ['admin.reviews'], 0, 'Catálogo'],
+            ['Textos y aviso', 'admin.content', 'edit', ['admin.content'], 0, 'Sitio'],
+            ['Textos legales', 'admin.legal', 'shield', ['admin.legal'], 0, 'Sitio'],
             ['Preguntas frecuentes', 'admin.faq', 'question', ['admin.faq'], 0, 'Sitio'],
-            ['Actividad', 'admin.activity', 'chart', ['admin.activity'], 0, 'Sitio'],
             ['Ajustes', 'admin.settings', 'settings', ['admin.settings'], 0, 'Sitio'],
+            ['Actividad', 'admin.activity', 'chart', ['admin.activity'], 0, 'Sistema'],
+            ['Estado del sistema', 'admin.system', 'check-circle', ['admin.system', 'admin.errors'], (function () { try { return \Illuminate\Support\Facades\DB::table('error_logs')->whereNull('resolved_at')->count(); } catch (\Throwable) { return 0; } })(), 'Sistema'],
+            ['Historial', 'admin.history', 'clock', ['admin.history'], 0, 'Sistema'],
+            ['Guía', 'admin.guide', 'info', ['admin.guide'], 0, 'Sistema'],
         ];
     } elseif ($role === 'SVP') {
         $roleLabel = 'Panel de proveedor';

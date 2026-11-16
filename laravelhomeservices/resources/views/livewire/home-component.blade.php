@@ -24,12 +24,12 @@
         <div class="absolute inset-0 -z-10 bg-gradient-to-b from-noche-950/70 via-noche-900/45 to-noche-900" aria-hidden="true"></div>
 
         <div class="mx-auto flex w-full max-w-[84rem] flex-1 flex-col justify-center px-5 pb-10 pt-28 text-center sm:px-8">
-            <p data-hero-eyebrow class="lp-eyebrow uppercase tracking-[.22em] text-white/60">Malacatos — Loja, Ecuador</p>
+            <p data-hero-eyebrow class="lp-eyebrow uppercase tracking-[.22em] text-white/60">{{ config('content.hero_eyebrow') }}</p>
             <h1 data-hero-title class="lp-title mx-auto mt-7 max-w-5xl text-[2.75rem] sm:text-7xl lg:text-[5.5rem]">
-                Gente de oficio cerca de ti, <span class="lp-accent text-oro-300">en Malacatos.</span>
+                {{ \App\Support\Content::rich(config('content.hero_title'), 'lp-accent text-oro-300') }}
             </h1>
             <p data-hero-lede class="mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-white/70">
-                Gasfiteros, electricistas, jardineros y más de Malacatos, Vilcabamba, Yangana y Quinara. Les escribes directo y les pagas a ellos.
+                {{ \App\Support\Content::fill((string) config('content.hero_lede')) }}
             </p>
 
             <form data-hero-search action="{{ route('search') }}" method="GET" role="search"
@@ -150,7 +150,7 @@
                 <p class="lp-eyebrow uppercase text-grafito-400">Sobre Malakplace</p>
             </div>
             <p data-words class="lp-title text-[1.75rem] leading-[1.18] text-grafito sm:text-4xl lg:col-span-9 lg:text-[2.9rem]">
-                Reunimos a la gente de oficio de Malacatos y sus parroquias vecinas. Encuentras a quien te queda cerca, lees lo que dicen otros vecinos y le escribes <span class="lp-accent">directo.</span>
+                {{ \App\Support\Content::rich(config('content.about_text')) }}
             </p>
         </div>
         {{-- Cifras solo cuando dicen algo: al arrancar, tres ceros no invitan a nadie. --}}
@@ -285,7 +285,7 @@
         <div data-anim class="mx-auto grid max-w-[86rem] overflow-hidden rounded-[36px] bg-oro-400 text-noche-900 lg:grid-cols-2">
             <div class="p-8 sm:p-12 lg:p-16">
                 <p class="lp-eyebrow uppercase text-noche-900/60">Para proveedores</p>
-                <h2 class="lp-title mt-5 text-5xl lg:text-6xl">¿Trabajas en Malacatos? <span class="lp-accent">Que te encuentren.</span></h2>
+                <h2 class="lp-title mt-5 text-5xl lg:text-6xl">{{ \App\Support\Content::rich(config('content.providers_title')) }}</h2>
                 <ul class="mt-10 space-y-4 text-[16px]">
                     @foreach (['Publica ' . config('marketplace.free_service_limit') . ' servicios gratis', 'Los clientes te escriben a tu WhatsApp', 'Tú pones el precio y cobras directo'] as $benefit)
                         <li class="flex items-center gap-3 border-b border-noche-900/15 pb-4"><x-site.icon name="check" class="h-5 w-5" /> {{ $benefit }}</li>

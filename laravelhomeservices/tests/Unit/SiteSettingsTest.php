@@ -24,8 +24,8 @@ class SiteSettingsTest extends TestCase
             $this->assertArrayHasKey($group, SiteSettings::GROUPS, $key);
             $this->assertTrue(\Illuminate\Support\Arr::has(config()->all(), $configKey), "{$key} → {$configKey}");
             $this->assertNotSame('', $label);
-            $this->assertContains($type, ['text', 'tel', 'email', 'number']);
-            $this->assertContains($cast, ['string', 'int', 'float']);
+            $this->assertContains($type, ['text', 'tel', 'email', 'number', 'textarea', 'checkbox', 'url']);
+            $this->assertContains($cast, ['string', 'int', 'float', 'bool']);
             $this->assertNotEmpty($rules);
         }
     }

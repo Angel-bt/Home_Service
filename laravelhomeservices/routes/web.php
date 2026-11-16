@@ -125,6 +125,13 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('/admin/users', \App\Http\Livewire\Admin\AdminUsersComponent::class)->name('admin.users');
     Route::get('/admin/reviews', \App\Http\Livewire\Admin\AdminReviewsComponent::class)->name('admin.reviews');
     Route::get('/admin/settings', \App\Http\Livewire\Admin\AdminSettingsComponent::class)->name('admin.settings');
+    Route::get('/admin/content', \App\Http\Livewire\Admin\AdminContentComponent::class)->name('admin.content');
+    Route::get('/admin/legal', \App\Http\Livewire\Admin\AdminLegalComponent::class)->name('admin.legal');
+    Route::get('/admin/system', \App\Http\Livewire\Admin\AdminSystemComponent::class)->name('admin.system');
+    Route::get('/admin/errors', \App\Http\Livewire\Admin\AdminErrorsComponent::class)->name('admin.errors');
+    Route::get('/admin/history', \App\Http\Livewire\Admin\AdminHistoryComponent::class)->name('admin.history');
+    Route::get('/admin/guia', \App\Http\Livewire\Admin\AdminGuideComponent::class)->name('admin.guide');
+    Route::get('/admin/descargas/{type}.csv', [\App\Http\Controllers\AdminTrustController::class, 'export'])->whereIn('type', ['users', 'services', 'requests'])->middleware('throttle:10,1')->name('admin.export');
     Route::get('/admin/activity/export', [\App\Http\Controllers\AdminTrustController::class, 'exportActivity'])->name('admin.activity_export');
     Route::get('/admin/about', AdminAboutComponent::class)->name('admin.about');
     Route::get('/admin/faq', AdminFaqComponent::class)->name('admin.faq');

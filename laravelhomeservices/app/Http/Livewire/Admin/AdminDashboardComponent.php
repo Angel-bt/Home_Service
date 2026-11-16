@@ -24,6 +24,7 @@ class AdminDashboardComponent extends Component
 
         Visit::counter()->update(['visits' => 0]);
         session()->forget('visit_counted');
+        \App\Support\AdminLog::record('Reinició el contador de visitas');
         session()->flash('message', 'El contador de visitas volvió a cero.');
     }
 

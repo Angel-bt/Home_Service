@@ -41,6 +41,7 @@ class AdminAddServiceComponent extends Component
         $this->persistService($service);
 
         $this->reset();
+        \App\Support\AdminLog::record('Creó un servicio', $this->name);
         session()->flash('message', 'El servicio se creó correctamente.');
     }
 

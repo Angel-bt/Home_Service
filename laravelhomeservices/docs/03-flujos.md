@@ -94,7 +94,13 @@ El proveedor ve sus solicitudes en `/sprovider/requests` con un enlace de WhatsA
 | Reseñas | Ocultar o volver a mostrar. |
 | Mensajes | Responder, marcar como respondido, eliminar. |
 | Preguntas frecuentes | Agregar, editar, ordenar y quitar. |
-| Ajustes | Contacto, planes, banco, sello y zonas. |
+| Ajustes | Contacto, planes y formas de pago, banco, sello y zonas. |
+| Textos y aviso | Textos de la portada y del pie, Google y redes, aviso destacado. |
+| Textos legales | Términos, privacidad, resumen del registro y permiso de publicación; corrección o nueva versión. |
+| Estado del sistema | Comprobaciones, última revisión automática, versión y descarga de datos. |
+| Errores | Fallos del sitio agrupados; copiar el detalle y marcar como revisado. |
+| Historial | Quién hizo qué desde el panel, y cuándo. |
+| Guía | Cómo hacer cada tarea. |
 
 **Quién ve un servicio:** el público solo ve los que no están ocultos por la administración, ni pausados por su proveedor, ni son de una cuenta suspendida (`Service::scopeActive()` / `isPublic()`). Su dueño y la administración lo siguen viendo, con un aviso del motivo.
 

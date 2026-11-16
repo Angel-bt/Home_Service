@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ isset($title) && $title ? $title . ' · Malakplace' : 'Malakplace · Servicios para tu hogar en Malacatos' }}</title>
-    <meta name="description" content="Gasfiteros, electricistas, jardineros y más en Malacatos, Vilcabamba, Yangana y Quinara.">
+    <meta name="description" content="{{ config('content.seo_description') }}">
     <meta name="theme-color" content="#f3f2ee">
     <link rel="icon" href="{{ asset('images/favicon.png') }}">
 
@@ -28,6 +28,7 @@
     </main>
 
     <x-site.footer />
+    <x-site.announcement />
 
     {{-- En las páginas de acceso el formulario ya está en la página: el modal se abriría encima con los mismos errores. --}}
     @guest

@@ -25,6 +25,7 @@ class AdminServiceCategoryComponent extends Component
         app(ServiceAssetCleaner::class)->deleteFile('images/categories', $scategory->image);
 
         $scategory->delete();
+        \App\Support\AdminLog::record('Eliminó una categoría', $scategory->name);
         session()->flash('message', 'La categoría se eliminó.');
     }
 

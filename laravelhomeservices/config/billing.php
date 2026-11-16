@@ -11,6 +11,12 @@ return [
     // (p. ej. RIMPE negocio popular). Confírmalo con tu contador.
     'tax_rate' => (float) env('BILLING_TAX_RATE', 0),
 
+    // Formas de pago del plan Pro que acepta la administración (se cambian en /admin/settings).
+    'methods' => [
+        'transfer' => true,
+        'cash' => true,
+    ],
+
     // Instrucciones de pago manual que verá el proveedor.
     'bank_transfer' => [
         'bank' => env('BILLING_BANK_NAME'),

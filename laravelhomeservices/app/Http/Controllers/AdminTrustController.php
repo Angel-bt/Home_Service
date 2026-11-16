@@ -58,6 +58,45 @@ class AdminTrustController extends Controller
     }
 
     /**
+     * Copia de los datos principales en CSV (Estado del sistema → Descargar datos). Admin solamente.
+     */
+    public function export(string $type): StreamedResponse
+    {
+        $exports = [
+            'users' => [
+                ['nombre', 'correo', 'celular', 'tipo', 'plan', 'creada', 'suspendida', 'motivo'],
+                fn () => \App\Models\User::query()->orderBy('id')->lazyById(500),
+                fn ($u) => [$u->name, $u->email, $u->phone, ['ADM' => 'administración', 'SVP' => 'proveedor', 'CST' => 'cliente'][$u->utype] ?? $u->utype, $u->isPro() ? 'Pro' : 'gratis', $u->created_at?->format('Y-m-d'), $u->suspended_at?->format('Y-m-d'), $u->suspension_reason],
+            ],
+            'services' => [
+                ['servicio', 'oficio', 'publicado por', 'precio', 'visible', 'pausado', 'destacado', 'visitas', 'creado'],
+                fn () => Service::query()->with(['category:id,name', 'user:id,name'])->orderBy('id')->lazyById(500),
+                fn ($s) => [$s->name, $s->category?->name, $s->user?->name ?? 'administración', $s->price, $s->status ? 'sí' : 'no', $s->paused_at ? 'sí' : 'no', $s->featured ? 'sí' : 'no', $s->views, $s->created_at?->format('Y-m-d')],
+            ],
+            'requests' => [
+                ['fecha', 'servicio', 'cliente', 'celular', 'zona', 'estado', 'proveedor'],
+                fn () => \App\Models\ServiceRequest::query()->with(['service:id,name', 'provider:id,name'])->orderBy('id')->lazyById(500),
+                fn ($r) => [$r->created_at?->format('Y-m-d H:i'), $r->service?->name, $r->name, $r->phone, $r->zoneLabel(), $r->statusLabel(), $r->provider?->name],
+            ],
+        ];
+
+        abort_unless(isset($exports[$type]), 404);
+        [$header, $rows, $map] = $exports[$type];
+
+        \App\Support\AdminLog::record('Descargó datos', $type);
+
+        return response()->streamDownload(function () use ($header, $rows, $map): void {
+            $output = fopen('php://output', 'w');
+            fwrite($output, "\xEF\xBB\xBF");
+            fputcsv($output, $header, ';');
+            foreach ($rows() as $row) {
+                fputcsv($output, array_map(fn ($cell) => self::safeCell($cell === null ? null : (string) $cell), $map($row)), ';');
+            }
+            fclose($output);
+        }, $type . '-malakplace-' . now()->format('Y-m-d') . '.csv', ['Content-Type' => 'text/csv; charset=UTF-8', 'Cache-Control' => 'private, no-store']);
+    }
+
+    /**
      * Lo que escribe la gente no debe ejecutarse como fórmula al abrir el archivo en Excel.
      */
     private static function safeCell(?string $value): ?string

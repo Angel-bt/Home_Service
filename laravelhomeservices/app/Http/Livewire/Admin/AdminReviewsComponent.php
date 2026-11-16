@@ -45,6 +45,7 @@ class AdminReviewsComponent extends Component
 
         Review::findOrFail($this->hidingId)->forceFill(['hidden_at' => now(), 'hidden_reason' => $this->hideReason])->save();
         $this->hidingId = null;
+        \App\Support\AdminLog::record('Ocultó una reseña', null, $this->hideReason);
         session()->flash('message', 'Reseña oculta. Ya no se ve en el sitio ni cuenta en la calificación.');
     }
 
@@ -53,6 +54,7 @@ class AdminReviewsComponent extends Component
         abort_unless(Auth::user()?->utype === 'ADM', 403);
 
         Review::findOrFail($reviewId)->forceFill(['hidden_at' => null, 'hidden_reason' => null])->save();
+        \App\Support\AdminLog::record('Volvió a mostrar una reseña', 'reseña #' . $reviewId);
         session()->flash('message', 'La reseña se ve otra vez.');
     }
 

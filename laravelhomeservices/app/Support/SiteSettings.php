@@ -17,11 +17,15 @@ final class SiteSettings
 {
     public const CACHE_KEY = 'site:settings';
 
+    /** grupo => [título, ayuda, pantalla] — pantalla: 'ajustes' (/admin/settings) o 'textos' (/admin/content). */
     public const GROUPS = [
-        'contacto' => ['Contacto de Malakplace', 'Lo que ve la gente para escribirles, y adónde llegan los avisos.'],
-        'planes' => ['Plan gratuito y plan Pro', 'Cuánto pueden publicar gratis los proveedores y cuánto cuesta el Pro.'],
-        'banco' => ['Datos para transferencias', 'Lo que ven los proveedores al pagar el plan Pro por transferencia.'],
-        'verificacion' => ['Verificación', 'Cuánto dura el sello «Sin antecedentes penales».'],
+        'contacto' => ['Contacto de Malakplace', 'Lo que ve la gente para escribirles, y adónde llegan los avisos.', 'ajustes'],
+        'planes' => ['Plan gratuito y plan Pro', 'Cuánto pueden publicar gratis los proveedores, cuánto cuesta el Pro y cómo se puede pagar.', 'ajustes'],
+        'banco' => ['Datos para transferencias', 'Lo que ven los proveedores al pagar el plan Pro por transferencia.', 'ajustes'],
+        'verificacion' => ['Verificación', 'Cuánto dura el sello «Sin antecedentes penales».', 'ajustes'],
+        'portada' => ['Portada', 'Los textos principales de la página de inicio. Lo que escribas entre *asteriscos* sale destacado.', 'textos'],
+        'aviso' => ['Aviso destacado', 'Un mensaje corto que aparece abajo en todas las páginas, por ejemplo por un feriado. Cada persona puede cerrarlo.', 'textos'],
+        'buscadores' => ['Google y redes', 'Cómo se ve Malakplace en Google y cuando alguien comparte el enlace por WhatsApp o Facebook.', 'textos'],
     ];
 
     /**
@@ -39,7 +43,35 @@ final class SiteSettings
         'bank_account_number' => ['banco', 'billing.bank_transfer.account_number', 'Número de cuenta', '', 'text', ['nullable', 'string', 'max:40'], 'string'],
         'bank_holder' => ['banco', 'billing.bank_transfer.holder', 'A nombre de', '', 'text', ['nullable', 'string', 'max:120'], 'string'],
         'bank_holder_id' => ['banco', 'billing.bank_transfer.holder_id', 'Cédula o RUC del titular', '', 'text', ['nullable', 'string', 'max:20'], 'string'],
+        'pay_transfer' => ['planes', 'billing.methods.transfer', 'Aceptar pagos por transferencia', 'El proveedor sube la foto del comprobante.', 'checkbox', ['boolean'], 'bool'],
+        'pay_cash' => ['planes', 'billing.methods.cash', 'Aceptar pagos en efectivo', 'El proveedor avisa y tú lo apruebas al recibir el dinero.', 'checkbox', ['boolean'], 'bool'],
+        'hero_eyebrow' => ['portada', 'content.hero_eyebrow', 'Línea sobre el titular', 'Ej.: Malacatos — Loja, Ecuador', 'text', ['required', 'string', 'max:80'], 'string'],
+        'hero_title' => ['portada', 'content.hero_title', 'Titular', 'Ej.: Gente de oficio cerca de ti, *en Malacatos.*', 'text', ['required', 'string', 'max:120'], 'string'],
+        'hero_lede' => ['portada', 'content.hero_lede', 'Texto bajo el titular', 'Una o dos frases.', 'textarea', ['required', 'string', 'max:300'], 'string'],
+        'about_text' => ['portada', 'content.about_text', 'Presentación de Malakplace', 'Aparece debajo del buscador.', 'textarea', ['required', 'string', 'max:400'], 'string'],
+        'providers_title' => ['portada', 'content.providers_title', 'Título de la sección para proveedores', '', 'text', ['required', 'string', 'max:120'], 'string'],
+        'footer_tagline' => ['portada', 'content.footer_tagline', 'Frase del pie de página', 'Aparece en todas las páginas.', 'text', ['required', 'string', 'max:160'], 'string'],
+        'announcement_enabled' => ['aviso', 'content.announcement.enabled', 'Mostrar el aviso', '', 'checkbox', ['boolean'], 'bool'],
+        'announcement_text' => ['aviso', 'content.announcement.text', 'Texto del aviso', 'Ej.: Este feriado respondemos desde el lunes.', 'text', ['nullable', 'string', 'max:160'], 'string'],
+        'announcement_link' => ['aviso', 'content.announcement.link', 'Enlace (opcional)', 'Una página para saber más. Déjalo vacío si no hace falta.', 'url', ['nullable', 'url:https,http', 'max:300'], 'string'],
+        'seo_title' => ['buscadores', 'content.seo_title', 'Título', 'Unos 60 caracteres.', 'text', ['required', 'string', 'max:70'], 'string'],
+        'seo_description' => ['buscadores', 'content.seo_description', 'Descripción', 'Unos 150 caracteres: qué es y dónde.', 'textarea', ['required', 'string', 'max:180'], 'string'],
+        'share_image' => ['buscadores', 'content.share_image', 'Imagen al compartir (dirección https)', 'Una foto de 1200×630. Vacío: la de siempre.', 'url', ['nullable', 'url:https', 'max:500'], 'string'],
         'background_valid_days' => ['verificacion', 'marketplace.verification.background_valid_days', 'Días que dura el sello de antecedentes', 'El certificado oficial vale 3 meses (90 días). Entre 30 y 365.', 'number', ['required', 'integer', 'between:30,365'], 'int'],
+    ];
+
+    /**
+     * Textos largos con su propia pantalla (/admin/legal), y la versión vigente de los términos.
+     * clave => config
+     */
+    public const TEXTS = [
+        'legal_terms' => 'content.legal.terms',
+        'legal_privacy' => 'content.legal.privacy',
+        'legal_summary_all' => 'content.legal.summary_all',
+        'legal_summary_provider' => 'content.legal.summary_provider',
+        'legal_summary_customer' => 'content.legal.summary_customer',
+        'legal_consent' => 'content.legal.consent',
+        'terms_version' => 'marketplace.terms_version',
     ];
 
     /** Zonas: guardadas como JSON, reemplazan config('marketplace.zones'). */
@@ -67,7 +99,21 @@ final class SiteSettings
             return config(self::FIELDS[$key][1]);
         }
 
+        if (isset(self::TEXTS[$key])) {
+            return config(self::TEXTS[$key]);
+        }
+
         return null;
+    }
+
+    /**
+     * Los campos de una pantalla ('ajustes' o 'textos').
+     *
+     * @return array<string, array>
+     */
+    public static function fieldsFor(string $page): array
+    {
+        return array_filter(self::FIELDS, fn (array $field) => (self::GROUPS[$field[0]][2] ?? null) === $page);
     }
 
     /**
@@ -77,7 +123,12 @@ final class SiteSettings
     {
         $now = now();
         foreach ($values as $key => $value) {
-            $stored = is_array($value) ? json_encode($value, JSON_UNESCAPED_UNICODE) : ($value === null || $value === '' ? null : (string) $value);
+            $stored = match (true) {
+                is_array($value) => json_encode($value, JSON_UNESCAPED_UNICODE),
+                is_bool($value) => $value ? '1' : '0',
+                $value === null || $value === '' => null,
+                default => (string) $value,
+            };
             DB::table('settings')->updateOrInsert(['key' => $key], ['value' => $stored, 'updated_at' => $now, 'created_at' => $now]);
         }
 
@@ -100,8 +151,15 @@ final class SiteSettings
             config([$configKey => $value === null ? null : match ($cast) {
                 'int' => (int) $value,
                 'float' => (float) $value,
+                'bool' => $value === '1' || $value === 'true',
                 default => $value,
             }]);
+        }
+
+        foreach (self::TEXTS as $key => $configKey) {
+            if (isset($values[$key]) && $values[$key] !== '') {
+                config([$configKey => $values[$key]]);
+            }
         }
 
         if (isset($values[self::ZONES_KEY])) {

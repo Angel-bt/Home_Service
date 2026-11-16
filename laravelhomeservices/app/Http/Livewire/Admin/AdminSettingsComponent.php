@@ -6,6 +6,7 @@ namespace App\Http\Livewire\Admin;
 
 use App\Models\ProviderZone;
 use App\Models\ServiceRequest;
+use App\Support\AdminLog;
 use App\Support\SiteSettings;
 use App\Support\WhatsApp;
 use Illuminate\Support\Facades\Auth;
@@ -14,9 +15,13 @@ use Livewire\Component;
 
 /**
  * Ajustes del sitio: lo que antes había que cambiar en el código o en las variables de entorno.
+ * La misma pantalla sirve para «Textos y aviso» (AdminContentComponent), con otros grupos.
  */
 class AdminSettingsComponent extends Component
 {
+    /** Qué grupos de SiteSettings::GROUPS muestra esta pantalla. */
+    protected string $page = 'ajustes';
+
     /** @var array<string, mixed> */
     public array $values = [];
 
@@ -29,8 +34,9 @@ class AdminSettingsComponent extends Component
 
     public function mount(): void
     {
-        foreach (array_keys(SiteSettings::FIELDS) as $key) {
-            $this->values[$key] = SiteSettings::value($key);
+        foreach (array_keys(SiteSettings::fieldsFor($this->page)) as $key) {
+            $value = SiteSettings::value($key);
+            $this->values[$key] = SiteSettings::FIELDS[$key][6] === 'bool' ? (bool) $value : $value;
         }
 
         $this->zones = config('marketplace.zones');
@@ -41,21 +47,40 @@ class AdminSettingsComponent extends Component
     {
         $this->authorizeAdmin();
 
+        $fields = SiteSettings::fieldsFor($this->page);
         $rules = [];
         $attributes = [];
-        foreach (SiteSettings::FIELDS as $key => [, , $label, , , $fieldRules]) {
+        foreach ($fields as $key => [, , $label, , , $fieldRules]) {
             $rules['values.' . $key] = $fieldRules;
             $attributes['values.' . $key] = mb_strtolower($label);
         }
-        $rules['values.contact_phone'][] = function (string $attribute, mixed $value, \Closure $fail): void {
-            if (WhatsApp::normalize((string) $value) === null) {
-                $fail('Escribe un celular válido, por ejemplo 0991234567.');
-            }
-        };
+
+        if (isset($fields['contact_phone'])) {
+            $rules['values.contact_phone'][] = function (string $attribute, mixed $value, \Closure $fail): void {
+                if (WhatsApp::normalize((string) $value) === null) {
+                    $fail('Escribe un celular válido, por ejemplo 0991234567.');
+                }
+            };
+        }
+        if (isset($fields['pay_cash'])) {
+            $rules['values.pay_cash'][] = function (string $attribute, mixed $value, \Closure $fail): void {
+                if (! $value && ! ($this->values['pay_transfer'] ?? false)) {
+                    $fail('Deja al menos una forma de pago activa; si no, nadie podrá pasarse al plan Pro.');
+                }
+            };
+        }
         $this->validate($rules, [], $attributes);
 
-        SiteSettings::save($this->values);
-        session()->flash('message', 'Ajustes guardados. Ya se ven en todo el sitio.');
+        // Un campo vacío no pasa por reglas propias: el aviso sin texto se revisa aparte.
+        if (isset($fields['announcement_text']) && ($this->values['announcement_enabled'] ?? false) && blank($this->values['announcement_text'] ?? null)) {
+            $this->addError('values.announcement_text', 'Escribe el texto del aviso, o desmarca «Mostrar el aviso».');
+
+            return;
+        }
+
+        SiteSettings::save(array_intersect_key($this->values, $fields));
+        AdminLog::record($this->page === 'textos' ? 'Cambió los textos del sitio' : 'Cambió los ajustes', null, implode(', ', array_map(fn ($key) => $fields[$key][2], array_keys($fields))));
+        session()->flash('message', 'Guardado. Ya se ve en todo el sitio.');
     }
 
     public function saveZones(): void
@@ -70,6 +95,7 @@ class AdminSettingsComponent extends Component
 
         $zones = array_map(fn ($label) => trim((string) $label), $this->zones);
         SiteSettings::save([SiteSettings::ZONES_KEY => $zones, SiteSettings::MAIN_ZONE_KEY => $this->mainZone]);
+        AdminLog::record('Cambió las zonas', null, implode(', ', $zones));
         session()->flash('message', 'Zonas guardadas.');
     }
 
@@ -115,17 +141,18 @@ class AdminSettingsComponent extends Component
     public function render()
     {
         $fields = [];
-        foreach (SiteSettings::FIELDS as $key => [$group, , $label, $hint, $type]) {
+        foreach (SiteSettings::fieldsFor($this->page) as $key => [$group, , $label, $hint, $type]) {
             $fields[$group][$key] = compact('label', 'hint', 'type');
         }
 
         return view('livewire.admin.admin-settings-component', [
-            'groups' => SiteSettings::GROUPS,
+            'groups' => array_filter(SiteSettings::GROUPS, fn (array $group) => $group[2] === $this->page),
             'fields' => $fields,
-        ])->layout('layouts.base')->title('Ajustes');
+            'page' => $this->page,
+        ])->layout('layouts.base')->title($this->page === 'textos' ? 'Textos y aviso' : 'Ajustes');
     }
 
-    private function authorizeAdmin(): void
+    protected function authorizeAdmin(): void
     {
         abort_unless(Auth::user()?->utype === 'ADM', 403);
     }

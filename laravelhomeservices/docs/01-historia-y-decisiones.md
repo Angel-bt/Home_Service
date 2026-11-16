@@ -268,6 +268,20 @@ Se encontró y corrigió un error de antes: al eliminar una cuenta de proveedor,
 
 Siguen en el código, a propósito: los términos y la privacidad (tienen versión y obligan a aceptar de nuevo; conviene que pasen por un abogado) y los textos de la portada.
 
+## Fase 10: operar el sitio solo desde el panel
+
+La meta: que el día a día no necesite tocar código ni entrar a Vercel o Supabase.
+
+- **Textos y aviso** (`/admin/content`): titular, texto y presentación de la portada, título para proveedores, frase del pie, título, descripción e imagen para Google y redes, y un **aviso destacado** que se prende y se apaga (abajo en todas las páginas; cada persona puede cerrarlo). Lo que va entre `*asteriscos*` sale destacado (`Content::rich()`).
+- **Textos legales** (`/admin/legal`): términos, privacidad, el resumen del registro (todos, solo proveedores, solo clientes) y el permiso de publicación. «Guardar corrección» no molesta a nadie; «Publicar nueva versión» cambia `terms_version` y cada cuenta acepta de nuevo al entrar. El formato es Markdown sencillo, con el HTML escapado y los enlaces peligrosos descartados (`Content::markdown()`). Los textos iniciales están en `resources/legal/`.
+- **Ajustes** suma las formas de pago del plan Pro (transferencia y efectivo); al menos una queda siempre activa.
+- **Estado del sistema** (`/admin/system`): base de datos, almacenamiento, correo y seguridad, a pedido y con la última revisión automática; qué revisar cuando algo falla; versión publicada; descarga de cuentas, servicios y solicitudes para Excel.
+- **Errores** (`/admin/errors`): cada error del sitio queda en `error_logs`, agrupado por lugar; se copia el detalle para quien mantiene el sitio y se marca como revisado (si vuelve a pasar, reaparece).
+- **Historial** (`/admin/history`): cada acción del panel (pagos, sellos, suspensiones, textos, ajustes, descargas…) con persona, hora e IP.
+- **Guía del administrador** (`/admin/guia`): cómo hacer cada tarea, con enlace a su pantalla.
+
+Lo que sigue necesitando a alguien técnico: el diseño y las funciones nuevas, las claves secretas en Vercel y un dominio propio.
+
 ## Decisiones pendientes o deliberadamente postergadas
 
 - **Content-Security-Policy:** no se configuró porque el sitio aún tiene scripts en línea (Livewire, contador de visitas, mapa). El tema heredado que usaba varios CDN ya se eliminó.

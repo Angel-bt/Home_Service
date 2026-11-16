@@ -15,7 +15,7 @@
             @endforeach
         </ul>
         @if ($note)
-            <p class="mt-3 text-[13px] leading-snug text-grafito-500">Los sellos son voluntarios. Dicen que revisamos un documento en esa fecha; no son una garantía. <a href="{{ route('home.terms') }}#sellos" class="ui-link">Qué significan</a></p>
+            <p class="mt-3 text-[13px] leading-snug text-grafito-500">Los sellos son voluntarios. Dicen que revisamos un documento en esa fecha; no son una garantía. <a href="{{ route('home.terms') }}#verificacion-y-sellos" class="ui-link">Qué significan</a></p>
         @endif
     </div>
 @endif

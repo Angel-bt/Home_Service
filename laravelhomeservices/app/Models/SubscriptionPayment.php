@@ -25,6 +25,16 @@ class SubscriptionPayment extends Model
     /** Methods providers can choose on their plan page. */
     public const MANUAL_METHODS = [self::METHOD_TRANSFER, self::METHOD_CASH];
 
+    /**
+     * Las formas de pago manuales que la administración tiene activas (Ajustes → Plan Pro).
+     *
+     * @return list<string>
+     */
+    public static function enabledManualMethods(): array
+    {
+        return array_values(array_filter(self::MANUAL_METHODS, fn (string $method) => (bool) config('billing.methods.' . $method, true)));
+    }
+
     public const STATUS_LABELS = [
         self::INITIATED => 'Iniciado (sin confirmar)',
         self::PENDING => 'En revisión',

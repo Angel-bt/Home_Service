@@ -37,6 +37,7 @@ class AdminEditServiceComponent extends Component
         $this->thumbnail = $service->thumbnail;
         $this->newimage = null;
         $this->newthumbnail = null;
+        \App\Support\AdminLog::record('Editó un servicio', $this->name);
         session()->flash('message', 'El servicio se actualizó correctamente.');
     }
 

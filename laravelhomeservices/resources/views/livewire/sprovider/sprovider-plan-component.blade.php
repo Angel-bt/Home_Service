@@ -67,7 +67,7 @@
                             <fieldset>
                                 <legend class="ui-label">2. ¿Cómo vas a pagar los ${{ number_format($total, 2) }}?</legend>
                                 <div class="grid gap-2 sm:grid-cols-2">
-                                    @foreach (['transfer' => ['Transferencia', 'card'], 'cash' => ['Efectivo', 'cash']] as $value => [$label, $icon])
+                                    @foreach (array_intersect_key(['transfer' => ['Transferencia', 'card'], 'cash' => ['Efectivo', 'cash']], array_flip($methods)) as $value => [$label, $icon])
                                         <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-humo-300 bg-white px-4 py-3 text-[15px] transition has-[:checked]:border-noche-900 has-[:checked]:bg-humo-50">
                                             <input type="radio" class="text-noche-900 focus:ring-noche-600/20" name="method" value="{{ $value }}" wire:model.live="method">
                                             <x-site.icon :name="$icon" class="h-5 w-5 text-grafito-500" /> {{ $label }}

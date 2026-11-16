@@ -78,6 +78,7 @@ class AdminEditServiceCategoryComponent extends Component
         $scategory->featured = $this->featured;
 
         $scategory->save();
+        \App\Support\AdminLog::record('Editó una categoría', $this->name);
         session()->flash('message', 'La categoría se actualizó correctamente.');
     }
 

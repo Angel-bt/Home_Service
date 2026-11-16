@@ -44,6 +44,7 @@ class AdminPaymentsComponent extends Component
         abort_unless(Auth::user()->utype === 'ADM', 403);
 
         $payment = $billing->approve(SubscriptionPayment::findOrFail($paymentId), Auth::user());
+        \App\Support\AdminLog::record('Aprobó un pago Pro', $payment->user?->email, '$' . $payment->amount);
         session()->flash('message', 'Pago aprobado. ' . $payment->user->name . ' tiene Pro hasta el ' . $payment->paid_until->format('d/m/Y') . '.');
     }
 
@@ -62,6 +63,7 @@ class AdminPaymentsComponent extends Component
 
         $billing->reject(SubscriptionPayment::findOrFail($this->rejectingId), Auth::user(), $this->rejectReason);
         $this->rejectingId = null;
+        \App\Support\AdminLog::record('Rechazó un pago Pro', null, $this->rejectReason);
         session()->flash('message', 'Pago rechazado. El proveedor verá el motivo en su historial.');
     }
 
@@ -89,6 +91,7 @@ class AdminPaymentsComponent extends Component
         $payment = $billing->approve($payment, Auth::user());
 
         $this->reset(['cashUserId', 'cashPeriods', 'cashNote']);
+        \App\Support\AdminLog::record('Registró un pago en efectivo', $payment->user?->email, '$' . $payment->amount);
         session()->flash('message', 'Pago en efectivo registrado. ' . $payment->user->name . ' tiene Pro hasta el ' . $payment->paid_until->format('d/m/Y') . '.');
     }
 

@@ -25,13 +25,23 @@ class CronController extends Controller
         $mail = Artisan::call('mail:check');
         $security = Artisan::call('security:check');
 
-        return response()->json([
+        $results = [
             'billing:expire-plans' => Artisan::call('billing:expire-plans'),
             'activity:prune' => Artisan::call('activity:prune'),
             'services:sync-visit-counters' => config('marketplace.visit_counter') === 'redis' ? Artisan::call('services:sync-visit-counters') : 'not needed',
             'storage:check' => $storage,
             'mail:check' => $mail,
             'security:check' => $security,
-        ], $storage === 0 && $mail === 0 && $security === 0 ? 200 : 500);
+        ];
+        $ok = $storage === 0 && $mail === 0 && $security === 0;
+
+        // Para «Estado del sistema»: cuándo corrió y cómo salió.
+        try {
+            \Illuminate\Support\Facades\Cache::forever('system:last_cron', ['at' => now()->toIso8601String(), 'ok' => $ok, 'results' => $results]);
+        } catch (\Throwable $exception) {
+            report($exception);
+        }
+
+        return response()->json($results, $ok ? 200 : 500);
     }
 }

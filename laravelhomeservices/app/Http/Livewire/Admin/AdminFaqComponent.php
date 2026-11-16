@@ -63,6 +63,7 @@ class AdminFaqComponent extends Component
         }
 
         $this->editingId = null;
+        \App\Support\AdminLog::record('Guardó una pregunta frecuente', $data['question']);
         session()->flash('message', 'Pregunta guardada. Ya se ve en la página de preguntas frecuentes.');
     }
 
@@ -90,6 +91,7 @@ class AdminFaqComponent extends Component
         $this->authorizeAdmin();
 
         Faq::whereKey($faqId)->delete();
+        \App\Support\AdminLog::record('Eliminó una pregunta frecuente', 'pregunta #' . $faqId);
         session()->flash('message', 'Pregunta eliminada.');
     }
 

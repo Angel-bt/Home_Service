@@ -36,6 +36,7 @@ class AdminVerificationsComponent extends Component
         abort_unless(Auth::user()->utype === 'ADM', 403);
 
         $verification->approve(ProviderDocument::findOrFail($documentId), Auth::user());
+        \App\Support\AdminLog::record('Dio un sello', 'documento #' . $documentId);
         session()->flash('message', 'Sello otorgado. El archivo ya se borró y el proveedor recibió un correo.');
     }
 
@@ -54,6 +55,7 @@ class AdminVerificationsComponent extends Component
 
         $verification->reject(ProviderDocument::findOrFail($this->rejectingId), Auth::user(), $this->rejectReason);
         $this->rejectingId = null;
+        \App\Support\AdminLog::record('No dio un sello', null, $this->rejectReason);
         session()->flash('message', 'Listo. El archivo ya se borró y el proveedor recibió el motivo por correo.');
     }
 
@@ -63,6 +65,7 @@ class AdminVerificationsComponent extends Component
 
         $document = ProviderDocument::with('provider')->findOrFail($documentId);
         $verification->withdraw($document->provider, $document->type);
+        \App\Support\AdminLog::record('Quitó un sello', $document->provider?->user?->email, $document->type);
         session()->flash('message', 'Quitamos ese sello del perfil del proveedor.');
     }
 

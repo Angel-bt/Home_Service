@@ -54,6 +54,10 @@ Ya estaban bien: HSTS, cookies `secure`/`httponly`/`samesite=lax`, CSRF, límite
 
 Pendiente: revisar en el panel de Supabase (*Advisors → Security*) que no queden avisos, activar la verificación en dos pasos en la cuenta de administración y respaldos periódicos de la base (el plan gratuito de Supabase no guarda respaldos descargables).
 
+### Historial y errores
+
+`App\Support\AdminLog` anota cada acción del panel (con la IP) en `admin_logs`; se conserva un año. `App\Support\ErrorRecorder`, llamado desde `Exceptions\Handler`, guarda los errores reportados en `error_logs` (clase, mensaje, archivo y línea, dirección), agrupados; nunca lanza otro error si la base falla. Los textos que escribe la administración pasan por `App\Support\Content`, que escapa el HTML: un texto no puede meter código en el sitio.
+
 ## Formularios y abuso
 
 | Medida | Límite | Dónde |

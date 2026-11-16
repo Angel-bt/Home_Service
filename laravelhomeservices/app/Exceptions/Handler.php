@@ -43,6 +43,11 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
+        // Cada error queda también en /admin/errors, para verlo sin entrar a los registros del servidor.
+        $this->reportable(function (\Throwable $e): void {
+            \App\Support\ErrorRecorder::capture($e);
+        });
+
         // Servidor de correo caído (p. ej. al pedir recuperar la contraseña): explicarlo, no una página de error.
         $this->renderable(function (\Symfony\Component\Mailer\Exception\TransportExceptionInterface $e, $request) {
             if ($request->expectsJson()) {

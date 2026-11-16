@@ -64,6 +64,7 @@ class AdminUsersComponent extends Component
         $user->forceFill(['suspended_at' => now(), 'suspension_reason' => $this->suspendReason])->save();
         Cache::forget(HomeComponent::CACHE_KEY);
         $this->suspendingId = null;
+        \App\Support\AdminLog::record('Suspendió una cuenta', $user->email, $this->suspendReason);
         session()->flash('message', $user->name . ' quedó suspendido: ya no puede entrar y sus servicios no se ven.');
     }
 
@@ -74,6 +75,7 @@ class AdminUsersComponent extends Component
         $user = User::findOrFail($userId);
         $user->forceFill(['suspended_at' => null, 'suspension_reason' => null])->save();
         Cache::forget(HomeComponent::CACHE_KEY);
+        \App\Support\AdminLog::record('Reactivó una cuenta', $user->email);
         session()->flash('message', $user->name . ' puede volver a entrar y sus servicios se ven otra vez.');
     }
 
@@ -107,6 +109,7 @@ class AdminUsersComponent extends Component
         }
         $user->save();
 
+        \App\Support\AdminLog::record('Cambió el tipo de cuenta', $user->email, self::ROLES[$role]);
         session()->flash('message', $user->name . ' ahora es: ' . self::ROLES[$role] . '.');
     }
 
@@ -128,6 +131,7 @@ class AdminUsersComponent extends Component
         $name = $user->name;
         $deleter->delete($user);
         Cache::forget(HomeComponent::CACHE_KEY);
+        \App\Support\AdminLog::record('Eliminó una cuenta', $name);
         session()->flash('message', 'Se eliminó la cuenta de ' . $name . ' con sus servicios.');
     }
 

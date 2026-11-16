@@ -9,7 +9,7 @@
         <div class="grid gap-12 border-b border-white/10 pb-16 md:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1fr]">
             <div>
                 <p class="lp-title text-3xl text-white">¿Una duda? <span class="lp-accent text-oro-300">Escríbenos.</span></p>
-                <p class="mt-4 max-w-xs text-[15px] leading-relaxed text-white/50">Atendemos desde Malacatos. Respondemos el mismo día.</p>
+                <p class="mt-4 max-w-xs text-[15px] leading-relaxed text-white/50">{{ config('content.footer_tagline') }}</p>
                 @if ($whatsapp)
                     <a href="{{ $whatsapp }}" target="_blank" rel="noopener" class="mt-7 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-[13px] font-medium uppercase tracking-[.08em] text-noche-900 transition hover:bg-oro-300">
                         <x-site.icon name="whatsapp" class="h-4 w-4" /> WhatsApp

@@ -28,6 +28,12 @@ class SproviderPlanComponent extends Component
 
     public string $method = SubscriptionPayment::METHOD_TRANSFER;
     public int $periods = 1;
+
+    public function mount(): void
+    {
+        // Si la administración apagó la transferencia, se propone la otra forma de pago.
+        $this->method = SubscriptionPayment::enabledManualMethods()[0] ?? SubscriptionPayment::METHOD_TRANSFER;
+    }
     public string $reference = '';
     public $receipt;
 
@@ -36,7 +42,7 @@ class SproviderPlanComponent extends Component
         $isTransfer = $this->method === SubscriptionPayment::METHOD_TRANSFER;
 
         return [
-            'method' => ['required', Rule::in(SubscriptionPayment::MANUAL_METHODS)],
+            'method' => ['required', Rule::in(SubscriptionPayment::enabledManualMethods())],
             'periods' => ['required', 'integer', Rule::in(self::PERIOD_OPTIONS)],
             // Transfer: bank reference number. Cash: when/where the money will be handed over.
             'reference' => [$isTransfer ? 'required' : 'nullable', 'string', 'max:100'],
@@ -112,6 +118,7 @@ class SproviderPlanComponent extends Component
             'periodOptions' => self::PERIOD_OPTIONS,
             'bank' => config('billing.bank_transfer'),
             'payphoneEnabled' => (bool) config('billing.payphone.enabled'),
+            'methods' => SubscriptionPayment::enabledManualMethods(),
             'contactWhatsapp' => WhatsApp::link(config('marketplace.contact_phone'), 'Hola, quiero pagar el plan Pro en efectivo. Soy ' . $user->name . '.'),
             'hasPending' => $user->subscriptionPayments()->where('status', SubscriptionPayment::PENDING)->exists(),
             'payments' => $user->subscriptionPayments()->latest()->take(10)->get(),

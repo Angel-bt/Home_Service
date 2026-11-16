@@ -48,6 +48,7 @@ class AdminAddServiceCategoryComponent extends Component
         \App\Support\Media::store($this->image, 'categories', $imageName);
         $scategory->image = $imageName;
         $scategory->save();
+        \App\Support\AdminLog::record('Creó una categoría', $this->name);
         session()->flash('message', 'La categoría se creó correctamente.');
     }
 

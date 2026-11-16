@@ -157,7 +157,13 @@ Archivos: `vercel.json`, `.vercelignore` y `api/index.php` (lleva a `/tmp` lo qu
 
 **Rutas bloqueadas en Vercel:** `vercel.json` responde 404 a las direcciones de archivos del proyecto (`.env*`, `composer.*`, `vendor/`, `app/`, `routes/`, `docs/`…). Si algún día una ruta pública empieza con uno de esos nombres, hay que sacarla de esa regla.
 
-**Limpieza de actividad:** el cron diario también corre `php artisan activity:prune`, que borra lo que tenga más de `ACTIVITY_RETENTION_DAYS` días (365 por defecto; es lo que promete la política de privacidad).
+**Textos desde el panel:** los textos de la portada, el aviso, lo que se ve en Google y los textos legales se guardan en `settings` y reemplazan a `config/content.php` (cuyos valores iniciales salen de `resources/legal/`). La versión vigente de los términos (`terms_version`) también vive en `settings` cuando se publica una nueva desde el panel.
+
+**Última revisión automática:** `/cron/diario` guarda en caché (`system:last_cron`) cuándo corrió y cómo salió; «Estado del sistema» lo muestra.
+
+**Orden al desplegar la migración `2026_11_13_000001`:** primero migra, después sube el código (el panel y el registro de errores usan las tablas nuevas).
+
+**Limpieza de actividad:** el cron diario también corre `php artisan activity:prune`, que borra lo que tenga más de `ACTIVITY_RETENTION_DAYS` días (365 por defecto; es lo que promete la política de privacidad), el historial de la administración de más de un año y los errores revisados hace un mes o que no se repiten hace tres.
 
 **Autocomprobación del correo:** el cron diario también corre `php artisan mail:check`, que inicia sesión en el servidor SMTP sin enviar nada. Si falla (por ejemplo, si revocan la contraseña), `/cron/diario` responde 500.
 
