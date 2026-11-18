@@ -26,6 +26,9 @@
         <env name="DB_CONNECTION" value="sqlite"/>
         <env name="DB_DATABASE" value=":memory:"/>
         <env name="MAIL_MAILER" value="array"/>
+        <!-- Las pruebas no dependen del .env de cada máquina (en GitHub se copia .env.example, con estos vacíos). -->
+        <env name="MARKETPLACE_CONTACT_PHONE" value="0995528556" force="true"/>
+        <env name="MARKETPLACE_CONTACT_EMAIL" value="gameri7@hotmail.com" force="true"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="PULSE_ENABLED" value="false"/>
