@@ -92,6 +92,10 @@ Route::post('/search', [SearchController::class, 'searchService'])->name('search
 // Tareas programadas en hosts sin schedule:run (Vercel Cron). Protegida con CRON_SECRET.
 Route::get('/cron/diario', [\App\Http\Controllers\CronController::class, 'daily'])->middleware('throttle:10,1')->name('cron.daily');
 
+// Para el vigilante externo: ¿está todo funcionando? (ver .github/workflows/vigilancia.yml)
+// Sin el grupo web: no abre sesión, así no deja una fila en `sessions` cada 15 minutos.
+Route::get('/salud', \App\Http\Controllers\HealthController::class)->withoutMiddleware('web')->middleware('throttle:30,1')->name('health');
+
 // Ruta para incrementar el contador de visitas (POST: efecto secundario, no debe ser GET)
 Route::post('/increment-visit', [VisitController::class, 'incrementVisit'])->middleware('throttle:60,1')->name('increment.visit');
 

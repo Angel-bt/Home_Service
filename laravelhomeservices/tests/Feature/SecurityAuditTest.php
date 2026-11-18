@@ -132,6 +132,14 @@ class SecurityAuditTest extends TestCase
 
     public function test_the_supabase_lockdown_does_nothing_outside_supabase(): void
     {
+        if (SupabaseLockdown::applies()) {
+            // Corriendo las pruebas sobre Supabase: ahí sí aplica, y todas las tablas quedan cerradas.
+            SupabaseLockdown::apply();
+            $this->artisan('security:check')->assertSuccessful();
+
+            return;
+        }
+
         $this->assertFalse(SupabaseLockdown::applies());
         $this->assertSame(0, SupabaseLockdown::apply());
     }

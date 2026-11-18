@@ -1,0 +1,397 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Controllers/AdminTrustController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$amount\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/BillingController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$client_transaction_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/BillingController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$contacts\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Livewire/Admin/AdminActivityComponent.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$service_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Livewire/Admin/AdminActivityComponent.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$views\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Livewire/Admin/AdminActivityComponent.php
+
+		-
+			message: '#^Relation ''zones'' is not found in App\\Models\\ServiceProvider model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Livewire/Admin/AdminDashboardComponent.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Livewire/Admin/AdminPaymentsComponent.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Livewire/Admin/AdminPaymentsComponent.php
+
+		-
+			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
+			identifier: larastan.noEnvCallsOutsideOfConfig
+			count: 2
+			path: app/Http/Livewire/Admin/AdminSystemComponent.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Livewire/Admin/AdminVerificationsComponent.php
+
+		-
+			message: '#^Parameter \#1 \$provider of method App\\Services\\ProviderVerification\:\:withdraw\(\) expects App\\Models\\ServiceProvider, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Livewire/Admin/AdminVerificationsComponent.php
+
+		-
+			message: '#^Call to function abort_if\(\) with false and 403 will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: app/Http/Livewire/Admin/Service/AdminAddServiceComponent.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between App\\Models\\User and null will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Http/Livewire/Admin/Service/AdminAddServiceComponent.php
+
+		-
+			message: '#^Relation ''category'' is not found in App\\Models\\ServiceProvider model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Livewire/Admin/Service/AdminServiceProvidersComponent.php
+
+		-
+			message: '#^Relation ''user'' is not found in App\\Models\\ServiceProvider model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Livewire/Admin/Service/AdminServiceProvidersComponent.php
+
+		-
+			message: '#^Relation ''zones'' is not found in App\\Models\\ServiceProvider model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Livewire/Admin/Service/AdminServiceProvidersComponent.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Service\:\:\$reviews_avg_rating\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Livewire/HomeComponent.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 6
+			path: app/Http/Livewire/HomeComponent.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$serviceProvider\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Livewire/HomeComponent.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$slug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Livewire/HomeComponent.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$thumbnail\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Livewire/HomeComponent.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$utype\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Http/Livewire/HomeComponent.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,App\\Models\\Review\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Http/Livewire/HomeComponent.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,App\\Models\\Service\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 2
+			path: app/Http/Livewire/HomeComponent.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,App\\Models\\ServiceCategory\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Http/Livewire/HomeComponent.php
+
+		-
+			message: '#^Call to function method_exists\(\) with \$this\(App\\Http\\Livewire\\Service\\SearchComponent\) and ''resetPage'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: app/Http/Livewire/Service/SearchComponent.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Http/Livewire/Service/ServiceDetailsComponent.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>phone" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Livewire/Service/ServiceDetailsComponent.php
+
+		-
+			message: '#^Call to function method_exists\(\) with \$this\(App\\Http\\Livewire\\Service\\ServicesByCategoryComponent\) and ''resetPage'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: app/Http/Livewire/Service/ServicesByCategoryComponent.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$about\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Livewire/Sprovider/SproviderDashboardComponent.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$image\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Livewire/Sprovider/SproviderDashboardComponent.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$whatsapp\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Livewire/Sprovider/SproviderDashboardComponent.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$zones_count\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Livewire/Sprovider/SproviderDashboardComponent.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isVerified\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Livewire/Sprovider/SproviderDashboardComponent.php
+
+		-
+			message: '#^Relation ''category'' is not found in App\\Models\\ServiceProvider model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Livewire/Sprovider/SproviderProfileComponent.php
+
+		-
+			message: '#^Relation ''zones'' is not found in App\\Models\\ServiceProvider model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Livewire/Sprovider/SproviderProfileComponent.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:transitionTo\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Livewire/Sprovider/SproviderRequestsComponent.php
+
+		-
+			message: '#^Method App\\Http\\Middleware\\Authenticate\:\:redirectTo\(\) should return string\|null but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Middleware/Authenticate.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$suspended_at\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/Service.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$utype\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Service.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\ConnectionInterface\:\:getDriverName\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Models/Service.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:whatsappNumber\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Models/Service.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/ServiceRequest.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/ServiceRequest.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$utype\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/ServiceRequest.php
+
+		-
+			message: '#^Parameter \#1 \$user of method App\\Models\\ServiceRequest\:\:tell\(\) expects App\\Models\\User\|null, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 4
+			path: app/Models/ServiceRequest.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$whatsapp\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\User\:\:\$appends is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$appends\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\User\:\:\$casts is not covariant with PHPDoc type array\<string, string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$casts\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\User\:\:\$hidden is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$hidden\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc type array\<string\> of property App\\Models\\User\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\ServiceProvider\:\:\$user\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/ProviderVerification.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$background_checked_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/ProviderVerification.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$background_valid_until\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/ProviderVerification.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$cv_reviewed_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/ProviderVerification.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$identity_verified_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/ProviderVerification.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/ProviderVerification.php
+
+		-
+			message: '#^Match expression does not handle remaining value\: string$#'
+			identifier: match.unhandled
+			count: 2
+			path: app/Services/ProviderVerification.php
+
+		-
+			message: '#^Parameter \#2 \$args of static method Redis\:\:eval\(\) expects array, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/ServiceVisitCounter.php
+
+		-
+			message: '#^Parameter \#3 \$num_keys of static method Redis\:\:eval\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/ServiceVisitCounter.php
+
+		-
+			message: '#^Static method Redis\:\:eval\(\) invoked with 5 parameters, 1\-3 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: app/Services/ServiceVisitCounter.php
+
+		-
+			message: '#^Offset 2 on array\{''Aviso destacado'', ''Un mensaje corto…'', ''textos''\}\|array\{''Contacto de…'', ''Lo que ve la gente…'', ''ajustes''\}\|array\{''Datos para…'', ''Lo que ven los…'', ''ajustes''\}\|array\{''Google y redes'', ''Cómo se ve…'', ''textos''\}\|array\{''Plan gratuito y…'', ''Cuánto pueden…'', ''ajustes''\}\|array\{''Portada'', ''Los textos…'', ''textos''\}\|array\{''Verificación'', ''Cuánto dura el…'', ''ajustes''\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: app/Support/SiteSettings.php
+
+		-
+			message: '#^Call to static method factory\(\) on an unknown class App\\Models\\Team\.$#'
+			identifier: class.notFound
+			count: 1
+			path: database/factories/UserFactory.php
+
+		-
+			message: '#^Method Database\\Factories\\UserFactory\:\:withPersonalTeam\(\) should return \$this\(Database\\Factories\\UserFactory\) but returns static\(Database\\Factories\\UserFactory\)\.$#'
+			identifier: return.type
+			count: 2
+			path: database/factories/UserFactory.php
+
+		-
+			message: '#^PHPDoc type string of property Database\\Factories\\UserFactory\:\:\$model is not covariant with PHPDoc type class\-string\<Illuminate\\Database\\Eloquent\\Model\> of overridden property Illuminate\\Database\\Eloquent\\Factories\\Factory\<Illuminate\\Database\\Eloquent\\Model\>\:\:\$model\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: database/factories/UserFactory.php

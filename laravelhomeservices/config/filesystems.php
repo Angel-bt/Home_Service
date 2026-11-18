@@ -53,6 +53,24 @@ return [
             'throw' => false,
         ],
 
+        // Copias de seguridad de la base (cifradas). Por defecto en el almacén privado, carpeta «copias»;
+        // con BACKUPS_BUCKET (y sus BACKUPS_* opcionales) van a otro proveedor, lo más seguro.
+        'backups' => env('BACKUPS_BUCKET', env('RECEIPTS_BUCKET')) ? [
+            'driver' => 's3',
+            'key' => env('BACKUPS_ACCESS_KEY_ID', env('AWS_ACCESS_KEY_ID')),
+            'secret' => env('BACKUPS_SECRET_ACCESS_KEY', env('AWS_SECRET_ACCESS_KEY')),
+            'region' => env('BACKUPS_DEFAULT_REGION', env('AWS_DEFAULT_REGION')),
+            'bucket' => env('BACKUPS_BUCKET', env('RECEIPTS_BUCKET')),
+            'endpoint' => env('BACKUPS_ENDPOINT', env('AWS_ENDPOINT')),
+            'use_path_style_endpoint' => env('BACKUPS_USE_PATH_STYLE_ENDPOINT', env('AWS_USE_PATH_STYLE_ENDPOINT', false)),
+            'root' => 'copias',
+            'throw' => false,
+        ] : [
+            'driver' => 'local',
+            'root' => storage_path('app/backups'),
+            'throw' => false,
+        ],
+
         // Subidas de Livewire antes de guardarse: nunca en public/, porque pueden ser comprobantes de pago.
         'uploads' => [
             'driver' => 'local',

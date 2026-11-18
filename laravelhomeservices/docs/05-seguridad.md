@@ -10,6 +10,7 @@ Medidas aplicadas, qué protegen y dónde están. Están cubiertas por `tests/Fe
 | Los mismos guards en **cada petición Livewire** | `AppServiceProvider` (`Livewire::addPersistentMiddleware`) | Las acciones de Livewire (borrar, aprobar, subir archivos) van por `/livewire/update`, no por la ruta de la página. Sin esto, alguien que perdió el rol podría seguir ejecutando acciones. |
 | Comprobaciones de dueño en el código | Componentes del proveedor, `ServiceRequest` | Un proveedor solo edita sus servicios y solo cambia sus solicitudes; un cliente solo cancela y reseña las suyas. |
 | Registro limitado a `CST` / `SVP` | `CreateNewUser` | Nadie puede crearse una cuenta de administrador desde el formulario. |
+| Verificación en dos pasos **obligatoria** para administración | `AuthAdmin`, `marketplace.admin_two_factor` (`ADMIN_TWO_FACTOR`, encendido en producción) | Con la contraseña sola no se entra al panel: sin la verificación activada y confirmada, cada página del panel (y cada acción Livewire) lleva a «Cuenta», a la sección para activarla. |
 
 ## Datos y archivos
 
@@ -56,7 +57,7 @@ Pendiente: revisar en el panel de Supabase (*Advisors → Security*) que no qued
 
 ### Historial y errores
 
-`App\Support\AdminLog` anota cada acción del panel (con la IP) en `admin_logs`; se conserva un año. `App\Support\ErrorRecorder`, llamado desde `Exceptions\Handler`, guarda los errores reportados en `error_logs` (clase, mensaje, archivo y línea, dirección), agrupados; nunca lanza otro error si la base falla. Los textos que escribe la administración pasan por `App\Support\Content`, que escapa el HTML: un texto no puede meter código en el sitio.
+`App\Support\AdminLog` anota cada acción del panel (con la IP) en `admin_logs`; se conserva un año. `App\Support\ErrorRecorder`, llamado desde `Exceptions\Handler`, guarda los errores reportados en `error_logs` (clase, mensaje, archivo y línea, dirección), agrupados; nunca lanza otro error si la base falla. Cuando aparece un error que nunca había pasado, avisa por correo a la administración (como mucho 5 por hora). Los textos que escribe la administración pasan por `App\Support\Content`, que escapa el HTML: un texto no puede meter código en el sitio.
 
 ## Formularios y abuso
 
@@ -96,7 +97,8 @@ Los límites de las acciones Livewire usan `Concerns\ThrottlesActions`, porque e
 
 ## Dependencias
 
-- Laravel 13 y paquetes actualizados (soporte de seguridad vigente). Revisa con `composer audit` y `npm audit`.
+- Laravel 13 y paquetes actualizados (soporte de seguridad vigente). `composer audit` y `npm audit` corren solos en cada cambio (GitHub Actions) y Dependabot propone las actualizaciones cada mes.
+- Las copias de seguridad de la base van cifradas con `APP_KEY` (ver `06`).
 - `APP_DEBUG=false` en producción (ya en `.env.production.example`): con `true` se muestran trazas con datos internos.
 
 **Subidas temporales:** nunca en `public/` (disco `uploads`, o el bucket privado en Vercel), porque pueden ser comprobantes de pago. **`/cron/diario`** responde 404 sin `CRON_SECRET`. **`TRUSTED_PROXIES=*`** solo en hosts accesibles únicamente a través de su proxy, como Vercel: en otro servidor permitiría falsificar la IP y saltarse los límites de intentos.

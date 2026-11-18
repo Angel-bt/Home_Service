@@ -161,7 +161,23 @@ class ServerlessDeploymentTest extends TestCase
         $this->withToken('otro')->get('/cron/diario')->assertNotFound();
         Storage::fake('local');
         Storage::fake('receipts');
+        Storage::fake('backups');
         $this->withToken('secreto')->get('/cron/diario')->assertOk()->assertJson(['billing:expire-plans' => 0]);
+    }
+
+    public function test_health_check_reports_what_is_failing_without_a_session(): void
+    {
+        $this->get('/salud')->assertOk()->assertExactJson(['estado' => 'bien'])->assertCookieMissing(config('session.cookie'));
+
+        \Illuminate\Support\Facades\Cache::forever('system:last_cron', ['at' => now()->toIso8601String(), 'ok' => false]);
+        \Illuminate\Support\Facades\Cache::forever('system:last_backup', ['at' => now()->toIso8601String(), 'ok' => false, 'last_ok' => now()->subDays(3)->toIso8601String()]);
+
+        $this->get('/salud')->assertStatus(503)->assertJson(['falla' => ['revisión diaria', 'copias de seguridad']]);
+
+        \Illuminate\Support\Facades\Cache::forever('system:last_cron', ['at' => now()->toIso8601String(), 'ok' => true]);
+        \Illuminate\Support\Facades\Cache::forever('system:last_backup', ['at' => now()->toIso8601String(), 'ok' => true, 'last_ok' => now()->toIso8601String()]);
+
+        $this->get('/salud')->assertOk();
     }
 
     public function test_storage_check_passes_and_cleans_up_after_itself(): void
@@ -195,6 +211,7 @@ class ServerlessDeploymentTest extends TestCase
             'marketplace.visit_counter' => 'database',
             'filesystems.disks.receipts' => ['driver' => 'not-a-driver'],
         ]);
+        Storage::fake('backups');
 
         $this->withToken('secreto')->get('/cron/diario')->assertStatus(500);
     }

@@ -1,0 +1,126 @@
+# Revisión automática de cada cambio. Si algo falla, GitHub lo marca en rojo y avisa por correo.
+# Pruebas en SQLite (rápido) y en Postgres (el motor de producción), análisis estático,
+# formato de los archivos cambiados y avisos de seguridad de las dependencias.
+name: Pruebas
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: pruebas-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: laravelhomeservices
+
+jobs:
+  pruebas:
+    name: Pruebas (${{ matrix.db }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        db: [sqlite, pgsql]
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: malakplace
+          POSTGRES_PASSWORD: malakplace
+          POSTGRES_DB: malakplace
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U malakplace"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_sqlite, pdo_pgsql, intl, gd
+          coverage: none
+
+      - name: Caché de Composer
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache/files
+          key: composer-${{ hashFiles('laravelhomeservices/composer.lock') }}
+
+      - run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Preparar el entorno
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Pruebas en ${{ matrix.db }}
+        run: php artisan test --compact
+        env:
+          DB_CONNECTION: ${{ matrix.db }}
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_DATABASE: ${{ matrix.db == 'pgsql' && 'malakplace' || ':memory:' }}
+          DB_USERNAME: malakplace
+          DB_PASSWORD: malakplace
+
+  calidad:
+    name: Calidad y seguridad
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: intl, gd
+          coverage: none
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: laravelhomeservices/package-lock.json
+
+      - run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Avisos de seguridad (PHP)
+        run: composer audit
+
+      - name: Avisos de seguridad (JavaScript que llega al navegador)
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Análisis estático (Larastan)
+        run: vendor/bin/phpstan analyse --memory-limit=2G --no-progress
+
+      - name: Formato de los archivos cambiados (Pint)
+        run: |
+          BASE="${{ github.event.pull_request.base.sha || github.event.before }}"
+          if [ -z "$BASE" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then
+            echo "No hay con qué comparar; se omite."
+            exit 0
+          fi
+          FILES=$(git diff --relative --name-only --diff-filter=AMR "$BASE" HEAD -- . | grep '\.php$' | grep -v '\.blade\.php$' || true)
+          if [ -z "$FILES" ]; then
+            echo "Ningún archivo PHP cambiado."
+            exit 0
+          fi
+          vendor/bin/pint --test $FILES
+
+      - name: Compilar estilos y scripts
+        run: |
+          npm ci --no-audit --no-fund
+          npm run prod

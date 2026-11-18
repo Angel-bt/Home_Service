@@ -177,6 +177,7 @@ class AdminCatalogAndPermissionsTest extends TestCase
             'corregir textos legales' => [\App\Http\Livewire\Admin\AdminLegalComponent::class, [], 'saveCorrection', []],
             'publicar versión de términos' => [\App\Http\Livewire\Admin\AdminLegalComponent::class, [], 'publishVersion', []],
             'revisar el sistema' => [\App\Http\Livewire\Admin\AdminSystemComponent::class, [], 'runChecks', []],
+            'hacer una copia' => [\App\Http\Livewire\Admin\AdminSystemComponent::class, [], 'backupNow', []],
             'marcar errores' => [\App\Http\Livewire\Admin\AdminErrorsComponent::class, [], 'resolveAll', []],
             'marcar un error' => [\App\Http\Livewire\Admin\AdminErrorsComponent::class, [], 'resolve', [1]],
         ];

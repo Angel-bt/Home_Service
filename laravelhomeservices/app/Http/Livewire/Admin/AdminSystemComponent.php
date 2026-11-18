@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Number;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Throwable;
@@ -53,9 +54,30 @@ class AdminSystemComponent extends Component
         AdminLog::record('Revisó el estado del sistema', null, $failed === 0 ? 'Todo bien' : $failed . ' con problemas');
     }
 
+    /**
+     * Copia de seguridad a pedido, con prueba de restauración. Tarda unos segundos.
+     */
+    public function backupNow(): void
+    {
+        abort_unless(Auth::user()?->utype === 'ADM', 403);
+
+        try {
+            $code = Artisan::call('backup:run', ['--test-restore' => true]);
+        } catch (Throwable $exception) {
+            report($exception);
+            $code = 1;
+        }
+
+        AdminLog::record('Hizo una copia de seguridad', null, $code === 0 ? 'Bien' : 'Falló');
+        session()->flash($code === 0 ? 'message' : 'error', $code === 0
+            ? 'Copia hecha y probada: se restauró completa en un espacio aparte.'
+            : 'La copia falló. Abajo dice por qué.');
+    }
+
     public function render()
     {
         $cron = Cache::get('system:last_cron');
+        $backup = Cache::get('system:last_backup');
 
         try {
             $database = DB::connection()->getDriverName();
@@ -68,6 +90,15 @@ class AdminSystemComponent extends Component
         return view('livewire.admin.admin-system-component', [
             'checks' => self::CHECKS,
             'cron' => is_array($cron) ? $cron + ['when' => Carbon::parse($cron['at'])] : null,
+            'backup' => is_array($backup) ? [
+                'ok' => (bool) ($backup['ok'] ?? false),
+                'when' => Carbon::parse($backup['at']),
+                'rows' => (int) ($backup['rows'] ?? 0),
+                'size' => Number::fileSize((int) ($backup['size'] ?? 0)),
+                'error' => Str::limit((string) ($backup['error'] ?? ''), 200),
+                'lastOk' => ($backup['last_ok'] ?? null) ? Carbon::parse($backup['last_ok']) : null,
+                'tested' => ($backup['restore_tested_at'] ?? null) ? Carbon::parse($backup['restore_tested_at']) : null,
+            ] : null,
             'database' => $database ?? '—',
             'databaseOk' => $databaseOk,
             'openErrors' => $databaseOk ? (int) DB::table('error_logs')->whereNull('resolved_at')->count() : 0,

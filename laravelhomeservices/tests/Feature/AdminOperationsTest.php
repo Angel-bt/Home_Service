@@ -167,6 +167,59 @@ class AdminOperationsTest extends TestCase
         $component->call('$refresh')->assertSee('El correo no respondió');
     }
 
+    public function test_a_new_kind_of_error_emails_the_admins_once_and_with_a_limit(): void
+    {
+        \Illuminate\Support\Facades\Bus::fake([\App\Jobs\SendNoticeEmail::class]);
+        $admin = $this->admin();
+        User::factory()->create(['utype' => 'ADM', 'suspended_at' => now()]);
+        User::factory()->create(['utype' => 'SVP']);
+
+        $first = new RuntimeException('La base no respondió');
+        ErrorRecorder::capture($first);
+        ErrorRecorder::capture($first);
+
+        // Un aviso, solo al admin activo, aunque el error se repita.
+        \Illuminate\Support\Facades\Bus::assertDispatchedTimes(\App\Jobs\SendNoticeEmail::class, 1);
+        \Illuminate\Support\Facades\Bus::assertDispatched(\App\Jobs\SendNoticeEmail::class, fn ($job) => $job->to === $admin->email);
+
+        // Si todo se rompe a la vez (diez errores distintos), no más de ALERTS_PER_HOUR correos por hora.
+        foreach (range(1, 10) as $line) {
+            $exception = new RuntimeException('fallo ' . $line);
+            (new \ReflectionProperty(\Exception::class, 'line'))->setValue($exception, $line);
+            ErrorRecorder::capture($exception);
+        }
+
+        $this->assertSame(11, DB::table('error_logs')->count());
+        \Illuminate\Support\Facades\Bus::assertDispatchedTimes(\App\Jobs\SendNoticeEmail::class, ErrorRecorder::ALERTS_PER_HOUR);
+    }
+
+    public function test_in_production_the_admin_panel_requires_two_step_verification(): void
+    {
+        config(['marketplace.admin_two_factor' => true]);
+        $admin = $this->admin();
+
+        $this->actingAs($admin)->get(route('admin.system'))
+            ->assertRedirect(route('profile.show') . '#dos-pasos')
+            ->assertSessionHas('error');
+        $this->actingAs($admin)->get(route('profile.show'))->assertOk()->assertSee('Verificación en dos pasos');
+
+        // Activada a medias (sin confirmar el código) todavía no alcanza.
+        $admin->forceFill(['two_factor_secret' => encrypt('secreto'), 'two_factor_recovery_codes' => encrypt('[]')])->save();
+        $this->actingAs($admin)->get(route('admin.system'))->assertRedirect();
+
+        $admin->forceFill(['two_factor_confirmed_at' => now()])->save();
+        $this->actingAs($admin)->get(route('admin.system'))->assertOk();
+
+        // Al ingresar, la contraseña sola ya no alcanza: pide el código.
+        \Illuminate\Support\Facades\Auth::guard('web')->logout();
+        $this->post('/login', ['email' => $admin->email, 'password' => 'password'])->assertRedirect('/two-factor-challenge');
+        $this->get('/two-factor-challenge')->assertOk()->assertSee('Escribe el código de 6 números');
+        $this->assertGuest('web');
+
+        // Los demás paneles no la exigen.
+        $this->actingAs(User::factory()->create(['utype' => 'SVP']))->get(route('sprovider.dashboard'))->assertOk();
+    }
+
     public function test_reported_errors_reach_the_admin_page(): void
     {
         report(new RuntimeException('Algo falló al guardar'));
@@ -194,11 +247,15 @@ class AdminOperationsTest extends TestCase
     {
         Storage::fake('local');
         Storage::fake('receipts');
+        Storage::fake('backups');
         config(['services.cron.secret' => 'secreto', 'marketplace.visit_counter' => 'database']);
         $this->withToken('secreto')->get('/cron/diario')->assertOk();
 
         Livewire::actingAs($this->admin())->test(AdminSystemComponent::class)
             ->assertSee('todo bien')
+            ->assertSee('Última copia')
+            ->call('backupNow')
+            ->assertSee('Restauración probada')
             ->call('runChecks')
             ->assertSet('results.security:check.ok', true)
             ->assertSet('results.mail:check.ok', true);

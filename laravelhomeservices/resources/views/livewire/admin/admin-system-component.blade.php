@@ -45,6 +45,38 @@
                             </div>
                         </li>
                     @endforeach
+                    @php $backupFresh = $backup && $backup['ok'] && $backup['lastOk']?->gt(now()->subHours(36)); @endphp
+                    <li class="flex items-start gap-3 py-4">
+                        <x-site.icon :name="$backupFresh ? 'check-circle' : 'alert'" class="mt-0.5 h-5 w-5 shrink-0 {{ $backupFresh ? 'text-emerald-700' : ($backup ? 'text-red-700' : 'text-amber-700') }}" />
+                        <div class="min-w-0 flex-1">
+                            <div class="flex flex-wrap items-start justify-between gap-3">
+                                <div class="min-w-0">
+                                    <p class="font-medium">Copias de seguridad</p>
+                                    <p class="text-[14px] text-grafito-500">Todos los días se guarda una copia cifrada de la base en el almacén privado, durante 30 días. Los lunes se prueba restaurarla.</p>
+                                </div>
+                                <button type="button" wire:click="backupNow" class="ui-btn ui-btn-secondary ui-btn-sm" wire:loading.attr="disabled" wire:target="backupNow">
+                                    <span wire:loading.remove wire:target="backupNow">Hacer una copia ahora</span>
+                                    <span wire:loading wire:target="backupNow">Copiando y probando…</span>
+                                </button>
+                            </div>
+                            @if (! $backup)
+                                <p class="mt-1 text-[13px] text-amber-900">Todavía no hay ninguna copia. Toca «Hacer una copia ahora».</p>
+                            @else
+                                <p class="mt-1 text-[13px] {{ $backupFresh ? 'text-emerald-800' : 'text-red-800' }}">
+                                    @if ($backup['ok'])
+                                        Última copia {{ $backup['when']->diffForHumans() }}: {{ number_format($backup['rows']) }} registros, {{ $backup['size'] }}.
+                                    @else
+                                        La última copia falló ({{ $backup['when']->format('d/m/Y H:i') }}): {{ $backup['error'] }}
+                                        {{ $backup['lastOk'] ? 'La última buena es del ' . $backup['lastOk']->format('d/m/Y') . '.' : '' }}
+                                    @endif
+                                    {{ $backup['tested'] ? 'Restauración probada ' . $backup['tested']->diffForHumans() . '.' : 'La restauración aún no se probó.' }}
+                                </p>
+                                @unless ($backupFresh)
+                                    <p class="mt-2 rounded-xl bg-amber-50 px-3 py-2 text-[14px] text-amber-950">Sin una copia reciente, un borrado por error no tiene vuelta atrás. Revisa «Fotos y documentos» (las copias usan el mismo almacén) y envía este mensaje a quien mantiene el sitio.</p>
+                                @endunless
+                            @endif
+                        </div>
+                    </li>
                     <li class="flex items-start gap-3 py-4">
                         <x-site.icon :name="$openErrors === 0 ? 'check-circle' : 'alert'" class="mt-0.5 h-5 w-5 shrink-0 {{ $openErrors === 0 ? 'text-emerald-700' : 'text-amber-700' }}" />
                         <div>

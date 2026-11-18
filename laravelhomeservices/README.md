@@ -64,6 +64,7 @@ Para crear un administrador real, registra la cuenta y cambia `users.utype` a `A
 | [06 · Despliegue y operación](docs/06-despliegue-y-operacion.md) | Servidor, variables de entorno, cron, colas y caché. |
 | [07 · Desarrollo y tests](docs/07-desarrollo-y-tests.md) | Convenciones, cómo extender el proyecto y qué cubren los tests. |
 | [08 · Plan de rediseño](docs/08-plan-de-rediseno.md) | Diagnóstico del diseño actual y plan por fases para rehacerlo. |
+| [09 · Plan profesional](docs/09-plan-profesional.md) | Plataforma, arquitectura, seguridad y escala: estado medido y plan por fases. |
 
 Para asistentes de código hay un resumen técnico en inglés en [`AGENTS.md`](../AGENTS.md).
 

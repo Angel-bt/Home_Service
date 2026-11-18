@@ -92,6 +92,8 @@ Ejecuta:
 | `services:sync-visit-counters` | cada 5 min | Pasa a MySQL (`services.views`) las visitas acumuladas en Redis. |
 | `billing:expire-plans` | cada hora | Pasa a gratis los planes Pro vencidos y cierra pagos con tarjeta abandonados. |
 
+En Vercel no hay `schedule:run`: `/cron/diario` corre una vez al día `backup:run` (los lunes con prueba de restauración), los vencimientos de planes, la limpieza, `storage:check`, `mail:check` y `security:check`. Responde 500 si falla la copia o alguna comprobación. Por eso la función tiene `maxDuration: 60` en `vercel.json`.
+
 Ambas usan `withoutOverlapping()` y `onOneServer()`, que necesitan la caché en Redis.
 
 En local: `php artisan schedule:work`.
@@ -119,12 +121,38 @@ Alternativa sin Redis para colas: `QUEUE_CONNECTION=database` (la tabla `jobs` y
 
 `ServiceVisitCounter` suma cada visita en Redis (`service-visits:service:{id}`) sin escribir en MySQL. El comando programado reclama los contadores de forma atómica, los suma en una transacción y, si MySQL falla, los devuelve a Redis. Si Redis no está disponible, la página del servicio se muestra igual (la visita no se cuenta y el error queda en el log).
 
-## Respaldos
+## Copias de seguridad
 
-- Base de datos MySQL (diario).
-- `public/images/` (imágenes subidas).
-- `storage/app/receipts/` (comprobantes de pago; datos sensibles).
-- El archivo `.env` (guardado fuera del servidor y del repositorio).
+**Base de datos (automático).** `php artisan backup:run` (`App\Services\DatabaseBackup`) guarda todas las tablas, salvo sesiones, caché y colas, en un solo archivo comprimido y **cifrado con `APP_KEY`**. Lo deja en el disco `backups`: la carpeta `copias/` del bucket privado, o el bucket de `BACKUPS_BUCKET` si se define (con sus `BACKUPS_*` opcionales, para guardarlo en **otro proveedor**, lo más seguro). Después de guardarla vuelve a leer la copia y comprueba que tiene las mismas filas. Borra las de más de 30 días, pero nunca la más nueva. No necesita `pg_dump`: funciona en Vercel.
+
+- Corre todos los días con `/cron/diario`. Los lunes agrega `--test-restore`, que restaura la copia completa en un esquema temporal de Postgres (`create table … (like … including all)`), cuenta las filas tabla por tabla y borra el esquema. Los datos reales no se tocan.
+- «Estado del sistema» muestra la última copia y la última prueba de restauración, y tiene el botón **Hacer una copia ahora**.
+- `/salud` y el vigilante avisan si no hay una copia buena de las últimas 36 horas.
+
+**Sin `APP_KEY` no se puede abrir ninguna copia.** Guarda una copia de esa clave fuera de Vercel, por ejemplo en un gestor de contraseñas, junto con el resto del `.env`.
+
+**Restaurar** (desde una computadora con el `.env` de producción):
+
+```bash
+php artisan backup:restore --list           # copias guardadas
+php artisan backup:restore                  # prueba la más nueva sin tocar nada
+php artisan backup:restore NOMBRE --real    # BORRA los datos actuales y pone los de la copia (pide confirmación)
+php artisan cache:clear
+```
+
+`--real` inserta las tablas en orden (primero las referenciadas), en una sola transacción, ignora columnas que ya no existen y reajusta los contadores de `id` en Postgres. Hazlo con el sitio en mantenimiento y, si se puede, primero sobre una base nueva.
+
+**Lo demás:** las fotos y los comprobantes viven en los buckets (activa el versionado del bucket si el proveedor lo ofrece) y el `.env`, fuera del servidor y del repositorio.
+
+## Vigilancia y alertas
+
+| Qué | Cómo avisa |
+|---|---|
+| El sitio no responde, la base no contesta, la revisión diaria falló o no hay copia reciente | `.github/workflows/vigilancia.yml` abre la portada y `/salud` cada 15 minutos (con 3 reintentos). Si falla, GitHub envía un correo a quien publicó el flujo. GitHub pausa los flujos programados tras 60 días sin cambios en el repositorio; se reactiva en Actions → Vigilancia. |
+| Un error que el sitio nunca había tenido | `ErrorRecorder` envía un correo a cada administrador activo, con un máximo de 5 por hora. Los repetidos solo se suman en «Errores». |
+| Alguien ingresó a una cuenta de administración | Correo al administrador (ya existía). |
+
+`/salud` responde `200 {"estado":"bien"}` o `503` con la lista de lo que falla, sin detalles. No abre sesión.
 
 ## Vercel
 

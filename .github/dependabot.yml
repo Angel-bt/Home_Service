@@ -1,0 +1,28 @@
+# Propone actualizar las dependencias una vez al mes, agrupadas en pocos cambios.
+# Cada propuesta pasa por las pruebas automáticas antes de poder aceptarse.
+version: 2
+updates:
+  - package-ecosystem: composer
+    directory: /laravelhomeservices
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 3
+    groups:
+      php:
+        patterns: ['*']
+        update-types: [minor, patch]
+
+  - package-ecosystem: npm
+    directory: /laravelhomeservices
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 3
+    groups:
+      javascript:
+        patterns: ['*']
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

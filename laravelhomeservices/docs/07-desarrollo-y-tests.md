@@ -111,6 +111,29 @@ Usan el mismo diseño. Antes de escribir HTML nuevo, reutiliza estas piezas:
 
 **Nueva forma de activar el plan Pro:** crea el `SubscriptionPayment` y llama a `ProPlanBilling::approve()`; no cambies `subscription_plan` a mano.
 
+## Revisión automática (GitHub Actions)
+
+`.github/workflows/pruebas.yml` corre en cada cambio a `main` y en cada propuesta (pull request):
+
+| Paso | Qué revisa |
+|---|---|
+| Pruebas (sqlite) y Pruebas (pgsql) | Toda la suite, en SQLite y en un Postgres 17 real, el motor de producción. |
+| `composer audit` / `npm audit --omit=dev` | Fallas de seguridad conocidas en las dependencias (del lado de JavaScript, solo lo que llega al navegador). |
+| Larastan (`phpstan.neon`, nivel 5) | Errores de tipos y llamadas a cosas que no existen. Los 90 avisos que ya había quedaron en `phpstan-baseline.neon`; solo fallan los nuevos. Al arreglar uno, regenera la línea de base con `vendor/bin/phpstan analyse --generate-baseline phpstan-baseline.neon`. |
+| Pint (`pint.json`) | El formato, **solo en los archivos PHP cambiados**: el código heredado se irá ordenando al tocarlo. Antes de publicar, corre `vendor/bin/pint --dirty`. |
+| Compilar estilos | `npm run prod` no se rompe. |
+
+`.github/dependabot.yml` propone cada mes actualizar las dependencias, agrupadas; cada propuesta pasa por estas pruebas.
+
+En local, lo mismo:
+
+```bash
+php artisan test
+vendor/bin/phpstan analyse --memory-limit=2G
+vendor/bin/pint --dirty
+composer audit
+```
+
 ## Tests
 
 ```bash

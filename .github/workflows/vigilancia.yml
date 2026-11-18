@@ -1,0 +1,37 @@
+# Vigilante: cada 15 minutos abre el sitio y /salud. Si algo no responde, este flujo falla
+# y GitHub envía un correo a quien lo activó (la cuenta que publica en el repositorio).
+# GitHub pausa los flujos programados tras 60 días sin cambios en el repositorio: si eso pasa,
+# llega un aviso; se reactiva en la pestaña Actions → Vigilancia → Enable workflow.
+name: Vigilancia
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sitio:
+    name: ¿Responde Malakplace?
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SITIO: https://malakplace.vercel.app
+    steps:
+      - name: Portada
+        run: |
+          curl --fail --silent --show-error --max-time 30 --retry 3 --retry-delay 20 --retry-all-errors \
+            -o /dev/null -w 'Portada: %{http_code} en %{time_total}s\n' "$SITIO/"
+
+      - name: Base de datos, revisión diaria y copias
+        run: |
+          for intento in 1 2 3; do
+            codigo=$(curl --silent --max-time 30 -o salud.json -w '%{http_code}' "$SITIO/salud" || echo 000)
+            cat salud.json 2>/dev/null; echo
+            [ "$codigo" = "200" ] && exit 0
+            sleep 20
+          done
+          echo "::error::/salud respondió $codigo. Entra a Estado del sistema en el panel para ver el detalle."
+          exit 1
