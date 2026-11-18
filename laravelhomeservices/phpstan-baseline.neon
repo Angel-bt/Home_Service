@@ -355,24 +355,6 @@ parameters:
 			path: app/Services/ProviderVerification.php
 
 		-
-			message: '#^Parameter \#2 \$args of static method Redis\:\:eval\(\) expects array, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Services/ServiceVisitCounter.php
-
-		-
-			message: '#^Parameter \#3 \$num_keys of static method Redis\:\:eval\(\) expects int, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Services/ServiceVisitCounter.php
-
-		-
-			message: '#^Static method Redis\:\:eval\(\) invoked with 5 parameters, 1\-3 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: app/Services/ServiceVisitCounter.php
-
-		-
 			message: '#^Offset 2 on array\{''Aviso destacado'', ''Un mensaje corto…'', ''textos''\}\|array\{''Contacto de…'', ''Lo que ve la gente…'', ''ajustes''\}\|array\{''Datos para…'', ''Lo que ven los…'', ''ajustes''\}\|array\{''Google y redes'', ''Cómo se ve…'', ''textos''\}\|array\{''Plan gratuito y…'', ''Cuánto pueden…'', ''ajustes''\}\|array\{''Portada'', ''Los textos…'', ''textos''\}\|array\{''Verificación'', ''Cuánto dura el…'', ''ajustes''\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 1

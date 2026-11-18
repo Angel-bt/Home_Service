@@ -10,3 +10,11 @@ parameters:
         - database
         - routes
     tmpDir: storage/framework/phpstan
+    ignoreErrors:
+        # Redis::eval() de Laravel acepta (script, cantidad de claves, ...claves y argumentos), pero
+        # PHPStan lo compara con la firma de la extensión phpredis, que cambia según la versión
+        # instalada: en una máquina aparece y en otra no. Por eso sin reportUnmatched.
+        -
+            message: '#Redis\:\:eval\(\)#'
+            path: app/Services/ServiceVisitCounter.php
+            reportUnmatched: false
